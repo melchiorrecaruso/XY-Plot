@@ -1,0 +1,32 @@
+object debugform: Tdebugform
+  Left = 537
+  Height = 378
+  Top = 199
+  Width = 531
+  Caption = 'Debug ...'
+  ClientHeight = 378
+  ClientWidth = 531
+  Color = clWindow
+  Position = poOwnerFormCenter
+  LCLVersion = '2.1.0.0'
+  object memo: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 372
+    Top = 6
+    Width = 531
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 6
+    BorderStyle = bsNone
+    Font.Name = 'Courier New'
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 0
+  end
+end
