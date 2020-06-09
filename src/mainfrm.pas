@@ -169,6 +169,7 @@ type
     py: longint;
     screenimage: tbgrabitmap;
     zoom: double;
+    function getcleanup: double;
     procedure lockinternal(value: boolean);
     procedure onplottererror;
     procedure onplotterinit;
@@ -352,6 +353,7 @@ begin
     caption := 'XY-Plot Client - ' + opendialog.filename;
     svg2paths(opendialog.filename, page);
     pagecount := page.count;
+
     isneededoptimize := true;
     updatescreen;
     unlock;
@@ -433,8 +435,29 @@ end;
 
 // CONTROL
 
+function tmainform.getcleanup: double;
+begin
+  result := 0;
+  if cleanupoffmi.checked then result := 0.00 else
+  if cleanup010mi.checked then result := 0.10 else
+  if cleanup025mi.checked then result := 0.25 else
+  if cleanup050mi.checked then result := 0.50 else
+  if cleanup075mi.checked then result := 0.75 else
+  if cleanup100mi.checked then result := 1.00 else
+  if cleanup125mi.checked then result := 1.25 else
+  if cleanup150mi.checked then result := 1.50 else
+  if cleanup200mi.checked then result := 2.00 else
+  if cleanup300mi.checked then result := 3.00 else
+  if cleanup400mi.checked then result := 4.00 else
+  if cleanup500mi.checked then result := 5.00 else
+  if cleanup600mi.checked then result := 6.00 else
+  if cleanup700mi.checked then result := 7.00 else
+  if cleanup800mi.checked then result := 8.00;
+end;
+
 procedure tmainform.startmiclick(sender: tobject);
 var
+  cleanup: double;
    cx, cy: longint;
   element: txypelement;
      i, j: longint;
@@ -446,7 +469,7 @@ var
 begin
   if not assigned(driver) then
   begin
-
+    cleanup := getcleanup;
     if isneededoptimize then
       if optimizermi.checked then
       begin
@@ -454,21 +477,7 @@ begin
         optimizer.onstart := @onoptimizerstart;
         optimizer.onstop  := @onoptimizerstopandprint;
         optimizer.ontick  := @onoptimizertick;
-        if cleanupoffmi.checked then optimizer.cleanup := 0.00 else
-        if cleanup010mi.checked then optimizer.cleanup := 0.10 else
-        if cleanup025mi.checked then optimizer.cleanup := 0.25 else
-        if cleanup050mi.checked then optimizer.cleanup := 0.50 else
-        if cleanup075mi.checked then optimizer.cleanup := 0.75 else
-        if cleanup100mi.checked then optimizer.cleanup := 1.00 else
-        if cleanup125mi.checked then optimizer.cleanup := 1.25 else
-        if cleanup150mi.checked then optimizer.cleanup := 1.50 else
-        if cleanup200mi.checked then optimizer.cleanup := 2.00 else
-        if cleanup300mi.checked then optimizer.cleanup := 3.00 else
-        if cleanup400mi.checked then optimizer.cleanup := 4.00 else
-        if cleanup500mi.checked then optimizer.cleanup := 5.00 else
-        if cleanup600mi.checked then optimizer.cleanup := 6.00 else
-        if cleanup700mi.checked then optimizer.cleanup := 7.00 else
-        if cleanup800mi.checked then optimizer.cleanup := 8.00;
+        optimizer.cleanup := cleanup;
         optimizer.start;
         exit;
       end;
@@ -500,7 +509,7 @@ begin
           point2.x := point2.x + xoffset;
           point2.y := point2.y + yoffset;
 
-          if distance_between_two_points(point1, point2) > 0.2 then
+          if distance(point1, point2) >= 0.2 then
             driver.movez(setting.servozvalue1)
           else
             driver.movez(setting.servozvalue0);
@@ -707,21 +716,7 @@ begin
   optimizer.ontick  := @onoptimizertick;
   optimizer.onstart := @onoptimizerstart;
   optimizer.onstop  := @onoptimizerstop;
-  if cleanupoffmi.checked then optimizer.cleanup := 0.00 else
-  if cleanup010mi.checked then optimizer.cleanup := 0.10 else
-  if cleanup025mi.checked then optimizer.cleanup := 0.25 else
-  if cleanup050mi.checked then optimizer.cleanup := 0.50 else
-  if cleanup075mi.checked then optimizer.cleanup := 0.75 else
-  if cleanup100mi.checked then optimizer.cleanup := 1.00 else
-  if cleanup125mi.checked then optimizer.cleanup := 1.25 else
-  if cleanup150mi.checked then optimizer.cleanup := 1.50 else
-  if cleanup200mi.checked then optimizer.cleanup := 2.00 else
-  if cleanup300mi.checked then optimizer.cleanup := 3.00 else
-  if cleanup400mi.checked then optimizer.cleanup := 4.00 else
-  if cleanup500mi.checked then optimizer.cleanup := 5.00 else
-  if cleanup600mi.checked then optimizer.cleanup := 6.00 else
-  if cleanup700mi.checked then optimizer.cleanup := 7.00 else
-  if cleanup800mi.checked then optimizer.cleanup := 8.00;
+  optimizer.cleanup := getcleanup;
   optimizer.start;
 end;
 
@@ -885,7 +880,7 @@ begin
       begin
         p1.x := a[low(a)].x;
         p1.y := a[low(a)].y;
-        if distance_between_two_points(p0, p1) > 0.2 then
+        if distance(p0, p1) >= 0.2 then
         begin
           path.beginpath;
           path.moveto(p0.x, p0.y);
