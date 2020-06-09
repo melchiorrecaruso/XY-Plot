@@ -66,6 +66,7 @@ type
 implementation
 
 const
+
   gap = 0.02;
 
 // txyppathoptimizer
@@ -108,7 +109,7 @@ begin
   result := -1;
   for i := 0 to flist.count -1 do
   begin
-    di := distance_between_two_points(p, flist.items[i].firstpoint);
+    di := distance(p, flist.items[i].firstpoint);
     if di < dj then
     begin
        j :=  i;
@@ -132,7 +133,7 @@ begin
   result := -1;
   for i := 0 to flist.count -1 do
   begin
-    di := distance_between_two_points(p, flist.items[i].lastpoint);
+    di := distance(p, flist.items[i].lastpoint);
     if di < dj then
     begin
        j :=  i;
@@ -158,14 +159,14 @@ begin
   begin
     elem := flist.items[i];
 
-    len2 := distance_between_two_points(p, elem.firstpoint);
+    len2 := distance(p, elem.firstpoint);
     if len1 > len2 then
     begin
       len1   := len2;
       result := i;
     end;
 
-    len2 := distance_between_two_points(p, elem.lastpoint);
+    len2 := distance(p, elem.lastpoint);
     if len1 > len2 then
     begin
       elem.invert;
@@ -178,7 +179,7 @@ end;
 
 function txyppathoptimizer.isaloop(item: txypelement): boolean;
 begin
-  result := distance_between_two_points(item.firstpoint, item.lastpoint) < gap;
+  result := distance(item.firstpoint, item.lastpoint) < gap;
 end;
 
 function txyppathoptimizer.getnextsubpath(const p: txyppoint): longint;
@@ -195,7 +196,7 @@ begin
     group := txypelementlist(fsubpaths.items[i]);
     elem  := group.items[0];
 
-    len2 := distance_between_two_points(p, elem.firstpoint);
+    len2 := distance(p, elem.firstpoint);
     if len1 > len2 then
     begin
       len1   := len2;
@@ -204,7 +205,7 @@ begin
 
     elem := group.items[group.count-1];
 
-    len2 := distance_between_two_points(p, elem.lastpoint);
+    len2 := distance(p, elem.lastpoint);
     if len1 > len2 then
     begin
       group.invert;
@@ -315,10 +316,10 @@ begin
   for i := 0 to flist.count -1 do
   begin
     elem := flist.items[i];
-    if distance_between_two_points(p, elem.firstpoint) >= gap then
+    if distance(p, elem.firstpoint) >= 0.2 then
     begin
       result.traveldistance := result.traveldistance +
-        distance_between_two_points(p, elem.firstpoint);
+        distance(p, elem.firstpoint);
       inc(result.penraises);
     end;
     result.inkdistance := result.inkdistance + elem.length;
