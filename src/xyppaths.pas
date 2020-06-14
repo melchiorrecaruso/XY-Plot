@@ -150,6 +150,9 @@ type
     procedure move(dx, dy: double);
     procedure rotate(value: double);
     procedure scale(value: double);
+    //
+    function firstpoint: txyppoint;
+    function lastpoint: txyppoint;
     function length: double;
     //
     procedure updatepage;
@@ -459,9 +462,18 @@ begin
 end;
 
 procedure txypelementpolygonal.interpolate(var path: tbgrapath);
+var
+  i: longint;
 begin
   path.beginpath;
-  // todo
+  if system.length(fpolygonal) > 0 then
+  begin
+    path.moveto(fpolygonal[0].x, fpolygonal[0].y);
+    for i := 1 to system.length(fpolygonal) -1 do
+    begin
+      path.lineto(fpolygonal[i].x, fpolygonal[i].y);
+    end;
+  end;
 end;
 
 function txypelementpolygonal.firstpoint: txyppoint;
@@ -597,6 +609,16 @@ begin
   xyplog.add(format('  DOCUMENT::SCALE            %12.5f', [value]));
 end;
 
+function txypelementlist.firstpoint: txyppoint;
+begin
+  result := getitem(0).firstpoint;
+end;
+
+function txypelementlist.lastpoint: txyppoint;
+begin
+  result := getitem(flist.count -1).lastpoint;
+end;
+
 function txypelementlist.length: double;
 var
   i: longint;
@@ -616,7 +638,6 @@ begin
   begin
     txypelement(flist[i]).mirrorx;
   end;
-  xyplog.add('  DOCUMENT::MIRROR-X');
 end;
 
 procedure txypelementlist.mirrory;
@@ -627,7 +648,6 @@ begin
   begin
     txypelement(flist[i]).mirrory;
   end;
-  xyplog.add('  DOCUMENT::MIRROR-Y');
 end;
 
 procedure txypelementlist.invert;
