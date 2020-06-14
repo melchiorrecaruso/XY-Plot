@@ -29,6 +29,7 @@ uses
 
 type
   txyppathoptimizerfitness = packed record
+    cleanup: double;
     inkdistance: double;
     traveldistance: double;
     penraises: longint;
@@ -295,7 +296,7 @@ begin
     fsubpaths.delete(i);
   end;
   fitness1 := getfitness;
-
+  xyplog.add(format(' OPTIMIZER::CLEANUP          %12.2f',           [fitness1.cleanup]));
   xyplog.add(format(' OPTIMIZER::INK DISTANCE     %12.2f  (%12.2f)', [fitness1.inkdistance,    fitness0.inkdistance]));
   xyplog.add(format(' OPTIMIZER::TRAVEL DISTANCE  %12.2f  (%12.2f)', [fitness1.traveldistance, fitness0.traveldistance]));
   xyplog.add(format(' OPTIMIZER::PEN RAISES       %12.0u  (%12.0u)', [fitness1.penraises,      fitness0.penraises]));
@@ -325,6 +326,7 @@ begin
     result.inkdistance := result.inkdistance + elem.length;
     p := elem.lastpoint;
   end;
+  result.cleanup := fcleanup;
 end;
 
 end.
