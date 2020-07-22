@@ -108,7 +108,28 @@ type
     fpolygonal: txyppolygonal;
   public
     constructor create;
-    constructor create(const apolygonal: txyppolygonal);
+    constructor create(apolygonal: txyppolygonal);
+    destructor destroy; override;
+    procedure invert; override;
+    procedure move(dx, dy: double); override;
+    procedure rotate(angle: double); override;
+    procedure scale(value: double); override;
+    procedure mirrorx; override;
+    procedure mirrory; override;
+    procedure interpolate(var path: txyppolygonal; value: double); override;
+    procedure interpolate(var path: tbgrapath); override;
+    function firstpoint: txyppoint; override;
+    function lastpoint: txyppoint; override;
+    function length: double; override;
+  end;
+
+  txypelementpath = class(txypelement)
+  private
+    flist: tfplist;
+  public
+    constructor create;
+    destructor destroy; override;
+    procedure add(element: txypelement);
     procedure invert; override;
     procedure move(dx, dy: double); override;
     procedure rotate(angle: double); override;
@@ -231,7 +252,6 @@ end;
 
 procedure txypelementline.interpolate(var path: tbgrapath);
 begin
-  path.beginpath;
   path.moveto(fline.p0.x, fline.p0.y);
   path.lineto(fline.p1.x, fline.p1.y);
 end;
@@ -301,7 +321,6 @@ end;
 
 procedure txypelementcircle.interpolate(var path: tbgrapath);
 begin
-  path.beginpath;
   path.arc(fcircle.center.x,
            fcircle.center.y,
            fcircle.radius,0, 2*pi);
@@ -373,7 +392,6 @@ end;
 
 procedure txypelementcirclearc.interpolate(var path: tbgrapath);
 begin
-  path.beginpath;
   path.arc(
     fcirclearc.center.x,
     fcirclearc.center.y,
@@ -412,18 +430,19 @@ end;
 constructor txypelementpolygonal.create;
 begin
   inherited create;
+  fpolygonal := txyppolygonal.create;
 end;
 
-constructor txypelementpolygonal.create(const apolygonal: txyppolygonal);
-var
-  i: longint;
+constructor txypelementpolygonal.create(apolygonal: txyppolygonal);
 begin
   inherited create;
-  setlength(fpolygonal, system.length(apolygonal));
-  for i := 0 to high(apolygonal) do
-  begin
-    fpolygonal[i] := apolygonal[i];
-  end;
+  fpolygonal := apolygonal;
+end;
+
+destructor txypelementpolygonal.destroy;
+begin
+  fpolygonal.destroy;
+  inherited destroy;
 end;
 
 procedure txypelementpolygonal.invert;
@@ -456,7 +475,7 @@ begin
   xypmath.mirrory(fpolygonal);
 end;
 
-procedure txypelementpolygonal.interpolate(var path:  txyppolygonal; value: double);
+procedure txypelementpolygonal.interpolate(var path: txyppolygonal; value: double);
 begin
   xypmath.interpolate(fpolygonal, path, value);
 end;
@@ -465,11 +484,10 @@ procedure txypelementpolygonal.interpolate(var path: tbgrapath);
 var
   i: longint;
 begin
-  path.beginpath;
-  if system.length(fpolygonal) > 0 then
+  if fpolygonal.count > 0 then
   begin
     path.moveto(fpolygonal[0].x, fpolygonal[0].y);
-    for i := 1 to system.length(fpolygonal) -1 do
+    for i := 1 to fpolygonal.count -1 do
     begin
       path.lineto(fpolygonal[i].x, fpolygonal[i].y);
     end;
@@ -478,17 +496,145 @@ end;
 
 function txypelementpolygonal.firstpoint: txyppoint;
 begin
-  result := fpolygonal[low(fpolygonal)];
+  result := fpolygonal.first;
 end;
 
 function txypelementpolygonal.lastpoint: txyppoint;
 begin
-  result := fpolygonal[high(fpolygonal)];
+  result := fpolygonal.last;
 end;
 
 function txypelementpolygonal.length: double;
 begin
   result := xypmath.length(fpolygonal);
+end;
+
+/// txypelementpath
+
+constructor txypelementpath.create;
+begin
+  inherited create;
+  flist := tfplist.create;
+end;
+
+destructor txypelementpath.destroy;
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).destroy;
+  end;
+  flist.destroy;
+  inherited destroy;
+end;
+
+procedure txypelementpath.add(element: txypelement);
+begin
+  flist.add(element);
+end;
+
+procedure txypelementpath.invert;
+var
+  i, cnt: longint;
+begin
+  cnt := flist.count -1;
+  for i := 0 to cnt do
+  begin
+    txypelement(flist[0]).invert;
+    flist.move(0, cnt-i);
+  end;
+end;
+
+procedure txypelementpath.move(dx, dy: double);
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).move(dx, dy);
+  end;
+end;
+
+procedure txypelementpath.rotate(angle: double);
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).rotate(angle);
+  end;
+end;
+
+procedure txypelementpath.scale(value: double);
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).scale(value);
+  end;
+end;
+
+procedure txypelementpath.mirrorx;
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).mirrorx;
+  end;
+end;
+
+procedure txypelementpath.mirrory;
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).mirrory;
+  end;
+end;
+
+procedure txypelementpath.interpolate(var path: txyppolygonal; value: double);
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).interpolate(path, value);
+  end;
+end;
+
+procedure txypelementpath.interpolate(var path: tbgrapath);
+var
+  i: longint;
+begin
+  for i := 0 to flist.count -1 do
+  begin
+    txypelement(flist[i]).interpolate(path);
+  end;
+end;
+
+function txypelementpath.firstpoint: txyppoint;
+begin
+  result := txypelement(flist.first).firstpoint;
+end;
+
+function txypelementpath.lastpoint: txyppoint;
+begin
+  result := txypelement(flist.last).lastpoint;
+end;
+
+function txypelementpath.length: double;
+var
+  i: longint;
+begin
+  result := 0;
+  for i := 0 to flist.count -1 do
+  begin
+    result := result + txypelement(flist[i]).length;
+  end;
 end;
 
 /// tvpelementslist
@@ -515,8 +661,7 @@ procedure txypelementlist.clear;
 var
   i: longint;
 begin
-  fisneededupdatepage := false;
-  for i := 0 to Count -1 do
+  for i := 0 to count -1 do
   begin
     txypelement(flist[i]).destroy;
   end;
@@ -530,7 +675,6 @@ end;
 procedure txypelementlist.add(element: txypelement);
 begin
   flist.add(element);
-  fisneededupdatepage := true;
 end;
 
 function txypelementlist.getcount: longint;
@@ -558,21 +702,18 @@ end;
 procedure txypelementlist.insert(index: longint; element: txypelement);
 begin
   flist.insert(index, element);
-  fisneededupdatepage := true;
 end;
 
 function txypelementlist.extract(index: longint): txypelement;
 begin
   result := txypelement(flist[index]);
   flist.delete(index);
-  fisneededupdatepage := true;
 end;
 
 procedure txypelementlist.delete(index: longint);
 begin
   txypelement(flist[index]).destroy;
   flist.delete(index);
-  fisneededupdatepage := true;
 end;
 
 procedure txypelementlist.move(dx, dy: double);
@@ -593,7 +734,6 @@ begin
   begin
     txypelement(flist[i]).rotate(value);
   end;
-  fisneededupdatepage := true;
   xyplog.add(format('  DOCUMENT::ROTATE           %12.5f', [value]));
 end;
 
@@ -605,7 +745,6 @@ begin
   begin
     txypelement(flist[i]).scale(value);
   end;
-  fisneededupdatepage := true;
   xyplog.add(format('  DOCUMENT::SCALE            %12.5f', [value]));
 end;
 
@@ -666,7 +805,7 @@ procedure txypelementlist.updatepage;
 var
   i: longint;
   j: longint;
-  path:  txyppolygonal = nil;
+  path:  txyppolygonal;
   point: txyppoint;
 begin
   if fisneededupdatepage then
@@ -676,19 +815,21 @@ begin
     fxmax  := - maxint;
     fymin  := + maxint;
     fymax  := - maxint;
+    path := txyppolygonal.create;
     for i := 0 to flist.count -1 do
     begin
       getitem(i).interpolate(path, 0.5);
-      for j := 0 to high(path) do
+      for j := 0 to path.count -1 do
       begin
         point := path[j];
-         fxmin := min(fxmin, point.x);
-         fxmax := max(fxmax, point.x);
-         fymin := min(fymin, point.y);
-         fymax := max(fymax, point.y);
+        fxmin := min(fxmin, point.x);
+        fxmax := max(fxmax, point.x);
+        fymin := min(fymin, point.y);
+        fymax := max(fymax, point.y);
       end;
-      path := nil;
+      path.clear;
     end;
+    path.destroy;
   end;
   xyplog.add(format('  DOCUMENT::PAGE WIDTH       %12.1f', [fxmax-fxmin]));
   xyplog.add(format('  DOCUMENT::PAGE HEIGTH      %12.1f', [fymax-fymin]));
@@ -696,6 +837,8 @@ end;
 
 procedure txypelementlist.centertoorigin;
 begin
+  fisneededupdatepage := true;
+
   updatepage;
   move(-(fxmax+fxmin)/2, -(fymax+fymin)/2);
   xyplog.add('  DOCUMENT::MOVE ORIGIN TO CENTER');

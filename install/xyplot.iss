@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "XY-Plot Client"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.2"
 #define MyAppPublisher "Melchiorre Caruso"
 #define MyAppURL "https://github.com/melchiorrecaruso/xy-plot"
 #define MyAppExeName "xyplot.exe"

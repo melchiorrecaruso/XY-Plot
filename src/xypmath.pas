@@ -22,17 +22,19 @@
 unit xypmath;
 
 {$mode objfpc}
+{$modeswitch advancedrecords}
 
 interface
 
 uses
-  classes, sysutils, math;
+  classes, fgl, sysutils, math;
 
 type
   pxyppoint = ^txyppoint;
   txyppoint = packed record
     x: double;
     y: double;
+    class operator = (a, b: txyppoint): boolean;
   end;
 
   pxypline = ^txypline;
@@ -55,8 +57,7 @@ type
     radius:     double;
   end;
 
-  pxyppolygonal = ^txyppolygonal;
-  txyppolygonal = array of txyppoint;
+  txyppolygonal = specialize tfpglist<txyppoint>;
 
 // MOVE
 procedure move(var point:     txyppoint;     dx, dy: double);
@@ -113,9 +114,14 @@ procedure interpolate(const polygonal: txyppolygonal; var path: txyppolygonal; v
 
 // ---
 
-function distance(const p0, p1: txyppoint): double; inline;
+function distance(const p0, p1: txyppoint): double;
 
 implementation
+
+class operator txyppoint.= (a, b: txyppoint): boolean;
+begin
+  result := (a.x = b.x) and (a.y = b.y);
+end;
 
 // MOVE
 
@@ -144,10 +150,13 @@ end;
 procedure move(var polygonal: txyppolygonal; dx, dy: double);
 var
   i: longint;
+  p: txyppoint;
 begin
-  for i := 0 to high(polygonal) do
+  for i := 0 to polygonal.count -1 do
   begin
-    move(polygonal[i], dx, dy);
+    p := polygonal[i];
+    move(p, dx, dy);
+    polygonal[i] := p;
   end;
 end;
 
@@ -188,10 +197,13 @@ end;
 procedure rotate(var polygonal: txyppolygonal; angle: double);
 var
   i: longint;
+  p: txyppoint;
 begin
-  for i := 0 to high(polygonal) do
+  for i := 0 to polygonal.count -1 do
   begin
-    rotate(polygonal[i], angle);
+    p := polygonal[i];
+    rotate(p, angle);
+    polygonal[i] := p;
   end;
 end;
 
@@ -224,10 +236,13 @@ end;
 procedure scale(var polygonal: txyppolygonal; factor: double);
 var
   i: longint;
+  p: txyppoint;
 begin
-  for i := 0 to high(polygonal) do
+  for i := 0 to polygonal.count -1 do
   begin
-    scale(polygonal[i], factor);
+    p := polygonal[i];
+    scale(p, factor);
+    polygonal[i] := p;
   end;
 end;
 
@@ -259,10 +274,13 @@ end;
 procedure mirrorx(var polygonal: txyppolygonal);
 var
   i: longint;
+  p: txyppoint;
 begin
-  for i := 0 to high(polygonal) do
+  for i := 0 to polygonal.count -1 do
   begin
-    mirrorx(polygonal[i]);
+    p := polygonal[i];
+    mirrorx(p);
+    polygonal[i] := p;
   end;
 end;
 
@@ -294,10 +312,13 @@ end;
 procedure mirrory(var polygonal: txyppolygonal);
 var
   i: longint;
+  p: txyppoint;
 begin
-  for i := 0 to high(polygonal) do
+  for i := 0 to polygonal.count -1 do
   begin
-    mirrory(polygonal[i]);
+    p := polygonal[i];
+    mirrory(p);
+    polygonal[i] := p;
   end;
 end;
 
@@ -328,22 +349,12 @@ end;
 
 procedure invert(var polygonal: txyppolygonal);
 var
-  i, j: longint;
-     t: txyppolygonal;
+  i: longint;
 begin
-  setlength(t, system.length(polygonal));
-
-  j := high(polygonal);
-  for i := 0 to j do
+  for i := 0 to polygonal.count -1 do
   begin
-    t[i] := polygonal[j-i];
+    polygonal.move(i, 0);
   end;
-
-  for i := 0 to j do
-  begin
-    polygonal[i] := t[i];
-  end;
-  setlength(t, 0);
 end;
 
 // LENGTH
@@ -373,9 +384,9 @@ var
   i: longint;
 begin
   result := 0;
-  for i := 1 to high(polygonal) do
+  for i := 0 to polygonal.count -2 do
   begin
-    result := result + distance(polygonal[i-1], polygonal[i]);
+    result := result + distance(polygonal[i], polygonal[i+1]);
   end;
 end;
 
@@ -385,17 +396,19 @@ procedure interpolate(const line: txypline; var path: txyppolygonal; value: doub
 var
   dx, dy: double;
    i,  j: longint;
+       p: txyppoint;
 begin
    j := max(1, round(distance(line.p0, line.p1)/value));
   dx := (line.p1.x-line.p0.x)/j;
   dy := (line.p1.y-line.p0.y)/j;
-  setlength(path, j+1);
+
   for i := 0 to j do
   begin
-    path[i].x := i*dx;
-    path[i].y := i*dy;
-    move(path[i], line.p0.x,
-                  line.p0.y);
+    p.x := i*dx;
+    p.y := i*dy;
+    move(p, line.p0.x,
+            line.p0.y);
+    path.add(p);
   end;
 end;
 
@@ -403,18 +416,19 @@ procedure interpolate(const circle: txypcircle; var path: txyppolygonal; value: 
 var
   i, j: longint;
     ds: double;
+     p: txyppoint;
 begin
    j := max(1, round(length(circle)/value));
   ds := (2*pi)/j;
 
-  setlength(path, j+1);
   for i := 0 to j do
   begin
-    path[i].x := circle.radius;
-    path[i].y := 0.0;
-    rotate(path[i], i*ds);
-    move(path[i], circle.center.x,
-                  circle.center.y);
+    p.x := circle.radius;
+    p.y := 0.0;
+    rotate(p, i*ds);
+    move  (p, circle.center.x,
+              circle.center.y);
+    path.add(p);
   end;
 end;
 
@@ -422,61 +436,38 @@ procedure interpolate(const circlearc: txypcirclearc; var path: txyppolygonal; v
 var
   i, j: longint;
     ds: double;
+     p: txyppoint;
 begin
    j := max(1, round(length(circlearc)/value));
   ds := (circlearc.endangle-circlearc.startangle)/j;
 
-  setlength(path, j+1);
   for i := 0 to j do
   begin
-    path[i].x := circlearc.radius;
-    path[i].y := 0.0;
-    rotate(path[i], circlearc.startangle+(i*ds));
-    move(path[i],   circlearc.center.x,
-                    circlearc.center.y);
+    p.x := circlearc.radius;
+    p.y := 0.0;
+    rotate(p, circlearc.startangle+(i*ds));
+    move  (p, circlearc.center.x,
+              circlearc.center.y);
+    path.add(p);
   end;
 end;
 
 procedure interpolate(const polygonal: txyppolygonal; var path: txyppolygonal; value: double);
 var
-   i, j: longint;
-  aline: txypline;
-  alist: tfplist;
-  apath: txyppolygonal;
-     ap: pxyppoint;
+   i: longint;
+   line: txypline;
 begin
-  alist := tfplist.create;
-
-  new(ap);
-  alist.add(ap);
-  ap^ := polygonal[0];
-
-  for i := 0 to system.length(polygonal) - 2 do
+  for i := 0 to polygonal.count -2 do
   begin
-    aline.p0 := polygonal[i  ];
-    aline.p1 := polygonal[i+1];
-
-    interpolate(aline, apath, value);
-    for j := 1 to high(apath) do
-    begin
-      new(ap);
-      alist.add(ap);
-      ap^ := apath[j];
-    end;
+    line.p0 := polygonal[i];
+    line.p1 := polygonal[i+1];
+    interpolate(line, path, value);
   end;
-
-  setlength(path, alist.count);
-  for i := 0 to alist.count -1 do
-  begin
-    path[i] := pxyppoint(alist[i])^;
-    dispose(pxyppoint(alist[i]));
-  end;
-  alist.destroy;
 end;
 
 // ---
 
-function distance(const p0, p1: txyppoint): double;
+function distance(const p0, p1: txyppoint): double; inline;
 begin
   result := sqrt(sqr(p1.x - p0.x) + sqr(p1.y - p0.y));
 end;

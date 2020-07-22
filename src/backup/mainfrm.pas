@@ -217,8 +217,7 @@ implementation
 {$R *.lfm}
 
 uses
-  aboutfrm, importfrm, debugfrm, math, settingfrm, sysutils,
-  xypdebug, xypdxfreader, xypsvgreader;
+  aboutfrm, importfrm, debugfrm, math, settingfrm, sysutils, xypdebug, xypsvgreader;
 
 // SCREEN THREAD
 
@@ -277,7 +276,6 @@ begin
     x0 := trunc((pagewidth /2)*zoom);
     y0 := trunc((pageheight/2)*zoom);
 
-    path := tbgrapath.create;
     j := min(pagecount, page.count);
     for i := 0 to j -1 do
     begin
@@ -288,7 +286,7 @@ begin
       elem.scale(zoom);
       elem.move(x0, y0);
       begin
-        path.beginpath;
+        path := tbgrapath.create;
         elem.interpolate(path);
         path.stroke(screenimage, bgra(0, 0, 0), 1.5);
 
@@ -319,13 +317,12 @@ begin
           p0.x := a[high(a)].x;
           p0.y := a[high(a)].y;
         end;
-
+        path.destroy;
       end;
       elem.move(-x0, -y0);
       elem.scale(1/zoom);
       elem.mirrorx;
     end;
-    path.destroy;
     screen.redrawbitmap;
   end;
   if assigned(fonstop) then
@@ -458,10 +455,6 @@ begin
     end else
     if opendialog.filterindex = 2 then
     begin
-      dxf2paths(opendialog.filename, page);
-    end else
-    if opendialog.filterindex = 3 then
-    begin
       if importform.showmodal = mrok then
       begin
         bit := tbgrabitmap.create;
@@ -571,7 +564,6 @@ begin
         schedulerlist.add('screen.update');
       end;
     schedulerlist.add('driver.run');
-    schedulerlist.add('driver.movez+');
     schedulerlist.add('driver.movetoorigin');
     scheduler.enabled := true;
   end else
@@ -1040,12 +1032,12 @@ begin
     if (schedulerlist[0] = 'driver.run') then
     begin
       driver := txypdriver.create(setting, serialstream);
-      driver.onerror  := @onplottererror;
-      driver.onstart  := @onplotterstart;
-      driver.onstop   := @onplotterstop;
+      driver.onerror := @onplottererror;
+      driver.onstart := @onplotterstart;
+      driver.onstop  := @onplotterstop;
       driver.init;
 
-      path     := txyppolygonal.create;
+      path     := nil;
       point1.x := 0;
       point1.y := 0;
       xoffset  := pagewidth *setting.xfactor + setting.xoffset;
@@ -1053,8 +1045,8 @@ begin
       for i := 0 to page.count -1 do
       begin
         element := page.items[i];
-        element.interpolate(path, max(setting.pxratio, setting.pyratio));
-        for j := 0 to path.count -1 do
+        element.interpolate(path, 0.05);
+        for j := 0 to high(path) do
         begin
           point2 := path[j];
           if (abs(point2.x) < (pagewidth /2+2)) and
@@ -1073,9 +1065,8 @@ begin
             point1 := point2;
           end;
         end;
-        path.clear;
+        path := nil;
       end;
-      path.destroy;
       driver.start;
       lock;
     end else

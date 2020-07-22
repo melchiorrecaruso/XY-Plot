@@ -236,11 +236,11 @@ void setup() {
   LoopDelay = 400;
   RampIndex = 1;
   RampKB = 40000;
-  RampKI = 1;
-  xCount = 0;
-  yCount = 0;
+  RampKI =  1;
+  xCount =  0;
+  yCount =  0;
   zCount = motorZ.read();
-  zDelay = 4;  
+  zDelay =  4;  
 }
 
 // Main Loop

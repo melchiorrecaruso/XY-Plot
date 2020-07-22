@@ -35,11 +35,13 @@ implementation
 
 procedure element2paths(element: tsvgelement; elements: txypelementlist);
 var
-      bmp: tbgrabitmap;
+  bmp: tbgrabitmap;
   content: tsvgcontent;
-        i: longint;
-     line: txypline;
-   points: arrayoftpointf;
+  i: longint;
+  line: txypline;
+  points: arrayoftpointf;
+  point: txyppoint;
+  poly: txyppolygonal;
 begin
   bmp := tbgrabitmap.create;
   bmp.canvas2d.fontrenderer := tbgravectorizedfontrenderer.create;
@@ -48,8 +50,7 @@ begin
      (element is tsvgcircle    ) or
      (element is tsvgellipse   ) or
      (element is tsvgpath      ) or
-     (element is tsvgtext      ) or
-     (element is tsvgpolypoints) then
+     (element is tsvgtext      ) then
   begin
     element.draw(bmp.canvas2d, cucustom);
     points := bmp.canvas2d.currentpath;
@@ -64,6 +65,25 @@ begin
         if xypmath.length(line) > 0 then
           elements.add(txypelementline.create(line));
       end;
+    setlength(points, 0);
+  end else
+  if (element is tsvgpolypoints) then
+  begin
+    element.draw(bmp.canvas2d, cucustom);
+    points := bmp.canvas2d.currentpath;
+    poly := txyppolygonal.create;
+    for i := 0 to system.length(points) -1 do
+      if (not isemptypointf(points[i])) then
+      begin
+        point.x := points[i].x;
+        point.y := points[i].y;
+        poly.add(point);
+      end;
+
+    if poly.count = 0 then
+      poly.destroy
+    else
+      elements.add(txypelementpolygonal.create(poly));
     setlength(points, 0);
   end else
   if (element is tsvggroup) then
@@ -86,6 +106,7 @@ var
     i: longint;
   svg: tbgrasvg;
 begin
+  xyplog.add(format('      LOAD::FILE %s', [afilename]));
   svg := tbgrasvg.create(afilename);
   for i := 0 to svg.content.elementcount -1 do
     if svg.content.issvgelement[i] then

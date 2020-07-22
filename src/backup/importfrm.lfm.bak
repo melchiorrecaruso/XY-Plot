@@ -1,0 +1,173 @@
+object importform: Timportform
+  Left = 586
+  Height = 200
+  Top = 224
+  Width = 330
+  BorderStyle = bsDialog
+  Caption = 'Import ...'
+  ClientHeight = 200
+  ClientWidth = 330
+  Color = clWindow
+  LCLVersion = '2.1.0.0'
+  object methodcb: TComboBox
+    AnchorSideLeft.Control = methodlb
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 109
+    Height = 23
+    Top = 10
+    Width = 211
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 15
+    BorderSpacing.Top = 10
+    BorderSpacing.Right = 10
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'Raster graphics - Square wave'
+      'Raster graphics - Rounded square wave'
+      'Raster graphics - Triangular wave'
+    )
+    Style = csDropDownList
+    TabOrder = 0
+    Text = 'Raster graphics - Square wave'
+  end
+  object patternpxlb: TLabel
+    AnchorSideLeft.Control = methodlb
+    AnchorSideTop.Control = patternpxse
+    AnchorSideBottom.Control = patternpxse
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 23
+    Top = 43
+    Width = 134
+    Anchors = [akTop, akLeft, akBottom]
+    Caption = 'Image pattern witdh (px):'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object patternmmlb: TLabel
+    AnchorSideLeft.Control = patternpxlb
+    AnchorSideTop.Control = patternmmse
+    AnchorSideBottom.Control = patternmmse
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 23
+    Top = 76
+    Width = 59
+    Anchors = [akTop, akLeft, akBottom]
+    Caption = 'Page width'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object dotsizelb: TLabel
+    AnchorSideLeft.Control = patternmmlb
+    AnchorSideTop.Control = dotsizese
+    AnchorSideBottom.Control = dotsizese
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 23
+    Top = 109
+    Width = 77
+    Anchors = [akTop, akLeft, akBottom]
+    Caption = 'Dot size (mm):'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object methodlb: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = methodcb
+    AnchorSideRight.Control = methodcb
+    AnchorSideBottom.Control = methodcb
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 23
+    Top = 10
+    Width = 84
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Left = 10
+    Caption = 'Import method:'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object patternpxse: TFloatSpinEdit
+    AnchorSideLeft.Control = patternmmse
+    AnchorSideTop.Control = methodcb
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = methodcb
+    AnchorSideRight.Side = asrBottom
+    Left = 84
+    Height = 23
+    Top = 43
+    Width = 236
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 10
+    DecimalPlaces = 0
+    MaxValue = 999999999
+    MinValue = 1
+    TabOrder = 1
+    Value = 10
+  end
+  object patternmmse: TFloatSpinEdit
+    AnchorSideLeft.Control = patternmmlb
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = patternpxse
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = patternpxse
+    AnchorSideRight.Side = asrBottom
+    Left = 84
+    Height = 23
+    Top = 76
+    Width = 236
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 15
+    BorderSpacing.Top = 10
+    DecimalPlaces = 0
+    MaxValue = 999999999
+    MinValue = 5
+    TabOrder = 2
+    Value = 500
+  end
+  object dotsizese: TFloatSpinEdit
+    AnchorSideLeft.Control = patternmmse
+    AnchorSideTop.Control = patternmmse
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = patternmmse
+    AnchorSideRight.Side = asrBottom
+    Left = 84
+    Height = 23
+    Top = 109
+    Width = 236
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 10
+    Increment = 0.1
+    MaxValue = 999999999
+    MinValue = 0.05
+    TabOrder = 3
+    Value = 0.4
+  end
+  object okbtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = dotsizese
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 32
+    Top = 158
+    Width = 310
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 10
+    BorderSpacing.Bottom = 10
+    Caption = '&OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 4
+  end
+end

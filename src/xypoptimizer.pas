@@ -41,7 +41,6 @@ type
     flist: txypelementlist;
     fpercentage: longint;
     fsubpaths: tfplist;
-    fontick: tthreadmethod;
     fonstart: tthreadmethod;
     fonstop: tthreadmethod;
     function getfirst(const p: txyppoint): longint;
@@ -57,7 +56,6 @@ type
     procedure execute; override;
   public
     property cleanup: double read fcleanup write fcleanup;
-    property ontick:  tthreadmethod read fontick  write fontick;
     property onstart: tthreadmethod read fonstart write fonstart;
     property onstop:  tthreadmethod read fonstop  write fonstop;
     property percentage: longint read fpercentage;
@@ -236,8 +234,6 @@ begin
   while flist.count > 0 do
   begin
     fpercentage := round(100*(1-(flist.count/totalcount)));
-    if assigned(fontick) then
-      synchronize(fontick);
     // create new subpath
     subpath := txypelementlist.create;
     subpath.add(flist.extract(getnext(last)));

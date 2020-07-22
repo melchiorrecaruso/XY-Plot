@@ -25,7 +25,7 @@ program xyplot;
 
 uses
  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms,
- aboutfrm, debugfrm, mainfrm, settingfrm, xypdebug;
+ aboutfrm, debugfrm, importfrm, mainfrm, settingfrm, xypdebug;
 
 {$R *.res}
 
@@ -37,6 +37,7 @@ begin
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);
   application.createform(tdebugform, debugform);
+  application.createform(timportform, importform);
   application.createform(tsettingform, settingform);
   application.run;
 end.

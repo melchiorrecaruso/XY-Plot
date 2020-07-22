@@ -26,8 +26,8 @@ unit aboutfrm;
 interface
 
 uses
-  classes, controls, dialogs, extctrls, fileutil, forms,
-  graphics, lclintf, lresources, stdctrls, sysutils;
+  classes, sysutils, fileutil, lresources, forms, controls,
+  graphics, dialogs, extctrls, stdctrls, lclintf;
 
 type
 

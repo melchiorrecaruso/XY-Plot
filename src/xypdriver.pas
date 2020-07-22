@@ -41,13 +41,14 @@ type
     fsetting: txypsetting;
     fstream: tmemorystream;
     fxcount: longint;
+    fxreverse: boolean;
     fycount: longint;
+    fyreverse: boolean;
     fzcount: longint;
+    fzreverse: boolean;
     fonerror: tthreadmethod;
-    foninit: tthreadmethod;
     fonstart: tthreadmethod;
     fonstop: tthreadmethod;
-    fontick: tthreadmethod;
     procedure createramps;
     procedure destroyramps;
   public
@@ -61,14 +62,15 @@ type
     property enabled: boolean read fenabled write fenabled;
     property message: string read fmessage;
     property onerror: tthreadmethod read fonerror write fonerror;
-    property oninit:  tthreadmethod read foninit  write foninit;
     property onstart: tthreadmethod read fonstart write fonstart;
     property onstop:  tthreadmethod read fonstop  write fonstop;
-    property ontick:  tthreadmethod read fontick  write fontick;
     property percentage: longint read fpercentage;
     property xcount:  longint read fxcount;
     property ycount:  longint read fycount;
     property zcount:  longint read fzcount;
+    property xreverse: boolean read fxreverse write fxreverse;
+    property yreverse: boolean read fyreverse write fyreverse;
+    property zreverse: boolean read fzreverse write fzreverse;
   end;
 
 type
@@ -155,7 +157,7 @@ end;
 constructor txypdriverengine.create(asetting: txypsetting);
 begin
   inherited create;
-  fsetting := asetting;
+  fsetting  := asetting;
 end;
 
 destructor txypdriverengine.destroy;
@@ -247,24 +249,25 @@ end;
 
 constructor txypdriver.create(asetting: txypsetting; aserial: txypserialstream);
 begin
-  fenabled := true;
-  fmessage := '';
-  fsetting := asetting;
-  frampkb  := fsetting.rampkb;
-  frampki  := fsetting.rampki;
-  frampkl  := fsetting.rampkl;
-  fserial  := aserial;
-  fsetting := asetting;
-  fstream  := tmemorystream.create;
-  fxcount  := 0;
-  fycount  := 0;
-  fzcount  := 0;
+  fenabled  := true;
+  fmessage  := '';
+  fsetting  := asetting;
+  frampkb   := fsetting.rampkb;
+  frampki   := fsetting.rampki;
+  frampkl   := fsetting.rampkl;
+  fserial   := aserial;
+  fsetting  := asetting;
+  fstream   := tmemorystream.create;
+  fxcount   := 0;
+  fxreverse := fsetting.pxdir < 0;
+  fycount   := 0;
+  fyreverse := fsetting.pydir < 0;
+  fzcount   := 0;
+  fzreverse := fsetting.servozdir < 0;
 
-  fonerror := nil;
-  foninit  := nil;
-  fonstart := nil;
-  fonstop  := nil;
-  fontick  := nil;
+  fonerror  := nil;
+  fonstart  := nil;
+  fonstop   := nil;
   freeonterminate := true;
   inherited create(true);
 end;
@@ -281,9 +284,8 @@ end;
 procedure txypdriver.init;
 begin
   xyplog.add('    DRIVER::INIT');
-
-  fstream.clear;
   fserial.clear;
+  fstream.clear;
   if (not serverget(fserial, server_getxcount, fxcount)) or
      (not serverget(fserial, server_getycount, fycount)) or
      (not serverget(fserial, server_getzcount, fzcount)) or
@@ -302,7 +304,18 @@ var
   b1: byte;
   dx: longint;
   dy: longint;
+  ct: longint;
 begin
+  if fsetting.pagedir < 0 then
+  begin
+    ct := cx;
+    cx := cy;
+    cy := ct;
+  end;
+
+  if fxreverse then cx := -1*cx;
+  if fyreverse then cy := -1*cy;
+
   b0 := %00000000;
   dx := (cx - fxcount);
   dy := (cy - fycount);
@@ -337,6 +350,8 @@ var
   b1: byte;
   dz: longint;
 begin
+  if fzreverse then cz := -1*cz;
+
   b0 := %00000000;
   dz := (cz - fzcount);
   if (dz < 0) then setbit(b0, 5);
@@ -368,7 +383,6 @@ var
   i, j, k, r: longint;
 begin
   xyplog.add('    DRIVER::CREATE RAMPS');
-
   bufsize := fstream.size;
   if bufsize > 0 then
   begin
@@ -448,7 +462,6 @@ var
   streamwrote: int64;
 begin
   xyplog.add('    DRIVER::RUN ...');
-
   if assigned(onstart) then
     synchronize(fonstart);
   createramps;
@@ -471,8 +484,6 @@ begin
   begin
     inc(streamwrote, fserial.write(bf, bs));
     fpercentage := round(100*(streamwrote/streamsize));
-    if assigned(fontick) then
-      synchronize(ontick);
     // get server buffer free-space
     repeat
       bs := 0;
@@ -523,8 +534,6 @@ begin
     if assigned(fonerror) then
       synchronize(fonerror);
   end;
-  if assigned(foninit) then
-    synchronize(foninit);
   if assigned(fonstop) then
     synchronize(fonstop);
 end;

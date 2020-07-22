@@ -1,5 +1,5 @@
 {
-  Description: XY-Plot debug form.
+  Description: XY-Plot import form.
 
   Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
@@ -19,33 +19,42 @@
   MA 02111-1307, USA.
 }
 
-unit debugfrm;
+unit importfrm;
 
-{$mode objfpc}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  classes, sysutils, forms, controls, graphics, dialogs, stdctrls;
+  classes, sysutils, bgrabitmap, forms, controls, graphics,
+  dialogs, stdctrls, spin, buttons, extctrls;
 
 type
 
-  { tdebugform }
+  { timportform }
 
-  tdebugform = class(tform)
-    memo: tmemo;
+  timportform = class(tform)
+    okbtn: tbitbtn;
+    methodcb: tcombobox;
+    patternpxse: tfloatspinedit;
+    patternmmse: tfloatspinedit;
+    dotsizese: tfloatspinedit;
+    patternpxlb: tlabel;
+    patternmmlb: tlabel;
+    dotsizelb: tlabel;
+    methodlb: tlabel;
   private
   public
   end;
 
 var
-  debugform: tdebugform;
+  importform: timportform;
 
 implementation
 
 {$R *.lfm}
 
-{ tdebugform }
+{ timportform }
 
 end.
 

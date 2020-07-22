@@ -1,7 +1,7 @@
 object tmainform: tmainform
   Left = 247
   Height = 650
-  Top = 56
+  Top = 65
   Width = 920
   Anchors = []
   Caption = 'XY-Plot Client'
@@ -629,6 +629,7 @@ object tmainform: tmainform
       Caption = 'Connect'
       Constraints.MaxHeight = 32
       Constraints.MinHeight = 32
+      Default = True
       Images = btnimages
       ImageIndex = 12
       OnClick = connectbtnclick
@@ -2299,7 +2300,7 @@ object tmainform: tmainform
     Top = 352
   end
   object opendialog: TOpenPictureDialog
-    Filter = 'Scalable vector graphics (*.svg)|*.svg;|Drawing interchange format (*.dxf)|*.dxf;|Raster graphics (*.bmp, *.png)|*.bmp;*.png;'
+    Filter = 'Scalable vector graphics (*.svg)|*.svg;|Raster graphics (*.bmp, *.png)|*.bmp;*.png;'
     FilterIndex = 0
     Options = [ofPathMustExist, ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 352

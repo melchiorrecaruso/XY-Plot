@@ -26,15 +26,16 @@ unit settingfrm;
 interface
 
 uses
-  classes, sysutils, forms, controls, graphics, dialogs,
-  valedit, extctrls, buttons, xypmath, xypsetting;
+  classes, sysutils, forms, controls, graphics,
+  dialogs, valedit, extctrls, buttons, xypsetting;
 
 type
+
   { tsettingform }
 
   tsettingform = class(tform)
-    closebtn: TBitBtn;
     btnok: TBitBtn;
+    closebtn: TBitBtn;
     image: timage;
     settinglist: tvaluelisteditor;
   private
@@ -59,19 +60,22 @@ begin
   settinglist.titlecaptions.add('KEY');
   settinglist.titlecaptions.add('VALUE');
 
-  settinglist.insertrow('X.OFFSET',  floattostr(asetting.xoffset), true);
-  settinglist.insertrow('X.FACTOR',  floattostr(asetting.xfactor), true);
-  settinglist.insertrow('Y.OFFSET',  floattostr(asetting.yoffset), true);
-  settinglist.insertrow('Y.FACTOR',  floattostr(asetting.yfactor), true);
+  settinglist.insertrow('X.OFFSET', floattostr(asetting.xoffset), true);
+  settinglist.insertrow('X.FACTOR', floattostr(asetting.xfactor), true);
+  settinglist.insertrow('Y.OFFSET', floattostr(asetting.yoffset), true);
+  settinglist.insertrow('Y.FACTOR', floattostr(asetting.yfactor), true);
 
-  settinglist.insertrow('PULLEY-X.RATIO',  floattostr(asetting.pxratio), true);
-  settinglist.insertrow('PULLEY-Y.RATIO',  floattostr(asetting.pyratio), true);
-
+  settinglist.insertrow('PULLEY-X.RATIO', floattostr(asetting.pxratio), true);
+  settinglist.insertrow('PULLEY-X.DIR',   inttostr  (asetting.pxdir),   true);
+  settinglist.insertrow('PULLEY-Y.RATIO', floattostr(asetting.pyratio), true);
+  settinglist.insertrow('PULLEY-Y.DIR',   inttostr  (asetting.pydir),   true);
   settinglist.insertrow('SERVO-Z.VALUE-0', floattostr(asetting.servozvalue0), true);
   settinglist.insertrow('SERVO-Z.VALUE-1', floattostr(asetting.servozvalue1), true);
+  settinglist.insertrow('SERVO-Z.DIR',     inttostr  (asetting.servozdir),    true);
 
   settinglist.insertrow('PAGE.HEIGHT', floattostr(asetting.pageheight), true);
   settinglist.insertrow('PAGE.WIDTH',  floattostr(asetting.pagewidth),  true);
+  settinglist.insertrow('PAGE.DIR',    inttostr  (asetting.pagedir),    true);
 
   settinglist.insertrow('RAMP.KB', floattostr(asetting.rampkb), true);
   settinglist.insertrow('RAMP.KI', floattostr(asetting.rampki), true);
@@ -86,14 +90,19 @@ begin
   asetting.yoffset := strtofloat(settinglist.values['Y.OFFSET']);
   asetting.yfactor := strtofloat(settinglist.values['Y.FACTOR']);
 
-  asetting.pxratio := strtofloat(settinglist.values['PULLEY-X.RATIO' ]);
-  asetting.pyratio := strtofloat(settinglist.values['PULLEY-Y.RATIO' ]);
+  asetting.pxratio := strtofloat(settinglist.values['PULLEY-X.RATIO']);
+  asetting.pxdir   := strtoint  (settinglist.values['PULLEY-X.DIR']);
 
-  asetting.servozvalue0 := strtoint  (settinglist.values['SERVO-Z.VALUE-0']);
-  asetting.servozvalue1 := strtoint  (settinglist.values['SERVO-Z.VALUE-1']);
+  asetting.pyratio := strtofloat(settinglist.values['PULLEY-Y.RATIO']);
+  asetting.pydir   := strtoint  (settinglist.values['PULLEY-Y.DIR']);
+
+  asetting.servozvalue0 := strtoint(settinglist.values['SERVO-Z.VALUE-0']);
+  asetting.servozvalue1 := strtoint(settinglist.values['SERVO-Z.VALUE-1']);
+  asetting.servozdir    := strtoint(settinglist.values['SERVO-Z.DIR']);
 
   asetting.pageheight := strtofloat(settinglist.values['PAGE.HEIGHT']);
   asetting.pagewidth  := strtofloat(settinglist.values['PAGE.WIDTH']);
+  asetting.pagedir    := strtoint  (settinglist.values['PAGE.DIR']);
 
   asetting.rampkb := strtoint(settinglist.values['RAMP.KB']);
   asetting.rampki := strtoint(settinglist.values['RAMP.KI']);
