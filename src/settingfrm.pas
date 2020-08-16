@@ -34,8 +34,8 @@ type
   { tsettingform }
 
   tsettingform = class(tform)
-    btnok: TBitBtn;
-    closebtn: TBitBtn;
+    btnok: tbitbtn;
+    closebtn: tbitbtn;
     image: timage;
     settinglist: tvaluelisteditor;
   private

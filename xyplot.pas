@@ -25,14 +25,14 @@ program xyplot;
 
 uses
  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms,
- aboutfrm, debugfrm, importfrm, mainfrm, settingfrm, xypdebug;
+ aboutfrm, debugfrm, importfrm, mainfrm, settingfrm, xypdebug, xypfiller;
 
 {$R *.res}
 
 begin
   requirederivedformresource := true;
-  Application.Scaled:=True;
-  Application.Title:='XY-Plot Client';
+  application.scaled := true;
+  application.title := 'XY-Plot Client';
   application.initialize;
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);

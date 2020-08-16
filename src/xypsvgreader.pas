@@ -27,7 +27,7 @@ interface
 
 uses
   bgrabitmap, bgrabitmaptypes, bgrasvg, bgrasvgshapes, bgrasvgtype,
-  bgravectorize, classes, sysutils, xypdebug, xypmath, xyppaths;
+  bgravectorize, classes, sysutils, xypdebug, xypfiller, xypmath, xyppaths;
 
 procedure svg2paths(const afilename: string; elements: txypelementlist);
 
@@ -45,12 +45,7 @@ var
 begin
   bmp := tbgrabitmap.create;
   bmp.canvas2d.fontrenderer := tbgravectorizedfontrenderer.create;
-  if (element is tsvgline      ) or
-     (element is tsvgrectangle ) or
-     (element is tsvgcircle    ) or
-     (element is tsvgellipse   ) or
-     (element is tsvgpath      ) or
-     (element is tsvgtext      ) then
+  if (element is tsvgline) then
   begin
     element.draw(bmp.canvas2d, cucustom);
     points := bmp.canvas2d.currentpath;
@@ -63,11 +58,18 @@ begin
         line.p1.x := points[i + 1].x;
         line.p1.y := points[i + 1].y;
         if xypmath.length(line) > 0 then
+        begin
           elements.add(txypelementline.create(line));
+        end;
       end;
     setlength(points, 0);
   end else
-  if (element is tsvgpolypoints) then
+  if (element is tsvgpolypoints) or
+     (element is tsvgrectangle ) or
+     (element is tsvgcircle    ) or
+     (element is tsvgellipse   ) or
+     (element is tsvgtext      ) or
+     (element is tsvgpath      ) then
   begin
     element.draw(bmp.canvas2d, cucustom);
     points := bmp.canvas2d.currentpath;
@@ -78,12 +80,22 @@ begin
         point.x := points[i].x;
         point.y := points[i].y;
         poly.add(point);
+      end else
+      begin
+        if poly.count > 0 then
+        begin
+          elements.add(txypelementpolygonal.create(poly));
+          poly := txyppolygonal.create;
+        end;
       end;
 
-    if poly.count = 0 then
-      poly.destroy
-    else
+    if poly.count > 0 then
+    begin
       elements.add(txypelementpolygonal.create(poly));
+      poly := txyppolygonal.create;
+    end;
+    poly.destroy;
+
     setlength(points, 0);
   end else
   if (element is tsvggroup) then
@@ -103,16 +115,46 @@ end;
 
 procedure svg2paths(const afilename: string; elements: txypelementlist);
 var
-    i: longint;
+  i: longint;
+  bit: tbgrabitmap;
+  dotsize: single;
+  filler: txypfiller;
+  path: txypelementlist;
   svg: tbgrasvg;
+  zoom: single;
 begin
   xyplog.add(format('      LOAD::FILE %s', [afilename]));
   svg := tbgrasvg.create(afilename);
+
+  dotsize := 0.4;
+  zoom := (dotsize*svg.defaultdpi)/25.4;
+
+  bit := tbgrabitmap.create;
+  bit.fontrenderer := tbgravectorizedfontrenderer.create;
+  bit.setsize(round(svg.widthaspixel*zoom), round(svg.heightaspixel*zoom));
+  bit.fill(bgrawhite);
+
+  svg.stretchdraw(bit.canvas2d, 0, 0, bit.width, bit.height, true);
+
+  path := txypelementlist.create;
+  filler := txypfiller.create(bit, dotsize);
+  filler.update(path);
+  filler.destroy;
+
+  path.scale(1/(zoom*zoom));
+  path.move(-0.42, -0.42);
+  while path.count > 0 do
+  begin
+    elements.add(path.extract(0));
+  end;
+  path.destroy;
+
   for i := 0 to svg.content.elementcount -1 do
-    if svg.content.issvgelement[i] then
-    begin
-      element2paths(svg.content.element[i], elements);
-    end;
+  if svg.content.issvgelement[i] then
+  begin
+    element2paths(svg.content.element[i], elements);
+  end;
+  bit.destroy;
   svg.destroy;
 
   elements.mirrorx;

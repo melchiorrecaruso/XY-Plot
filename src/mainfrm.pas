@@ -30,7 +30,7 @@ uses
   buttons, classes, comctrls, controls, dialogs, extctrls, forms, graphics,
   menus, spin, stdctrls, shellctrls, xmlpropstorage, ExtDlgs, dividerbevel,
   spinex, xypdriver, xyppaths, xypmath, xypoptimizer, xypserial, xypsetting,
-  xypsketcher;
+  xypsketcher, bgrasvg, bgrasvgshapes, bgrasvgtype;
 
 type
   { tmainform }
@@ -218,7 +218,7 @@ implementation
 
 uses
   aboutfrm, importfrm, debugfrm, math, settingfrm, sysutils,
-  xypdebug, xypdxfreader, xypsvgreader;
+  xypdebug, xypfiller, xypdxfreader, xypsvgreader;
 
 // SCREEN THREAD
 

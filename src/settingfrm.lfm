@@ -1,15 +1,16 @@
 object settingform: Tsettingform
-  Left = 590
-  Height = 343
-  Top = 216
-  Width = 571
+  Left = 424
+  Height = 514
+  Top = 206
+  Width = 856
   AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Layout setup ...'
-  ClientHeight = 343
-  ClientWidth = 571
+  ClientHeight = 514
+  ClientWidth = 856
   Color = clWindow
+  DesignTimePPI = 144
   Position = poOwnerFormCenter
   LCLVersion = '2.1.0.0'
   object settinglist: TValueListEditor
@@ -19,38 +20,39 @@ object settingform: Tsettingform
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = image
     AnchorSideBottom.Side = asrBottom
-    Left = 295
+    Left = 307
     Height = 270
-    Top = 10
-    Width = 250
+    Top = 15
+    Width = 375
     Anchors = [akTop, akLeft, akBottom]
-    BorderSpacing.Left = 15
-    BorderSpacing.Top = 10
-    BorderSpacing.Right = 20
-    DefaultColWidth = 140
+    BorderSpacing.Left = 22
+    BorderSpacing.Top = 15
+    BorderSpacing.Right = 30
+    DefaultColWidth = 210
     FixedCols = 0
     Flat = True
+    ParentFont = False
     RowCount = 2
     TabOrder = 0
     TitleFont.Style = [fsBold]
     TitleStyle = tsStandard
     ColWidths = (
-      140
-      109
+      210
+      164
     )
   end
   object image: TImage
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    Left = 10
+    Left = 15
     Height = 270
-    Top = 10
+    Top = 15
     Width = 270
     AutoSize = True
-    BorderSpacing.Left = 10
-    BorderSpacing.Top = 10
-    BorderSpacing.Right = 4
-    BorderSpacing.Bottom = 6
+    BorderSpacing.Left = 15
+    BorderSpacing.Top = 15
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 9
     Picture.Data = {
       1754506F727461626C654E6574776F726B477261706869637B24000089504E47
       0D0A1A0A0000000D494844520000010E0000010E080600000078B1F9A5000000
@@ -355,16 +357,17 @@ object settingform: Tsettingform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = settinglist
     AnchorSideRight.Side = asrBottom
-    Left = 425
-    Height = 32
-    Top = 290
-    Width = 120
+    Left = 502
+    Height = 48
+    Top = 300
+    Width = 180
     Anchors = [akTop, akRight]
-    BorderSpacing.Top = 10
-    BorderSpacing.Bottom = 15
+    BorderSpacing.Top = 15
+    BorderSpacing.Bottom = 22
     Caption = 'Ok'
     Default = True
     ModalResult = 1
+    ParentFont = False
     TabOrder = 1
   end
   object closebtn: TBitBtn
@@ -372,13 +375,14 @@ object settingform: Tsettingform
     AnchorSideTop.Control = btnok
     AnchorSideBottom.Control = btnok
     AnchorSideBottom.Side = asrBottom
-    Left = 295
-    Height = 32
-    Top = 290
-    Width = 120
+    Left = 307
+    Height = 48
+    Top = 300
+    Width = 180
     Anchors = [akTop, akLeft, akBottom]
     Caption = 'Cancel'
     ModalResult = 2
+    ParentFont = False
     TabOrder = 2
   end
 end
