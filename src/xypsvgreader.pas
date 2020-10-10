@@ -126,6 +126,7 @@ begin
   xyplog.add(format('      LOAD::FILE %s', [afilename]));
   svg := tbgrasvg.create(afilename);
 
+  (*
   dotsize := 0.4;
   zoom := (dotsize*svg.defaultdpi)/25.4;
 
@@ -148,13 +149,14 @@ begin
     elements.add(path.extract(0));
   end;
   path.destroy;
+  bit.destroy;
+  *)
 
   for i := 0 to svg.content.elementcount -1 do
   if svg.content.issvgelement[i] then
   begin
     element2paths(svg.content.element[i], elements);
   end;
-  bit.destroy;
   svg.destroy;
 
   elements.mirrorx;
