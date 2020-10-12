@@ -65,7 +65,6 @@ type
 implementation
 
 const
-
   gap = 0.02;
 
 // txyppathoptimizer

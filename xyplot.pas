@@ -25,7 +25,7 @@ program xyplot;
 
 uses
  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms,
- aboutfrm, debugfrm, importfrm, mainfrm, settingfrm, xypdebug, xypfiller;
+ aboutfrm, debugfrm, importfrm, mainfrm, settingfrm, xypdebug;
 
 {$R *.res}
 

@@ -27,7 +27,7 @@ interface
 
 uses
   bgrabitmap, bgrabitmaptypes, bgrasvg, bgrasvgshapes, bgrasvgtype,
-  bgravectorize, classes, sysutils, xypdebug, xypfiller, xypmath, xyppaths;
+  bgravectorize, classes, sysutils, xypdebug, xypmath, xyppaths;
 
 procedure svg2paths(const afilename: string; elements: txypelementlist);
 
@@ -116,41 +116,10 @@ end;
 procedure svg2paths(const afilename: string; elements: txypelementlist);
 var
   i: longint;
-  bit: tbgrabitmap;
-  dotsize: single;
-  filler: txypfiller;
-  path: txypelementlist;
   svg: tbgrasvg;
-  zoom: single;
 begin
   xyplog.add(format('      LOAD::FILE %s', [afilename]));
   svg := tbgrasvg.create(afilename);
-
-  (*
-  dotsize := 0.4;
-  zoom := (dotsize*svg.defaultdpi)/25.4;
-
-  bit := tbgrabitmap.create;
-  bit.fontrenderer := tbgravectorizedfontrenderer.create;
-  bit.setsize(round(svg.widthaspixel*zoom), round(svg.heightaspixel*zoom));
-  bit.fill(bgrawhite);
-
-  svg.stretchdraw(bit.canvas2d, 0, 0, bit.width, bit.height, true);
-
-  path := txypelementlist.create;
-  filler := txypfiller.create(bit, dotsize);
-  filler.update(path);
-  filler.destroy;
-
-  path.scale(1/(zoom*zoom));
-  path.move(-0.42, -0.42);
-  while path.count > 0 do
-  begin
-    elements.add(path.extract(0));
-  end;
-  path.destroy;
-  bit.destroy;
-  *)
 
   for i := 0 to svg.content.elementcount -1 do
   if svg.content.issvgelement[i] then

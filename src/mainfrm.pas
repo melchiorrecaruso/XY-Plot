@@ -218,7 +218,7 @@ implementation
 
 uses
   aboutfrm, importfrm, debugfrm, math, settingfrm, sysutils,
-  xypdebug, xypfiller, xypdxfreader, xypsvgreader;
+  xypdebug, xypdxfreader, xypsvgreader;
 
 // SCREEN THREAD
 
