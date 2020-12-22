@@ -39,15 +39,13 @@ type
     fpageheight: double;
     fpagewidth:  double;
     fpagedir: longint;
-    // pulley-x/y
+    // pulley-x/y/z
     fpxratio: double;
     fpxdir: longint;
     fpyratio: double;
     fpydir: longint;
-    // servo-z
-    fservozvalue0: longint;
-    fservozvalue1: longint;
-    fservozdir: longint;
+    fpzratio: double;
+    fpzdir: longint;
     // ramps
     frampkb: longint;
     frampki: longint;
@@ -64,14 +62,12 @@ type
     property xoffset: double read fxoffset write fxoffset;
     property yoffset: double read fyoffset write fyoffset;
 
-
     property pxratio: double read fpxratio write fpxratio;
     property pxdir: longint read fpxdir write fpxdir;
     property pyratio: double read fpyratio write fpyratio;
     property pydir: longint read fpydir write fpydir;
-    property servozvalue0: longint read fservozvalue0 write fservozvalue0;
-    property servozvalue1: longint read fservozvalue1 write fservozvalue1;
-    property servozdir: longint read fservozdir write fservozdir;
+    property pzratio: double read fpzratio write fpzratio;
+    property pzdir: longint read fpzdir write fpzdir;
 
     property rampkb: longint read frampkb write frampkb;
     property rampki: longint read frampki write frampki;
@@ -142,13 +138,12 @@ begin
     fxfactor := ini.readfloat('LAYOUT', 'X.FACTOR', 0);
     fyfactor := ini.readfloat('LAYOUT', 'Y.FACTOR', 0);
 
-    fpxratio      := ini.readfloat  ('PULLEY-X', 'RATIO',   0);
-    fpxdir        := ini.readinteger('PULLEY-X', 'DIR',     1);
-    fpyratio      := ini.readfloat  ('PULLEY-Y', 'RATIO',   0);
-    fpydir        := ini.readinteger('PULLEY-Y', 'DIR',     1);
-    fservozvalue0 := ini.readinteger('SERVO-Z',  'VALUE-0', 0);
-    fservozvalue1 := ini.readinteger('SERVO-Z',  'VALUE-1', 0);
-    fservozdir    := ini.readinteger('SERVO-Z',  'DIR',     1);
+    fpxratio      := ini.readfloat  ('X-AXIS', 'RATIO', 0);
+    fpxdir        := ini.readinteger('X-AXIS', 'DIR',   1);
+    fpyratio      := ini.readfloat  ('Y-AXIS', 'RATIO', 0);
+    fpydir        := ini.readinteger('Y-AXIS', 'DIR',   1);
+    fpzratio      := ini.readfloat  ('Z-AXIS', 'RATIO', 0);
+    fpzdir        := ini.readinteger('Z-AXIS', 'DIR',   1);
 
     fpageheight := ini.readfloat  ('PAGE', 'HEIGHT', 0);
     fpagewidth  := ini.readfloat  ('PAGE', 'WIDTH',  0);
@@ -163,14 +158,12 @@ begin
     xyplog.add(format('   SETTING::X.FACTOR         %12.5f', [fxfactor]));
     xyplog.add(format('   SETTING::Y.FACTOR         %12.5f', [fyfactor]));
 
-    xyplog.add(format('   SETTING::X.PULLEY-RATIO   %12.5f', [fpxratio]));
-    xyplog.add(format('   SETTING::X.PULLEY-DIR     %12.5d', [fpxdir]));
-    xyplog.add(format('   SETTING::Y.PULLEY-RATIO   %12.5f', [fpyratio]));
-    xyplog.add(format('   SETTING::Y.PULLEY-DIR     %12.5d', [fpydir]));
-
-    xyplog.add(format('   SETTING::Z.SERVO-VALUE-0  %12.5u', [fservozvalue0]));
-    xyplog.add(format('   SETTING::Z.SERVO-VALUE-1  %12.5u', [fservozvalue1]));
-    xyplog.add(format('   SETTING::Z.SERVO-DIR      %12.5d', [fservozdir]));
+    xyplog.add(format('   SETTING::X.RATIO          %12.5f', [fpxratio]));
+    xyplog.add(format('   SETTING::X.DIR            %12.5d', [fpxdir]));
+    xyplog.add(format('   SETTING::Y.RATIO          %12.5f', [fpyratio]));
+    xyplog.add(format('   SETTING::Y.DIR            %12.5d', [fpydir]));
+    xyplog.add(format('   SETTING::Z.RATIO          %12.5f', [fpzratio]));
+    xyplog.add(format('   SETTING::Z.DIR            %12.5d', [fpzdir]));
 
     xyplog.add(format('   SETTING::PAGE.MAXHEIGHT   %12.5f', [fpageheight]));
     xyplog.add(format('   SETTING::PAGE.MAXWIDTH    %12.5f', [fpagewidth]));
@@ -198,13 +191,12 @@ begin
   ini.writefloat('LAYOUT', 'X.FACTOR', fxfactor);
   ini.writefloat('LAYOUT', 'Y.FACTOR', fyfactor);
 
-  ini.writefloat  ('PULLEY-X', 'RATIO',   fpxratio);
-  ini.writeinteger('PULLEY-X', 'DIR',     fpxdir);
-  ini.writefloat  ('PULLEY-Y', 'RATIO',   fpyratio);
-  ini.writeinteger('PULLEY-Y', 'DIR',     fpydir);
-  ini.writeinteger('SERVO-Z',  'VALUE-0', fservozvalue0);
-  ini.writeinteger('SERVO-Z',  'VALUE-1', fservozvalue1);
-  ini.writeinteger('SERVO-Z',  'DIR',     fservozdir);
+  ini.writefloat  ('X-AXIS', 'RATIO', fpxratio);
+  ini.writeinteger('X-AXIS', 'DIR',   fpxdir);
+  ini.writefloat  ('Y-AXIS', 'RATIO', fpyratio);
+  ini.writeinteger('Y-AXIS', 'DIR',   fpydir);
+  ini.writefloat  ('Z-AXIS', 'RATIO', fpzratio);
+  ini.writeinteger('Z-AXIS', 'DIR',   fpzdir);
 
   ini.writefloat  ('PAGE', 'HEIGHT', fpageheight);
   ini.writefloat  ('PAGE', 'WIDTH',  fpagewidth);

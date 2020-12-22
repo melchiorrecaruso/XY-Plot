@@ -55,8 +55,7 @@ type
     constructor create(asetting: txypsetting; aserial: txypserialstream);
     destructor destroy; override;
     procedure init;
-    procedure move(cx, cy: longint);
-    procedure movez(cz: longint);
+    procedure move(cx, cy,cz: longint);
     procedure execute; override;
   published
     property enabled: boolean read fenabled write fenabled;
@@ -65,9 +64,9 @@ type
     property onstart: tthreadmethod read fonstart write fonstart;
     property onstop:  tthreadmethod read fonstop  write fonstop;
     property percentage: longint read fpercentage;
-    property xcount:  longint read fxcount;
-    property ycount:  longint read fycount;
-    property zcount:  longint read fzcount;
+    property xcount: longint read fxcount;
+    property ycount: longint read fycount;
+    property zcount: longint read fzcount;
     property xreverse: boolean read fxreverse write fxreverse;
     property yreverse: boolean read fyreverse write fyreverse;
     property zreverse: boolean read fzreverse write fzreverse;
@@ -263,7 +262,7 @@ begin
   fycount   := 0;
   fyreverse := fsetting.pydir < 0;
   fzcount   := 0;
-  fzreverse := fsetting.servozdir < 0;
+  fzreverse := fsetting.pzdir < 0;
 
   fonerror  := nil;
   fonstart  := nil;
@@ -286,6 +285,10 @@ begin
   xyplog.add('    DRIVER::INIT');
   fserial.clear;
   fstream.clear;
+  writeln('fxcount=', fxcount);
+  writeln('fycount=', fycount);
+  writeln('fzcount=', fzcount);
+
   if (not serverget(fserial, server_getxcount, fxcount)) or
      (not serverget(fserial, server_getycount, fycount)) or
      (not serverget(fserial, server_getzcount, fzcount)) or
@@ -296,16 +299,24 @@ begin
     if assigned(fonerror) then
       synchronize(fonerror);
   end;
+
+  writeln('fxcount=', fxcount);
+  writeln('fycount=', fycount);
+  writeln('fzcount=', fzcount);
 end;
 
-procedure txypdriver.move(cx, cy: longint);
+procedure txypdriver.move(cx, cy, cz: longint);
 var
   b0: byte;
   b1: byte;
   dx: longint;
   dy: longint;
+  dz: longint;
   ct: longint;
 begin
+  writeln('    DRIVER::', CX, ' ', CY, ' ',CX);
+
+
   if fsetting.pagedir < 0 then
   begin
     ct := cx;
@@ -313,18 +324,22 @@ begin
     cy := ct;
   end;
 
-  if fxreverse then cx := -1*cx;
-  if fyreverse then cy := -1*cy;
+  //if fxreverse then cx := -1*cx;
+  //if fyreverse then cy := -1*cy;
+  //if fzreverse then cz := -1*cz;
 
   b0 := %00000000;
   dx := (cx - fxcount);
   dy := (cy - fycount);
+  dz := (cz - fzcount);
   if (dx < 0) then setbit(b0, 1);
   if (dy < 0) then setbit(b0, 3);
+  if (dz < 0) then setbit(b0, 5);
 
   dx := abs(dx);
   dy := abs(dy);
-  while (dx > 0) or (dy > 0) do
+  dz := abs(dz);
+  while (dx > 0) or (dy > 0) or (dz > 0) do
   begin
     b1 := b0;
     if dx > 0 then
@@ -338,28 +353,7 @@ begin
       setbit(b1, 2);
       dec(dy);
     end;
-    fstream.write(b1, 1);
-  end;
-  fxcount := cx;
-  fycount := cy;
-end;
 
-procedure txypdriver.movez(cz : longint);
-var
-  b0: byte;
-  b1: byte;
-  dz: longint;
-begin
-  if fzreverse then cz := -1*cz;
-
-  b0 := %00000000;
-  dz := (cz - fzcount);
-  if (dz < 0) then setbit(b0, 5);
-
-  dz := abs(dz);
-  while (dz > 0) do
-  begin
-    b1 := b0;
     if dz > 0 then
     begin
       setbit(b1, 4);
@@ -367,6 +361,8 @@ begin
     end;
     fstream.write(b1, 1);
   end;
+  fxcount := cx;
+  fycount := cy;
   fzcount := cz;
 end;
 
@@ -461,6 +457,8 @@ var
   streamsize:  int64;
   streamwrote: int64;
 begin
+  writeln('    DRIVER::RUN ...');
+
   xyplog.add('    DRIVER::RUN ...');
   if assigned(onstart) then
     synchronize(fonstart);
@@ -501,13 +499,13 @@ begin
       until (bs = server_nop) or (terminated);
       // move pen-holder up
       i := 0;
-      j := fsetting.servozvalue1;
-      if (not serverget(fserial, server_getzcount, i)) then terminate;
-      if (not serverset(fserial, server_movz,      j)) then terminate;
+      j := 0;
+      //if (not serverget(fserial, server_getzcount, i)) then terminate;
+      //if (not serverset(fserial, server_movz,      j)) then terminate;
       // waiting ...
-      while (not fenabled) do sleep(500);
+      //while (not fenabled) do sleep(500);
       // move pen-holder down
-      if (not serverset(fserial, server_movz,      i)) then terminate;
+      //if (not serverset(fserial, server_movz,      i)) then terminate;
       // reset buffersize
       bs := sizeof(bf);
     end;
@@ -531,11 +529,12 @@ begin
      ((not serverget(fserial, server_getrampki, i)) or (frampki <> i)) then
   begin
     fmessage := 'Server syncing error !';
-    if assigned(fonerror) then
-      synchronize(fonerror);
+    if assigned(fonerror) then synchronize(fonerror);
   end;
+
   if assigned(fonstop) then
     synchronize(fonstop);
+  writeln('    DRIVER::END');
 end;
 
 end.

@@ -30,7 +30,7 @@ uses
   buttons, classes, comctrls, controls, dialogs, extctrls, forms, graphics,
   menus, spin, stdctrls, shellctrls, xmlpropstorage, ExtDlgs, dividerbevel,
   spinex, xypdriver, xyppaths, xypmath, xypoptimizer, xypserial, xypsetting,
-  xypsketcher, bgrasvg, bgrasvgshapes, bgrasvgtype;
+  xypsketcher, bgrasvg;
 
 type
   { tmainform }
@@ -100,8 +100,8 @@ type
     editingedt: tfloatspinedit;
     editingvaluelb: tlabel;
     pagesizebvl: tdividerbevel;
-    pendownbtn: tbitbtn;
-    penupbtn: tbitbtn;
+    zdownbtn: tbitbtn;
+    zupbtn: tbitbtn;
     portcb: tcombobox;
     portlb: tlabel;
     ydownbtn: tbitbtn;
@@ -119,7 +119,6 @@ type
     procedure connectbtnclick(sender: tobject);
     // CALIBRATION
     procedure motorbtnclick(sender: tobject);
-    procedure penbtnclick  (sender: tobject);
     // IMPORT/CLEAR
     procedure importbtnclick(sender: tobject);
     procedure clearbtnclick (sender: tobject);
@@ -168,6 +167,7 @@ type
     pagesteps: longint;
     pageheight: longint;
     pagewidth: longint;
+    pageformat: string;
     px: longint;
     py: longint;
     screenimage: tbgrabitmap;
@@ -272,6 +272,10 @@ begin
     y1 := y0+trunc(pageheight*zoom)-2;
     screenimage.fillrect(x0, y0, x1, y1, bgra(255, 255, 255), dmset);
 
+    screenimage.canvas.font.bold  := true;
+    screenimage.canvas.font.size  := 12;
+    screenimage.canvas.font.color := bgra(255, 0, 0);
+    screenimage.canvas.textout(5, 2, pageformat);
     // updtare preview ...
     p0 := setting.origin;
     x0 := trunc((pagewidth /2)*zoom);
@@ -423,20 +427,13 @@ end;
 
 procedure tmainform.motorbtnclick(sender: tobject);
 begin
-  schedulerlist.add('driver.movez+');
   if sender = xupbtn   then schedulerlist.add('driver.movex+');
   if sender = xdownbtn then schedulerlist.add('driver.movex-');
   if sender = yupbtn   then schedulerlist.add('driver.movey+');
   if sender = ydownbtn then schedulerlist.add('driver.movey-');
+  if sender = zupbtn   then schedulerlist.add('driver.movez+');
+  if sender = zdownbtn then schedulerlist.add('driver.movez-');
   schedulerlist.add('driver.init');
-  // start scheduler
-  scheduler.enabled := true;
-end;
-
-procedure tmainform.penbtnclick(sender: tobject);
-begin
-  if sender = penupbtn   then schedulerlist.add('driver.movez+');
-  if sender = pendownbtn then schedulerlist.add('driver.movez-');
   // start scheduler
   scheduler.enabled := true;
 end;
@@ -539,19 +536,19 @@ end;
 procedure tmainform.pagesizebtnclick(sender: tobject);
 begin
   case pagesizecb.itemindex of
-    0: begin pagewidth := 1189; pageheight :=  841; end; // A0-Landscape
-    1: begin pagewidth :=  841; pageheight := 1189; end; // A0-Portrait
-    2: begin pagewidth :=  841; pageheight :=  594; end; // A1-Landscape
-    3: begin pagewidth :=  594; pageheight :=  841; end; // A1-Portrait
-    4: begin pagewidth :=  594; pageheight :=  420; end; // A2-Landscape
-    5: begin pagewidth :=  420; pageheight :=  594; end; // A2-Portrait
-    6: begin pagewidth :=  420; pageheight :=  297; end; // A3-Landscape
-    7: begin pagewidth :=  297; pageheight :=  420; end; // A3-Portrait
-    8: begin pagewidth :=  297; pageheight :=  210; end; // A4-Landscape
-    9: begin pagewidth :=  210; pageheight :=  297; end; // A4-Portrait
-   10: begin pagewidth :=  210; pageheight :=  148; end; // A5-Landscape
-   11: begin pagewidth :=  148; pageheight :=  210; end; // A5-Portrait
-  else begin pagewidth :=  420; pageheight :=  297; end  // Default
+    0: begin pagewidth := 1189; pageheight :=  841; pageformat := 'A0'; end; // A0-Landscape
+    1: begin pagewidth :=  841; pageheight := 1189; pageformat := 'A0'; end; // A0-Portrait
+    2: begin pagewidth :=  841; pageheight :=  594; pageformat := 'A1'; end; // A1-Landscape
+    3: begin pagewidth :=  594; pageheight :=  841; pageformat := 'A1'; end; // A1-Portrait
+    4: begin pagewidth :=  594; pageheight :=  420; pageformat := 'A2'; end; // A2-Landscape
+    5: begin pagewidth :=  420; pageheight :=  594; pageformat := 'A2'; end; // A2-Portrait
+    6: begin pagewidth :=  420; pageheight :=  297; pageformat := 'A3'; end; // A3-Landscape
+    7: begin pagewidth :=  297; pageheight :=  420; pageformat := 'A3'; end; // A3-Portrait
+    8: begin pagewidth :=  297; pageheight :=  210; pageformat := 'A4'; end; // A4-Landscape
+    9: begin pagewidth :=  210; pageheight :=  297; pageformat := 'A4'; end; // A4-Portrait
+   10: begin pagewidth :=  210; pageheight :=  148; pageformat := 'A5'; end; // A5-Landscape
+   11: begin pagewidth :=  148; pageheight :=  210; pageformat := 'A5'; end; // A5-Portrait
+  else begin pagewidth :=  420; pageheight :=  297; pageformat := 'A3'; end  // Default
   end;
   xyplog.add(format('      PAGE::WIDTH            %12.5u', [pagewidth]));
   xyplog.add(format('      PAGE::HEIGHT           %12.5u', [pageheight]));
@@ -570,7 +567,7 @@ begin
         schedulerlist.add('optimizer.run');
         schedulerlist.add('screen.update');
       end;
-    schedulerlist.add('driver.run');
+    schedulerlist.add('driver.start');
     schedulerlist.add('driver.movez+');
     schedulerlist.add('driver.movetoorigin');
     scheduler.enabled := true;
@@ -834,8 +831,8 @@ begin
     xdownbtn       .enabled := false;
     yupbtn         .enabled := false;
     ydownbtn       .enabled := false;
-    penupbtn       .enabled := false;
-    pendownbtn     .enabled := false;
+    zupbtn         .enabled := false;
+    zdownbtn       .enabled := false;
     // drawing
     importbtn      .enabled := false;
     clearbtn       .enabled := false;
@@ -879,8 +876,8 @@ begin
     xdownbtn       .enabled := value and serialstream.connected;
     yupbtn         .enabled := value and serialstream.connected;
     ydownbtn       .enabled := value and serialstream.connected;
-    penupbtn       .enabled := value and serialstream.connected;
-    pendownbtn     .enabled := value and serialstream.connected;
+    zupbtn         .enabled := value and serialstream.connected;
+    zdownbtn       .enabled := value and serialstream.connected;
     // drawing
     importbtn      .enabled := value;
     clearbtn       .enabled := value;
@@ -1037,12 +1034,13 @@ begin
       optimizer.start;
       lock;
     end else
-    if (schedulerlist[0] = 'driver.run') then
+    if (schedulerlist[0] = 'driver.start') then
     begin
+      writeln(' SCHEDULER::START ');
       driver := txypdriver.create(setting, serialstream);
-      driver.onerror  := @onplottererror;
-      driver.onstart  := @onplotterstart;
-      driver.onstop   := @onplotterstop;
+      driver.onerror := @onplottererror;
+      driver.onstart := @onplotterstart;
+      driver.onstop  := @onplotterstop;
       driver.init;
 
       path     := txyppolygonal.create;
@@ -1052,8 +1050,13 @@ begin
       yoffset  := pageheight*setting.yfactor + setting.yoffset;
       for i := 0 to page.count -1 do
       begin
+        writeln(' SCHEDULER::NEXT-ELEMENT=', i, '/', page.count);
+
         element := page.items[i];
+        writeln(' SCHEDULER::INTERPOLATE');
         element.interpolate(path, max(setting.pxratio, setting.pyratio));
+
+        writeln(' SCHEDULER::PROCESS');
         for j := 0 to path.count -1 do
         begin
           point2 := path[j];
@@ -1063,18 +1066,22 @@ begin
             point2.x := point2.x + xoffset;
             point2.y := point2.y + yoffset;
 
+            writeln(' SCHEDULER::MOVE-Z');
             if distance(point1, point2) >= 0.2 then
-              driver.movez(setting.servozvalue1)
+              driver.move(driver.xcount, driver.ycount, 0)
             else
-              driver.movez(setting.servozvalue0);
+              driver.move(driver.xcount, driver.ycount, trunc(1/setting.pzratio));
 
+            writeln(' SCHEDULER::CALC-XY');
             driverengine.calcsteps(point2, cx, cy);
-            driver.move(cx, cy);
+            writeln(' SCHEDULER::MOVE');
+            driver.move(cx, cy, driver.zcount);
             point1 := point2;
           end;
         end;
         path.clear;
       end;
+      writeln(' SCHEDULER::END ');
       path.destroy;
       driver.start;
       lock;
@@ -1087,14 +1094,14 @@ begin
       driver.onstop  := @onplotterstop;
       driver.init;
       driverengine.calcsteps(setting.origin, cx, cy);
-      driver.move(cx, cy);
+      driver.move(cx, cy, driver.zcount);
       driver.start;
       lock;
     end else
     if (schedulerlist[0] = 'driver.init') then
     begin
       setting.load(getsettingfilename(true));
-      driverengine.calcsteps(setting.origin, cx,  cy);
+      driverengine.calcsteps(setting.origin, cx, cy);
       if not serverset(serialstream, server_setxcount, cx) then
         messagedlg('XY-Plot Client', 'Axis X syncing error !',   mterror, [mbok], 0);
       if not serverget(serialstream, server_getxcount, cx) then
@@ -1103,10 +1110,11 @@ begin
         messagedlg('XY-Plot Client', 'Axis Y syncing error !',   mterror, [mbok], 0);
       if not serverget(serialstream, server_getycount, cy) then
         messagedlg('XY-Plot Client', 'Axis Y checking error !',  mterror, [mbok], 0);
-    //if not serverset(serialstream, server_setzcount, cz) then
-    //  messagedlg('XY-Plot Client', 'Axis Z syncing error !',   mterror, [mbok], 0);
-    //if not serverget(serialstream, server_getzcount, cz) then
-    //  messagedlg('XY-Plot Client', 'Axis Z checking error !',  mterror, [mbok], 0);
+      cz := 0;
+      if not serverset(serialstream, server_setzcount, cz) then
+        messagedlg('XY-Plot Client', 'Axis Z syncing error !',   mterror, [mbok], 0);
+      if not serverget(serialstream, server_getzcount, cz) then
+        messagedlg('XY-Plot Client', 'Axis Z checking error !',  mterror, [mbok], 0);
       kb := setting.rampkb;
       if not serverset(serialstream, server_setrampkb, kb) then
         messagedlg('XY-Plot Client', 'Ramp KB syncing error !',  mterror, [mbok], 0);
@@ -1118,41 +1126,27 @@ begin
       if not serverget(serialstream, server_getrampki, ki) then
         messagedlg('XY-Plot Client', 'Ramp KI checking error !', mterror, [mbok], 0);
     end else
-    if pos('driver.movez', schedulerlist[0]) = 1 then
-    begin
-      cz := 0;
-      if (schedulerlist[0] = 'driver.movez+') then cz := setting.servozvalue1;
-      if (schedulerlist[0] = 'driver.movez-') then cz := setting.servozvalue0;
-
-      driver := txypdriver.create(setting, serialstream);
-      driver.onerror := @onplottererror;
-      driver.onstart := @onplotterstart;
-      driver.onstop  := @onplotterstop;
-      driver.init;
-      driver.movez(cz);
-      driver.start;
-      lock;
-    end else
     if pos('driver.move', schedulerlist[0]) = 1 then
     begin
       cx := 0;
       cy := 0;
+      cz := 0;
       if (schedulerlist[0] = 'driver.movex+') then cx := +stepnumberedt.value;
       if (schedulerlist[0] = 'driver.movex-') then cx := -stepnumberedt.value;
       if (schedulerlist[0] = 'driver.movey+') then cy := +stepnumberedt.value;
       if (schedulerlist[0] = 'driver.movey-') then cy := -stepnumberedt.value;
+      if (schedulerlist[0] = 'driver.movez+') then cz := +stepnumberedt.value;
+      if (schedulerlist[0] = 'driver.movez-') then cz := -stepnumberedt.value;
 
       driver := txypdriver.create(setting, serialstream);
       driver.onerror := @onplottererror;
       driver.onstart := @onplotterstart;
       driver.onstop  := @onplotterstop;
       driver.init;
-      driver.move (cx + driver.xcount,
-                   cy + driver.ycount);
+      driver.move (cx + driver.xcount, cy + driver.ycount, cz + driver.zcount);
       driver.start;
       lock;
     end;
-
     schedulerlist.delete(0);
   end else
   begin
