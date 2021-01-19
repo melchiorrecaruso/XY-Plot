@@ -30,7 +30,6 @@ uses
   dialogs, valedit, extctrls, buttons, xypsetting;
 
 type
-
   { tsettingform }
 
   tsettingform = class(tform)
@@ -65,13 +64,12 @@ begin
   settinglist.insertrow('Y.OFFSET', floattostr(asetting.yoffset), true);
   settinglist.insertrow('Y.FACTOR', floattostr(asetting.yfactor), true);
 
-  settinglist.insertrow('PULLEY-X.RATIO', floattostr(asetting.pxratio), true);
-  settinglist.insertrow('PULLEY-X.DIR',   inttostr  (asetting.pxdir),   true);
-  settinglist.insertrow('PULLEY-Y.RATIO', floattostr(asetting.pyratio), true);
-  settinglist.insertrow('PULLEY-Y.DIR',   inttostr  (asetting.pydir),   true);
-  settinglist.insertrow('SERVO-Z.VALUE-0', floattostr(asetting.servozvalue0), true);
-  settinglist.insertrow('SERVO-Z.VALUE-1', floattostr(asetting.servozvalue1), true);
-  settinglist.insertrow('SERVO-Z.DIR',     inttostr  (asetting.servozdir),    true);
+  settinglist.insertrow('X.RATIO', floattostr(asetting.pxratio), true);
+  settinglist.insertrow('X.DIR',   inttostr  (asetting.pxdir),   true);
+  settinglist.insertrow('Y.RATIO', floattostr(asetting.pyratio), true);
+  settinglist.insertrow('Y.DIR',   inttostr  (asetting.pydir),   true);
+  settinglist.insertrow('Z.RATIO', floattostr(asetting.pzratio), true);
+  settinglist.insertrow('Z.DIR',   inttostr  (asetting.pzdir),   true);
 
   settinglist.insertrow('PAGE.HEIGHT', floattostr(asetting.pageheight), true);
   settinglist.insertrow('PAGE.WIDTH',  floattostr(asetting.pagewidth),  true);
@@ -90,15 +88,12 @@ begin
   asetting.yoffset := strtofloat(settinglist.values['Y.OFFSET']);
   asetting.yfactor := strtofloat(settinglist.values['Y.FACTOR']);
 
-  asetting.pxratio := strtofloat(settinglist.values['PULLEY-X.RATIO']);
-  asetting.pxdir   := strtoint  (settinglist.values['PULLEY-X.DIR']);
-
-  asetting.pyratio := strtofloat(settinglist.values['PULLEY-Y.RATIO']);
-  asetting.pydir   := strtoint  (settinglist.values['PULLEY-Y.DIR']);
-
-  asetting.servozvalue0 := strtoint(settinglist.values['SERVO-Z.VALUE-0']);
-  asetting.servozvalue1 := strtoint(settinglist.values['SERVO-Z.VALUE-1']);
-  asetting.servozdir    := strtoint(settinglist.values['SERVO-Z.DIR']);
+  asetting.pxratio := strtofloat(settinglist.values['X.RATIO']);
+  asetting.pxdir   := strtoint  (settinglist.values['X.DIR']);
+  asetting.pyratio := strtofloat(settinglist.values['Y.RATIO']);
+  asetting.pydir   := strtoint  (settinglist.values['Y.DIR']);
+  asetting.pzratio := strtofloat(settinglist.values['Z.RATIO']);
+  asetting.pzdir   := strtoint  (settinglist.values['Z.DIR']);
 
   asetting.pageheight := strtofloat(settinglist.values['PAGE.HEIGHT']);
   asetting.pagewidth  := strtofloat(settinglist.values['PAGE.WIDTH']);

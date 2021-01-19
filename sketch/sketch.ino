@@ -3,6 +3,7 @@
 //  Author:   Melchiorre Caruso
 //  Date:     20 November 2019
 //  Modified: 06 June     2020
+//  Modified: 12 Dec      2020
 
 // Specifica protocollo seriale:
 
@@ -20,7 +21,6 @@
 //  Librerie utilizzate nel codice sorgente
 
 #include <math.h>
-#include <Servo.h>
 
 // definizione PIN shield CNC V3
 
@@ -30,7 +30,8 @@
 #define MOTOR_X_DIR_PIN   5
 #define MOTOR_Y_STEP_PIN  3
 #define MOTOR_Y_DIR_PIN   6
-#define MOTOR_Z_PIN       11
+#define MOTOR_Z_STEP_PIN  4
+#define MOTOR_Z_DIR_PIN   7
 
 // definizione costanti protocollo seriale 
 
@@ -66,9 +67,6 @@ static long RampIndex;
 static long xCount;
 static long yCount;
 static long zCount;
-static long zDelay;
-
-Servo motorZ;
 
 union {
   byte asbytes[4];
@@ -83,28 +81,19 @@ void ExecRamp(byte bt) {
   RampIndex = max(RampKI, RampIndex);
 }
 
-void ExecServo(byte bt) {
-  long dz = bitRead(bt, 4);
-  if (bitRead(bt, 5) == 1) { dz *= -1; }
- 
-  zCount += dz;
-  if (dz != 0) {
-    motorZ.write(zCount);
-    delay(zDelay);
-  }
-}
-
 void ExecStepper(byte bt) {
   long dx = bitRead(bt, 0);
   long dy = bitRead(bt, 2);
+  long dz = bitRead(bt, 4);
   if (bitRead(bt, 1) == 1) { dx *= -1; }
   if (bitRead(bt, 3) == 1) { dy *= -1; }
+  if (bitRead(bt, 5) == 1) { dz *= -1; }
 
   xCount += dx;
   if (dx < 0) {
-    digitalWrite(MOTOR_X_DIR_PIN, HIGH);
-  } else {
     digitalWrite(MOTOR_X_DIR_PIN, LOW );
+  } else {
+    digitalWrite(MOTOR_X_DIR_PIN, HIGH);
   }
 
   yCount += dy;
@@ -114,13 +103,22 @@ void ExecStepper(byte bt) {
     digitalWrite(MOTOR_Y_DIR_PIN, HIGH);
   }
 
-  if ((dx != 0) || (dy != 0)) {
+  zCount += dz;
+  if (dz < 0) {
+    digitalWrite(MOTOR_Z_DIR_PIN, LOW );
+  } else {
+    digitalWrite(MOTOR_Z_DIR_PIN, HIGH);
+  }  
+
+  if ((dx != 0) || (dy != 0) || (dz != 0)) {
     if (dx != 0) { digitalWrite(MOTOR_X_STEP_PIN, HIGH); }
     if (dy != 0) { digitalWrite(MOTOR_Y_STEP_PIN, HIGH); }
+    if (dz != 0) { digitalWrite(MOTOR_Z_STEP_PIN, HIGH); }
     delayMicroseconds(20);
 
     if (dx != 0) { digitalWrite(MOTOR_X_STEP_PIN, LOW ); }
     if (dy != 0) { digitalWrite(MOTOR_Y_STEP_PIN, LOW ); }
+    if (dz != 0) { digitalWrite(MOTOR_Z_STEP_PIN, LOW ); }
   }
 }
 
@@ -191,8 +189,7 @@ void ExecInternal(byte bt) {
     case MOVZ:
       Serial.readBytes(data.asbytes, 4);
       Serial.write(MOVZ);
-      zCount = data.aslong;
-      motorZ.write(zCount);
+      // not implemented
       break;
       
     case RST:
@@ -219,16 +216,16 @@ void setup() {
     Serial.read();
     delay(50);
   }  
-  // init stepper X/Y
+  // init stepper X/Y/Z
   pinMode(MOTOR_X_STEP_PIN, OUTPUT);
   pinMode(MOTOR_Y_STEP_PIN, OUTPUT);
+  pinMode(MOTOR_Z_STEP_PIN, OUTPUT);
   pinMode(MOTOR_X_DIR_PIN,  OUTPUT);
   pinMode(MOTOR_Y_DIR_PIN,  OUTPUT);
+  pinMode(MOTOR_Z_DIR_PIN,  OUTPUT);  
   pinMode(MOTOR_ONOFF_PIN,  OUTPUT);
   // enable steppers
   digitalWrite(MOTOR_ONOFF_PIN, LOW);  
-  // init servo Z
-  motorZ.attach(MOTOR_Z_PIN);
   // init variables
   BufferIndex = 0;
   BufferSize = 0;
@@ -236,11 +233,10 @@ void setup() {
   LoopDelay = 400;
   RampIndex = 1;
   RampKB = 40000;
-  RampKI =  1;
-  xCount =  0;
-  yCount =  0;
-  zCount = motorZ.read();
-  zDelay =  4;  
+  RampKI = 1;
+  xCount = 0;
+  yCount = 0;
+  zCount = 0;
 }
 
 // Main Loop
@@ -248,6 +244,17 @@ void setup() {
 void loop() {
   if ((unsigned long)(micros() - LoopStart) >= LoopDelay) {
     LoopStart = micros();
+    if (BufferIndex < BufferSize) {
+      byte bt = Buffer[BufferIndex];
+      if (bt < B11000000) {
+        ExecRamp(bt);
+        ExecStepper(bt);
+      } else {
+        ExecInternal(bt);
+      }
+      BufferIndex++;          
+    }
+
     if (BufferIndex == BufferSize) {
       BufferIndex = 0;
       BufferSize = Serial.available();
@@ -255,19 +262,7 @@ void loop() {
         Serial.readBytes(Buffer, BufferSize);
         Serial.write(BufferSize);
       }
-    }
-
-    if (BufferIndex < BufferSize) {
-      byte bt = Buffer[BufferIndex];
-      if (bt < B11000000) {
-        ExecRamp(bt);
-        ExecServo(bt);
-        ExecStepper(bt);
-      } else {
-        ExecInternal(bt);
-      }
-      BufferIndex++;          
-    }   
+    }       
     LoopDelay = round(RampKB*(sqrt(RampIndex+1)-sqrt(RampIndex)));
   }
 }
