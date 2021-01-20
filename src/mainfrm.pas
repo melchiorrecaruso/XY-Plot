@@ -1036,7 +1036,6 @@ begin
     end else
     if (schedulerlist[0] = 'driver.start') then
     begin
-      writeln(' SCHEDULER::START ');
       driver := txypdriver.create(setting, serialstream);
       driver.onerror := @onplottererror;
       driver.onstart := @onplotterstart;
@@ -1050,13 +1049,8 @@ begin
       yoffset  := pageheight*setting.yfactor + setting.yoffset;
       for i := 0 to page.count -1 do
       begin
-        writeln(' SCHEDULER::NEXT-ELEMENT=', i, '/', page.count);
-
         element := page.items[i];
-        writeln(' SCHEDULER::INTERPOLATE');
         element.interpolate(path, max(setting.pxratio, setting.pyratio));
-
-        writeln(' SCHEDULER::PROCESS');
         for j := 0 to path.count -1 do
         begin
           point2 := path[j];
@@ -1065,23 +1059,18 @@ begin
           begin
             point2.x := point2.x + xoffset;
             point2.y := point2.y + yoffset;
-
-            writeln(' SCHEDULER::MOVE-Z');
             if distance(point1, point2) >= 0.2 then
               driver.move(driver.xcount, driver.ycount, 0)
             else
               driver.move(driver.xcount, driver.ycount, trunc(1/setting.pzratio));
 
-            writeln(' SCHEDULER::CALC-XY');
             driverengine.calcsteps(point2, cx, cy);
-            writeln(' SCHEDULER::MOVE');
             driver.move(cx, cy, driver.zcount);
             point1 := point2;
           end;
         end;
         path.clear;
       end;
-      writeln(' SCHEDULER::END ');
       path.destroy;
       driver.start;
       lock;

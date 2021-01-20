@@ -285,10 +285,6 @@ begin
   xyplog.add('    DRIVER::INIT');
   fserial.clear;
   fstream.clear;
-  writeln('fxcount=', fxcount);
-  writeln('fycount=', fycount);
-  writeln('fzcount=', fzcount);
-
   if (not serverget(fserial, server_getxcount, fxcount)) or
      (not serverget(fserial, server_getycount, fycount)) or
      (not serverget(fserial, server_getzcount, fzcount)) or
@@ -299,10 +295,6 @@ begin
     if assigned(fonerror) then
       synchronize(fonerror);
   end;
-
-  writeln('fxcount=', fxcount);
-  writeln('fycount=', fycount);
-  writeln('fzcount=', fzcount);
 end;
 
 procedure txypdriver.move(cx, cy, cz: longint);
@@ -314,9 +306,6 @@ var
   dz: longint;
   ct: longint;
 begin
-  writeln('    DRIVER::', CX, ' ', CY, ' ',CX);
-
-
   if fsetting.pagedir < 0 then
   begin
     ct := cx;
@@ -457,8 +446,6 @@ var
   streamsize:  int64;
   streamwrote: int64;
 begin
-  writeln('    DRIVER::RUN ...');
-
   xyplog.add('    DRIVER::RUN ...');
   if assigned(onstart) then
     synchronize(fonstart);
@@ -534,7 +521,6 @@ begin
 
   if assigned(fonstop) then
     synchronize(fonstop);
-  writeln('    DRIVER::END');
 end;
 
 end.

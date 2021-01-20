@@ -59,9 +59,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="lnetbase"/>
-      </Item>
-      <Item>
         <PackageName Value="LazControls"/>
       </Item>
       <Item>
@@ -78,8 +75,8 @@
       <Unit>
         <Filename Value="xyplot.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="9"/>
-        <CursorPos X="92" Y="13"/>
+        <TopLine Value="10"/>
+        <CursorPos X="52" Y="28"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -192,21 +189,21 @@
       <Unit>
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="247"/>
-        <CursorPos X="38" Y="287"/>
-        <FoldState Value=" T3kQ04423("/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="439"/>
+        <CursorPos X="20" Y="11"/>
+        <FoldState Value=" T3jX0F1,"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsetting.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="146"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="118"/>
         <CursorPos X="89" Y="136"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="FPC/3.0.4/source/rtl/objpas/types.pp"/>
@@ -236,11 +233,9 @@
       <Unit>
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="211"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="197"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/lcl/controls.pp"/>
@@ -1186,11 +1181,10 @@
       <Unit>
         <Filename Value="src/xypsvgreader.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="40"/>
         <CursorPos X="47" Y="30"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpdriverthread.pas"/>
@@ -1265,11 +1259,10 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypsketcher.pas"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="78"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="364"/>
         <CursorPos X="14" Y="84"/>
         <UsageCount Value="100"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/sketcherfrm.lfm"/>
@@ -1288,8 +1281,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="62"/>
-        <CursorPos X="48" Y="82"/>
+        <TopLine Value="966"/>
+        <CursorPos X="11" Y="1073"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -1388,11 +1381,10 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypserial.pas"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="73"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="131"/>
         <CursorPos X="42" Y="33"/>
         <UsageCount Value="99"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../.lazarus/onlinepackagemanager/packages/LazSerial/lazserial.pas"/>
@@ -1625,11 +1617,9 @@
         <ComponentName Value="settingform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="71"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="80" Y="78"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Documenti/github/lazarus/lcl/grids.pas"/>
@@ -1898,11 +1888,9 @@
       <Unit>
         <Filename Value="src/xypdxfreader.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="1008"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="63" Y="1185"/>
         <UsageCount Value="98"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgracontrols-master/bgravirtualscreen.pas"/>
@@ -1938,7 +1926,6 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypfill.pas"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="3"/>
         <UsageCount Value="93"/>
@@ -2016,13 +2003,10 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypethernet.pas"/>
-        <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="95"/>
-        <CursorPos X="27" Y="116"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="21"/>
+        <CursorPos X="15" Y="38"/>
         <UsageCount Value="21"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/lnet/lib/lnet.pp"/>
@@ -2033,126 +2017,18 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="19" TopLine="50"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="67" Column="32"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="66" Column="38" TopLine="50"/>
-      </Position>
+    <JumpHistory HistoryIndex="2">
       <Position>
         <Filename Value="src/mainfrm.pas"/>
         <Caret Line="1070" Column="53" TopLine="1005"/>
       </Position>
       <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="64" Column="72" TopLine="43"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="73" Column="46" TopLine="62"/>
       </Position>
       <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="72" Column="46" TopLine="50"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="19" TopLine="50"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="93" Column="11" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="20" TopLine="47"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="39" Column="19" TopLine="46"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="39" Column="19" TopLine="46"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="27" TopLine="50"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="38" Column="10" TopLine="20"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="37" Column="20" TopLine="21"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="32" Column="32" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="24" Column="33" TopLine="34"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="5" TopLine="50"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="92" Column="11" TopLine="56"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="69" Column="19" TopLine="44"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="24" Column="21"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="70" Column="33" TopLine="66"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="110" Column="46" TopLine="86"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="89" Column="31" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="93" Column="30" TopLine="47"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="91" Column="5" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="97" Column="15" TopLine="78"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="98" Column="36" TopLine="25"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="102" Column="28" TopLine="83"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="106" Column="37" TopLine="90"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypethernet.pas"/>
-        <Caret Line="109" Column="28" TopLine="90"/>
+        <Filename Value="xyplot.pas"/>
+        <Caret Line="28" Column="52" TopLine="10"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
