@@ -13,7 +13,7 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <BuildModes Active="Debug">
+    <BuildModes Active="Release">
       <Item Name="Release" Default="True"/>
       <Item Name="Debug">
         <CompilerOptions>
@@ -174,7 +174,8 @@
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <CursorPos X="32" Y="392"/>
+        <TopLine Value="101"/>
+        <CursorPos X="15" Y="124"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -182,8 +183,8 @@
         <Filename Value="src/xypsetting.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="61"/>
-        <CursorPos X="75" Y="85"/>
+        <TopLine Value="125"/>
+        <CursorPos X="51" Y="130"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -398,9 +399,10 @@
         <ComponentName Value="tmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="823"/>
-        <CursorPos X="25" Y="836"/>
+        <TopLine Value="271"/>
+        <CursorPos X="15" Y="284"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -466,7 +468,8 @@
         <Filename Value="src/xyputils.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="8"/>
-        <CursorPos X="11" Y="36"/>
+        <TopLine Value="100"/>
+        <CursorPos X="11" Y="40"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -839,7 +842,6 @@
       <Unit>
         <Filename Value="src/xypdxfreader.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
         <TopLine Value="1194"/>
         <CursorPos X="6" Y="1212"/>
@@ -853,6 +855,7 @@
         <TopLine Value="43"/>
         <CursorPos X="15" Y="59"/>
         <UsageCount Value="2"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgrabitmap.pas"/>
@@ -1032,38 +1035,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="836" Column="24" TopLine="823"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="72" Column="13" TopLine="58"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="81" Column="13" TopLine="58"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="85" Column="75" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="272" Column="30" TopLine="257"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="311" Column="25" TopLine="297"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="328" Column="45" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="381" Column="25" TopLine="367"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
         <Caret Line="272" Column="30" TopLine="258"/>
       </Position>
       <Position>
@@ -1150,6 +1121,38 @@
         <Filename Value="src/xypdxfreader.pas"/>
         <Caret Line="32" Column="37" TopLine="18"/>
       </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="653" Column="47" TopLine="267"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsetting.pas"/>
+        <Caret Line="72" Column="34" TopLine="58"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsetting.pas"/>
+        <Caret Line="82" Column="3" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="275" Column="42" TopLine="267"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdriver.pas"/>
+        <Caret Line="75" Column="24" TopLine="60"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="287" Column="25" TopLine="271"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdriver.pas"/>
+        <Caret Line="75" Column="24" TopLine="61"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdriver.pas"/>
+        <Caret Line="90" Column="105" TopLine="105"/>
+      </Position>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
@@ -1171,10 +1174,10 @@
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
-      <SmartLinkUnit Value="True"/>
       <Optimizations>
-        <OptimizationLevel Value="4"/>
+        <OptimizationLevel Value="3"/>
       </Optimizations>
+      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

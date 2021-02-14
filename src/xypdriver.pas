@@ -118,8 +118,10 @@ begin
       p   := page[i, j];
       p.x := p.x + offsetx;
       p.y := p.y + offsety;
+      {$ifopt D+}
       printdbg('DRIVER', format('POINT.X          %12.5f', [p.x]));
       printdbg('DRIVER', format('POINT.Y          %12.5f', [p.y]));
+      {$endif}
     end;
 end;
 

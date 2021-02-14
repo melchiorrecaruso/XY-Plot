@@ -621,6 +621,7 @@ begin
     startbtn       .enabled := true;
     killbtn        .enabled := true;
     homebtn        .enabled := false;
+    sethomebtn     .enabled := false;
     // about popup
     aboutbtn       .enabled := false;
     // zoom
@@ -653,6 +654,7 @@ begin
     startbtn       .enabled := value and (lnet.connected);
     killbtn        .enabled := value and (lnet.connected);
     homebtn        .enabled := value and (lnet.connected);
+    sethomebtn     .enabled := value and (lnet.connected);
     // about popup
     aboutbtn       .enabled := value;
     // zoom
