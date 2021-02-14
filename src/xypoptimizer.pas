@@ -1,7 +1,7 @@
 {
   Description: XY-Plot path optimizer.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,37 +28,20 @@ uses
   classes, sysutils, xypdebug, xypmath, xyppaths;
 
 type
-  txyppathoptimizerfitness = packed record
-    cleanup: double;
-    inkdistance: double;
-    traveldistance: double;
-    penraises: longint;
-  end;
-
-  txyppathoptimizer = class(tthread)
+  txyppathoptimizer = class
   private
-    fcleanup: double;
-    flist: txypelementlist;
-    fpercentage: longint;
+    fpath: txypelementlist;
     fsubpaths: tfplist;
-    fonstart: tthreadmethod;
-    fonstop: tthreadmethod;
     function getfirst(const p: txyppoint): longint;
-    function getfitness: txyppathoptimizerfitness;
     function getlast(const p: txyppoint): longint;
     function getnext(const p: txyppoint): longint;
     function getnextsubpath(const p: txyppoint): longint;
     function isaloop(item: txypelement): boolean;
     procedure clear;
   public
-    constructor create(elements: txypelementlist);
+    constructor create(path: txypelementlist);
     destructor destroy; override;
-    procedure execute; override;
-  public
-    property cleanup: double read fcleanup write fcleanup;
-    property onstart: tthreadmethod read fonstart write fonstart;
-    property onstop:  tthreadmethod read fonstop  write fonstop;
-    property percentage: longint read fpercentage;
+    procedure execute;
   end;
 
 
@@ -69,14 +52,11 @@ const
 
 // txyppathoptimizer
 
-constructor txyppathoptimizer.create(elements: txypelementlist);
+constructor txyppathoptimizer.create(path: txypelementlist);
 begin
-  fcleanup := 0;
-  flist := elements;
-  fpercentage := 0;
+  fpath     := path;
   fsubpaths := tfplist.create;
-  freeonterminate := true;
-  inherited create(true);
+  inherited create;
 end;
 
 destructor txyppathoptimizer.destroy;
@@ -105,9 +85,9 @@ var
   dj: double = gap;
 begin
   result := -1;
-  for i := 0 to flist.count -1 do
+  for i := 0 to fpath.count -1 do
   begin
-    di := distance(p, flist.items[i].firstpoint);
+    di := distance(p, fpath.items[i].firstpoint);
     if di < dj then
     begin
        j :=  i;
@@ -129,9 +109,9 @@ var
   dj: double = gap;
 begin
   result := -1;
-  for i := 0 to flist.count -1 do
+  for i := 0 to fpath.count -1 do
   begin
-    di := distance(p, flist.items[i].lastpoint);
+    di := distance(p, fpath.items[i].lastpoint);
     if di < dj then
     begin
        j :=  i;
@@ -153,9 +133,9 @@ var
   elem: txypelement;
 begin
   result := -1;
-  for i := 0 to flist.count -1 do
+  for i := 0 to fpath.count -1 do
   begin
-    elem := flist.items[i];
+    elem := fpath.items[i];
 
     len2 := distance(p, elem.firstpoint);
     if len1 > len2 then
@@ -217,25 +197,18 @@ procedure txyppathoptimizer.execute;
 var
   i: longint;
   elem: txypelement;
-  fitness0: txyppathoptimizerfitness;
-  fitness1: txyppathoptimizerfitness;
   last: txyppoint;
   subpath: txypelementlist;
   totalcount: longint;
 begin
-  if assigned(fonstart) then
-    synchronize(fonstart);
-  fitness0 := getfitness;
-
   last.x := 0;
   last.y := 0;
-  totalcount := flist.count;
-  while flist.count > 0 do
+  totalcount := fpath.count;
+  while fpath.count > 0 do
   begin
-    fpercentage := round(100*(1-(flist.count/totalcount)));
     // create new subpath
     subpath := txypelementlist.create;
-    subpath.add(flist.extract(getnext(last)));
+    subpath.add(fpath.extract(getnext(last)));
 
     if not isaloop(subpath.items[0]) then
     begin
@@ -245,12 +218,12 @@ begin
         if i = -1 then
         begin
           i := getlast(elem.lastpoint);
-          if i <> -1 then flist.items[i].invert;
+          if i <> -1 then fpath.items[i].invert;
         end;
 
         if i <> -1 then
         begin
-          elem := flist.extract(i);
+          elem := fpath.extract(i);
           subpath.add(elem);
         end;
       until i = -1;
@@ -261,12 +234,12 @@ begin
         if i = -1 then
         begin
           i := getfirst(elem.firstpoint);
-          if i <> -1 then flist.items[i].invert;
+          if i <> -1 then fpath.items[i].invert;
         end;
 
         if i <> -1 then
         begin
-          elem := flist.extract(i);
+          elem := fpath.extract(i);
           subpath.insert(0, elem);
         end;
       until i = -1;
@@ -279,49 +252,14 @@ begin
   begin
     i := getnextsubpath(last);
     subpath := txypelementlist(fsubpaths[i]);
-    if subpath.length > fcleanup then
+    last := subpath.items[subpath.count-1].lastpoint;
+    while subpath.count > 0 do
     begin
-      last := subpath.items[subpath.count-1].lastpoint;
-      while subpath.count > 0 do
-      begin
-        flist.add(subpath.extract(0));
-      end;
+      fpath.add(subpath.extract(0));
     end;
     subpath.destroy;
     fsubpaths.delete(i);
   end;
-  fitness1 := getfitness;
-  xyplog.add(format(' OPTIMIZER::CLEANUP          %12.2f',           [fitness1.cleanup]));
-  xyplog.add(format(' OPTIMIZER::INK DISTANCE     %12.2f  (%12.2f)', [fitness1.inkdistance,    fitness0.inkdistance]));
-  xyplog.add(format(' OPTIMIZER::TRAVEL DISTANCE  %12.2f  (%12.2f)', [fitness1.traveldistance, fitness0.traveldistance]));
-  xyplog.add(format(' OPTIMIZER::PEN RAISES       %12.0u  (%12.0u)', [fitness1.penraises,      fitness0.penraises]));
-  if assigned(fonstop) then
-    synchronize(fonstop);
-end;
-
-function txyppathoptimizer.getfitness: txyppathoptimizerfitness;
-var
-  i: longint;
-  p: txyppoint;
-  elem: txypelement;
-begin
-  fillbyte(result, sizeof(result), 0);
-
-  p.x := 0;
-  p.y := 0;
-  for i := 0 to flist.count -1 do
-  begin
-    elem := flist.items[i];
-    if distance(p, elem.firstpoint) >= 0.2 then
-    begin
-      result.traveldistance := result.traveldistance +
-        distance(p, elem.firstpoint);
-      inc(result.penraises);
-    end;
-    result.inkdistance := result.inkdistance + elem.length;
-    p := elem.lastpoint;
-  end;
-  result.cleanup := fcleanup;
 end;
 
 end.

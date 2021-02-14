@@ -3,7 +3,7 @@
 
   This unit derives from LAZARUS/FREEPASCAL dxfvectorialreader unit.
 
-  Copyright (C) 2018-2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2018-2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
   Copyright (C) 1993-2017 Felipe Monteiro de Carvalho
 
   This source is free software; you can redistribute it and/or modify it under

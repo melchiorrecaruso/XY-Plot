@@ -50,7 +50,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 17
-    Caption = 'XY-Plotter Client 1.2'
+    Caption = 'XY-Plotter 1.4'
     Font.Style = [fsBold]
     Layout = tlCenter
     ParentColor = False
@@ -266,7 +266,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 10
-    Caption = 'Copyright 2020 Melchiorre Caruso'
+    Caption = 'Copyright 2021 Melchiorre Caruso'
     Layout = tlCenter
     ParentColor = False
     ParentFont = False
@@ -284,7 +284,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Build 20201012'
+    Caption = 'Build 20210213'
     Layout = tlCenter
     ParentColor = False
     ParentFont = False

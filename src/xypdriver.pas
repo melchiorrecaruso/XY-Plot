@@ -1,7 +1,7 @@
 {
   Description: XY-Plot driver class.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -26,275 +26,211 @@ unit xypdriver;
 interface
 
 uses
-  classes, math, sysutils, xypdebug, xypmath, xypserial, xypsetting, xyputils;
+  classes, math, sysutils, xypmath, xyppaths, xypsetting, xyputils;
 
 type
-  txypdriver = class(tthread)
+  txypdriver = class
   private
-    fenabled: boolean;
-    fmessage: string;
-    frampkb: longint;
-    frampki: longint;
-    frampkl: longint;
-    fpercentage: longint;
-    fserial: txypserialstream;
-    fsetting: txypsetting;
-    fstream: tmemorystream;
-    fxcount: longint;
-    fxreverse: boolean;
-    fycount: longint;
-    fyreverse: boolean;
-    fzcount: longint;
-    fzreverse: boolean;
-    fonerror: tthreadmethod;
-    fonstart: tthreadmethod;
-    fonstop: tthreadmethod;
+    framplen: longint;
+    fstream: tstream;
+    fxcount1: longint;
+    fycount1: longint;
+    fzcount1: longint;
+    fxcount2: longint;
+    fycount2: longint;
+    fzcount2: longint;
+    fxratio: double;
+    fyratio: double;
+    fzratio: double;
+    procedure compute(const p: txyppoint; var cx, cy: longint);
+    procedure move(cx, cy, cz: longint);
+  public
+    constructor create(astream: tstream);
+    destructor destroy; override;
+    procedure movex(cx: longint);
+    procedure movey(cy: longint);
+    procedure movez(cz: longint);
+    procedure move(path: txypelementlist; pagewidth, pageheight: longint);
+    procedure setoriginx;
+    procedure setoriginy;
+    procedure setoriginz;
+    procedure setorigin;
+    procedure sync(var buffer; count: longint);
+    procedure sync;
     procedure createramps;
     procedure destroyramps;
-  public
-    constructor create(asetting: txypsetting; aserial: txypserialstream);
-    destructor destroy; override;
-    procedure init;
-    procedure move(cx, cy,cz: longint);
-    procedure execute; override;
   published
-    property enabled: boolean read fenabled write fenabled;
-    property message: string read fmessage;
-    property onerror: tthreadmethod read fonerror write fonerror;
-    property onstart: tthreadmethod read fonstart write fonstart;
-    property onstop:  tthreadmethod read fonstop  write fonstop;
-    property percentage: longint read fpercentage;
-    property xcount: longint read fxcount;
-    property ycount: longint read fycount;
-    property zcount: longint read fzcount;
-    property xreverse: boolean read fxreverse write fxreverse;
-    property yreverse: boolean read fyreverse write fyreverse;
-    property zreverse: boolean read fzreverse write fzreverse;
+    property ramplen: longint read framplen write framplen;
+    property xcount1: longint read fxcount1;
+    property ycount1: longint read fycount1;
+    property zcount1: longint read fzcount1;
+    property xcount2: longint read fxcount2;
+    property ycount2: longint read fycount2;
+    property zcount2: longint read fzcount2;
+    property xratio: double read fxratio write fxratio;
+    property yratio: double read fyratio write fyratio;
+    property zratio: double read fzratio write fzratio;
   end;
 
-type
-  txypdriverengine = class
-  private
-    fsetting: txypsetting;
-  public
-    constructor create(asetting: txypsetting);
-    destructor destroy; override;
-    function  calclengthx(const p: txyppoint): double;
-    function  calclengthy(const p: txyppoint): double;
-    procedure calclengths(const p: txyppoint; out lx, ly: double);
-    procedure calcsteps(const p: txyppoint; out sx, sy: longint);
-    procedure calcpoint(const lx, ly: double; out p: txyppoint);
-  end;
-
-
-  function serverget (serial: txypserialstream; id: byte; var value: longint): boolean;
-  function serverset (serial: txypserialstream; id: byte;     value: longint): boolean;
-
-  procedure driverenginedebug(adriverengine: txypdriverengine);
-
-const
-  server_nop       = 255;
-  server_rst       = 254;
-
-  server_getxcount = 240;
-  server_getycount = 241;
-  server_getzcount = 242;
-  server_getrampkb = 243;
-  server_getrampki = 244;
-
-  server_setxcount = 230;
-  server_setycount = 231;
-  server_setzcount = 232;
-  server_setrampkb = 233;
-  server_setrampki = 234;
-
-  server_movx      = 220;
-  server_movy      = 221;
-  server_movz      = 222;
-
+  procedure driverdebug;
 
 implementation
 
-// server get/set routines
-
-function serverget(serial: txypserialstream; id: byte; var value: longint): boolean;
-var
-  cc: byte;
-begin
-  result := serial.connected;
-  if result then
-  begin
-    serial.clear;
-    result := (serial.write(id,    sizeof(id   )) = sizeof(id   )) and
-              (serial.read (cc,    sizeof(cc   )) = sizeof(cc   )) and
-              (serial.read (cc,    sizeof(cc   )) = sizeof(cc   )) and
-              (serial.read (value, sizeof(value)) = sizeof(value));
-
-    result := result and (cc = id);
-  end;
-end;
-
-function serverset(serial: txypserialstream; id: byte; value: longint): boolean;
-var
-  cc: byte;
-begin
-  result := serial.connected;
-  if result then
-  begin
-    serial.clear;
-    result := (serial.write(id,    sizeof(id   )) = sizeof(id   )) and
-              (serial.read (cc,    sizeof(cc   )) = sizeof(cc   )) and
-              (serial.write(value, sizeof(value)) = sizeof(value)) and
-              (serial.read (cc,    sizeof(cc   )) = sizeof(cc   ));
-
-    result := result and (cc = id);
-  end;
-end;
-
-// txypdriverengine
-
-constructor txypdriverengine.create(asetting: txypsetting);
-begin
-  inherited create;
-  fsetting  := asetting;
-end;
-
-destructor txypdriverengine.destroy;
-begin
-  inherited destroy;
-end;
-
-function txypdriverengine.calclengthx(const p: txyppoint): double;
-begin
-  result := p.x;
-end;
-
-function txypdriverengine.calclengthy(const p: txyppoint): double;
-
-begin
-  result := p.y;
-end;
-
-procedure txypdriverengine.calclengths(const p: txyppoint; out lx, ly: double);
-begin
-  lx := p.x;
-  ly := p.y;
-end;
-
-procedure txypdriverengine.calcsteps(const p: txyppoint; out sx, sy: longint);
-begin
-  sx := round(p.x/fsetting.pxratio);
-  sy := round(p.y/fsetting.pyratio);
-end;
-
-procedure txypdriverengine.calcpoint(const lx, ly: double; out p: txyppoint);
-begin
-  p.x := lx;
-  p.y := ly;
-end;
-
 // txypdriverengine::debug
 
-procedure driverenginedebug(adriverengine: txypdriverengine);
+procedure driverdebug;
 var
-    i,  j: longint;
-   lx, ly: double;
+  i, j: longint;
   offsetx: double;
   offsety: double;
-     page: array[0..2, 0..2] of txyppoint;
-       pp: txyppoint;
+  page: array[0..2, 0..2] of txyppoint;
+  p: txyppoint;
 begin
-  page[0, 0].x := -adriverengine.fsetting.pagewidth  / 2;
-  page[0, 0].y := +adriverengine.fsetting.pageheight / 2;
+  page[0, 0].x := -setting.pagewidth  / 2;
+  page[0, 0].y := +setting.pageheight / 2;
   page[0, 1].x := +0;
-  page[0, 1].y := +adriverengine.fsetting.pageheight / 2;
-  page[0, 2].x := +adriverengine.fsetting.pagewidth  / 2;
-  page[0, 2].y := +adriverengine.fsetting.pageheight / 2;
+  page[0, 1].y := +setting.pageheight / 2;
+  page[0, 2].x := +setting.pagewidth  / 2;
+  page[0, 2].y := +setting.pageheight / 2;
 
-  page[1, 0].x := -adriverengine.fsetting.pagewidth  / 2;
+  page[1, 0].x := -setting.pagewidth  / 2;
   page[1, 0].y := +0;
   page[1, 1].y := +0;
   page[1, 1].y := +0;
   page[1, 2].x := +0;
-  page[1, 2].x := +adriverengine.fsetting.pagewidth  / 2;
+  page[1, 2].x := +setting.pagewidth  / 2;
 
-  page[2, 0].x := -adriverengine.fsetting.pagewidth  / 2;
-  page[2, 0].y := -adriverengine.fsetting.pageheight / 2;
+  page[2, 0].x := -setting.pagewidth  / 2;
+  page[2, 0].y := -setting.pageheight / 2;
   page[2, 1].x := +0;
-  page[2, 1].y := -adriverengine.fsetting.pageheight / 2;
-  page[2, 2].x := +adriverengine.fsetting.pagewidth  / 2;
-  page[2, 2].y := -adriverengine.fsetting.pageheight / 2;
+  page[2, 1].y := -setting.pageheight / 2;
+  page[2, 2].x := +setting.pagewidth  / 2;
+  page[2, 2].y := -setting.pageheight / 2;
 
-  with adriverengine.fsetting do
+  with setting do
   begin
-    offsetx := (pagewidth )*xfactor + xoffset;;
+    offsetx := (pagewidth )*xfactor + xoffset;
     offsety := (pageheight)*yfactor + yoffset;
   end;
-
   for i := 0 to 2 do
     for j := 0 to 2 do
     begin
-      pp   := page[i, j];
-      pp.x := pp.x + offsetx;
-      pp.y := pp.y + offsety;
-      adriverengine.calclengths(pp, lx, ly);
-
-      xyplog.add(format('    DRIVER::POINT.X          %12.5f   LENGTH.X  %12.5f', [pp.x, lx]));
-      xyplog.add(format('    DRIVER::POINT.Y          %12.5f   LENGTH.Y  %12.5f', [pp.y, ly]));
+      p   := page[i, j];
+      p.x := p.x + offsetx;
+      p.y := p.y + offsety;
+      printdbg('DRIVER', format('POINT.X          %12.5f', [p.x]));
+      printdbg('DRIVER', format('POINT.Y          %12.5f', [p.y]));
     end;
 end;
 
-// txypdriver
+// txypdriverengine
 
-constructor txypdriver.create(asetting: txypsetting; aserial: txypserialstream);
+constructor txypdriver.create(astream: tstream);
 begin
-  fenabled  := true;
-  fmessage  := '';
-  fsetting  := asetting;
-  frampkb   := fsetting.rampkb;
-  frampki   := fsetting.rampki;
-  frampkl   := fsetting.rampkl;
-  fserial   := aserial;
-  fsetting  := asetting;
-  fstream   := tmemorystream.create;
-  fxcount   := 0;
-  fxreverse := fsetting.pxdir < 0;
-  fycount   := 0;
-  fyreverse := fsetting.pydir < 0;
-  fzcount   := 0;
-  fzreverse := fsetting.pzdir < 0;
-
-  fonerror  := nil;
-  fonstart  := nil;
-  fonstop   := nil;
-  freeonterminate := true;
-  inherited create(true);
+  inherited create;
+  framplen  := 0;
+  fstream   := astream;
+  fxcount1  := 0;
+  fycount1  := 0;
+  fzcount1  := 0;
+  fxcount2  := 0;
+  fycount2  := 0;
+  fzcount2  := 0;
+  fxratio   := 0;
+  fyratio   := 0;
+  fzratio   := 0;
 end;
 
 destructor txypdriver.destroy;
 begin
-  fserial  := nil;
-  fsetting := nil;
-  fstream.clear;
-  fstream.destroy;
   inherited destroy;
 end;
 
-procedure txypdriver.init;
+procedure txypdriver.setorigin;
 begin
-  xyplog.add('    DRIVER::INIT');
-  fserial.clear;
-  fstream.clear;
-  if (not serverget(fserial, server_getxcount, fxcount)) or
-     (not serverget(fserial, server_getycount, fycount)) or
-     (not serverget(fserial, server_getzcount, fzcount)) or
-     (not serverset(fserial, server_setrampkb, frampkb)) or
-     (not serverset(fserial, server_setrampki, frampki)) then
+  fxcount1 := 0;
+  fycount1 := 0;
+  fzcount1 := 0;
+  fxcount2 := 0;
+  fycount2 := 0;
+  fzcount2 := 0;
+end;
+
+procedure txypdriver.setoriginx;
+begin
+  fxcount1 := 0;
+  fxcount2 := 0;
+end;
+
+procedure txypdriver.setoriginy;
+begin
+  fycount1 := 0;
+  fycount2 := 0;
+end;
+
+procedure txypdriver.setoriginz;
+begin
+  fzcount1 := 0;
+  fzcount2 := 0;
+end;
+
+procedure txypdriver.sync(var buffer; count: longint);
+var
+  data: array[0..$FFFFFF] of byte absolute buffer;
+  i: longint;
+begin
+  for i := 0 to count -1 do
   begin
-    fmessage := 'Unable connecting to server !';
-    if assigned(fonerror) then
-      synchronize(fonerror);
+    //dx
+    if getbit(data[i], 0) = 1 then
+    begin
+      if getbit(data[i], 1) = 1 then
+        dec(fxcount1)
+      else
+        inc(fxcount1);
+    end;
+    //dy
+    if getbit(data[i], 2) = 1 then
+    begin
+      if getbit(data[i], 3) = 1 then
+        dec(fycount1)
+      else
+        inc(fycount1);
+    end;
+    //dz
+    if getbit(data[i], 4) = 1 then
+    begin
+      if getbit(data[i], 5) = 1 then
+        dec(fzcount1)
+      else
+        inc(fzcount1);
+    end;
   end;
+  {$ifopt D+}
+  printdbg('DRIVER', format('SYNC-1 [X%10.2f] [Y%10.2f] [Z%10.2f]',
+    [fxcount1*setting.pxratio,
+     fycount1*setting.pyratio,
+     fzcount1*setting.pzratio]));
+  {$endif}
+end;
+
+procedure txypdriver.sync;
+begin
+  fxcount2 := fxcount1;
+  fycount2 := fycount1;
+  fzcount2 := fzcount1;
+  {$ifopt D+}
+  printdbg('DRIVER', format('SYNC-2 [X%10.2f] [Y%10.2f] [Z%10.2f]',
+    [fxcount2*setting.pxratio,
+     fycount2*setting.pyratio,
+     fzcount2*setting.pzratio]));
+  {$endif}
+end;
+
+procedure txypdriver.compute(const p: txyppoint; var cx, cy: longint);
+begin
+  cx := round(p.x/fxratio);
+  cy := round(p.y/fyratio);
 end;
 
 procedure txypdriver.move(cx, cy, cz: longint);
@@ -304,23 +240,11 @@ var
   dx: longint;
   dy: longint;
   dz: longint;
-  ct: longint;
 begin
-  if fsetting.pagedir < 0 then
-  begin
-    ct := cx;
-    cx := cy;
-    cy := ct;
-  end;
-
-  //if fxreverse then cx := -1*cx;
-  //if fyreverse then cy := -1*cy;
-  //if fzreverse then cz := -1*cz;
-
   b0 := %00000000;
-  dx := (cx - fxcount);
-  dy := (cy - fycount);
-  dz := (cz - fzcount);
+  dx := (cx - fxcount2);
+  dy := (cy - fycount2);
+  dz := (cz - fzcount2);
   if (dx < 0) then setbit(b0, 1);
   if (dy < 0) then setbit(b0, 3);
   if (dz < 0) then setbit(b0, 5);
@@ -350,9 +274,65 @@ begin
     end;
     fstream.write(b1, 1);
   end;
-  fxcount := cx;
-  fycount := cy;
-  fzcount := cz;
+  fxcount2 := cx;
+  fycount2 := cy;
+  fzcount2 := cz;
+end;
+
+procedure txypdriver.movex(cx: longint);
+begin
+  move(cx, fycount2 , fzcount2);
+end;
+
+procedure txypdriver.movey(cy: longint);
+begin
+  move(fxcount2, cy, fzcount2);
+end;
+
+procedure txypdriver.movez(cz: longint);
+begin
+  move(fxcount2, fycount2, cz);
+end;
+
+procedure txypdriver.move(path: txypelementlist; pagewidth, pageheight: longint);
+var
+  i, j: longint;
+  item: txypelement;
+  p1, p2: txyppoint;
+  poly: txyppolygonal;
+  xcnt: longint;
+  ycnt: longint;
+  xoffset: double;
+  yoffset: double;
+begin
+  p1.x    := 0;
+  p1.y    := 0;
+  poly    := txyppolygonal.create;
+  xoffset := pagewidth *setting.xfactor + setting.xoffset;
+  yoffset := pageheight*setting.yfactor + setting.yoffset;
+  for i := 0 to path.count -1 do
+  begin
+    item := path.items[i];
+    item.interpolate(poly, max(setting.pxratio, setting.pyratio));
+    for j := 0 to poly.count -1 do
+    begin
+      p2 := poly[j];
+      if (abs(p2.x) < (pagewidth /2)) and
+         (abs(p2.y) < (pageheight/2)) then
+      begin
+        p2.x := p2.x + xoffset;
+        p2.y := p2.y + yoffset;
+        compute(p2, xcnt, ycnt);
+        if distance(p1, p2) >= 0.2 then
+          move(xcnt, ycnt, +trunc(1/setting.pzratio))
+        else
+          move(xcnt, ycnt, -trunc(1/setting.pzratio));
+      end;
+      p1 := p2;
+    end;
+    poly.clear;
+  end;
+  poly.destroy;
 end;
 
 procedure txypdriver.createramps;
@@ -360,36 +340,57 @@ const
   ds    = 2;
   maxdx = 4;
   maxdy = 4;
+  maxdz = 4;
 var
   bufsize: longint;
   buf: array of byte;
-  dx:  array of longint;
-  dy:  array of longint;
+   dx: array of longint;
+   dy: array of longint;
+   dz: array of longint;
   i, j, k, r: longint;
 begin
-  xyplog.add('    DRIVER::CREATE RAMPS');
+  {$ifopt D+} printdbg('DRIVER', 'CREATE RAMPS'); {$endif}
+  fstream.seek(0, sofrombeginning);
   bufsize := fstream.size;
   if bufsize > 0 then
   begin
     setlength(dx,  bufsize);
     setlength(dy,  bufsize);
+    setlength(dz,  bufsize);
     setlength(buf, bufsize);
     fstream.seek(0, sofrombeginning);
     fstream.read(buf[0], bufsize);
-
     // store data in dx and dy arrays
     for i := 0 to bufsize -1 do
     begin
       dx[i] := 0;
       dy[i] := 0;
+      dz[i] := 0;
       for j := max(i-ds, 0) to min(i+ds, bufsize-1) do
       begin
+        //dx
+        if getbit(buf[j], 0) = 1 then
+        begin
+          if getbit(buf[j], 1) = 1 then
+            dec(dx[i])
+          else
+            inc(dx[i]);
+        end;
+        //dy
         if getbit(buf[j], 2) = 1 then
         begin
           if getbit(buf[j], 3) = 1 then
             dec(dy[i])
           else
             inc(dy[i]);
+        end;
+        //dz
+        if getbit(buf[j], 4) = 1 then
+        begin
+          if getbit(buf[j], 5) = 1 then
+            dec(dz[i])
+          else
+            inc(dz[i]);
         end;
       end;
     end;
@@ -401,20 +402,21 @@ begin
     begin
       k := i;
       while (abs(dx[j] - dx[k]) <= maxdx) and
-            (abs(dy[j] - dy[k]) <= maxdy) do
+            (abs(dy[j] - dy[k]) <= maxdy) and
+            (abs(dz[j] - dz[k]) <= maxdz) do
       begin
         if j = bufsize -1 then break;
         inc(j);
 
-        if (j - k) > (2*frampkl) then
+        if (j - k) > (2*framplen) then
         begin
-          k := j - frampkl;
+          k := j - framplen;
         end;
       end;
 
       if j - i > 10 then
       begin
-        r := min((j-i) div 2, frampkl);
+        r := min((j-i) div 2, framplen);
         for k := (i) to (i+r-1) do
           setbit(buf[k], 6);
 
@@ -428,6 +430,7 @@ begin
     fstream.write(buf[0], bufsize);
     setlength(dx,  0);
     setlength(dy,  0);
+    setlength(dz,  0);
     setlength(buf, 0);
   end;
 end;
@@ -437,91 +440,11 @@ begin
   // todo ...
 end;
 
-procedure txypdriver.execute;
-var
-  bf: array[0..55] of byte;
-  bs: byte;
-  i: longint;
-  j: longint;
-  streamsize:  int64;
-  streamwrote: int64;
-begin
-  xyplog.add('    DRIVER::RUN ...');
-  if assigned(onstart) then
-    synchronize(fonstart);
-  createramps;
-  fpercentage := 0;
-  streamwrote := 0;
-  streamsize  := fstream.size;
-  // waiting rst signal ...
-  bs := server_rst;
-  fserial.write(bs, 1);
-  repeat
-    bs := 0;
-    fserial.read(bs, 1);
-  until (bs = server_rst) or (terminated);
-  // seek stream from beginning
-  fstream.seek(0, sofrombeginning);
-  // read bytes form stream
-  bs := fstream.read(bf, sizeof(bf));
-  // send bytes to server
-  while (bs > 0) and (not terminated) do
-  begin
-    inc(streamwrote, fserial.write(bf, bs));
-    fpercentage := round(100*(streamwrote/streamsize));
-    // get server buffer free-space
-    repeat
-      bs := 0;
-      fserial.read(bs, 1);
-    until (bs > 0) or (terminated);
-    // pause server and raise pen honder
-    if (not fenabled) then
-    begin
-      // waiting nop signal ...
-      bs := server_nop;
-      fserial.write(bs, 1);
-      repeat
-        bs := 0;
-        fserial.read(bs, 1);
-      until (bs = server_nop) or (terminated);
-      // move pen-holder up
-      i := 0;
-      j := 0;
-      //if (not serverget(fserial, server_getzcount, i)) then terminate;
-      //if (not serverset(fserial, server_movz,      j)) then terminate;
-      // waiting ...
-      //while (not fenabled) do sleep(500);
-      // move pen-holder down
-      //if (not serverset(fserial, server_movz,      i)) then terminate;
-      // reset buffersize
-      bs := sizeof(bf);
-    end;
-    // continue to send data ...
-    bs := fstream.read(bf, bs);
-  end;
 
-  // waiting nop signal ...
-  bs := server_nop;
-  fserial.write(bs, 1);
-  repeat
-    bs := 0;
-    fserial.read(bs, 1);
-  until (bs = server_nop) or (terminated);
-  // check server status ...
-  i := -1;
-  if ((not serverget(fserial, server_getxcount, i)) or (fxcount <> i)) or
-     ((not serverget(fserial, server_getycount, i)) or (fycount <> i)) or
-     ((not serverget(fserial, server_getzcount, i)) or (fzcount <> i)) or
-     ((not serverget(fserial, server_getrampkb, i)) or (frampkb <> i)) or
-     ((not serverget(fserial, server_getrampki, i)) or (frampki <> i)) then
-  begin
-    fmessage := 'Server syncing error !';
-    if assigned(fonerror) then synchronize(fonerror);
-  end;
 
-  if assigned(fonstop) then
-    synchronize(fonstop);
-end;
+
+
+
 
 end.
 

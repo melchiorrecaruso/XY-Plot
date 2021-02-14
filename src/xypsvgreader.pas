@@ -1,7 +1,7 @@
 {
   Description: XY-Plot SVG file reader class.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -27,7 +27,7 @@ interface
 
 uses
   bgrabitmap, bgrabitmaptypes, bgrasvg, bgrasvgshapes, bgrasvgtype,
-  bgravectorize, classes, sysutils, xypdebug, xypmath, xyppaths;
+  bgravectorize, classes, sysutils, xypmath, xyppaths;
 
 procedure svg2paths(const afilename: string; elements: txypelementlist);
 
@@ -108,7 +108,9 @@ begin
       end;
   end else
   begin
-    xyplog.add(format('      LOAD::SKIP %s', [element.classname]));
+    {$ifopt D+}
+    writeln(format('      LOAD::SKIP %s', [element.classname]));
+    {$endif}
   end;
   bmp.destroy;
 end;
@@ -118,7 +120,9 @@ var
   i: longint;
   svg: tbgrasvg;
 begin
-  xyplog.add(format('      LOAD::FILE %s', [afilename]));
+  {$ifopt D+}
+  writeln(format('      LOAD::FILE %s', [afilename]));
+  {$endif}
   svg := tbgrasvg.create(afilename);
 
   for i := 0 to svg.content.elementcount -1 do

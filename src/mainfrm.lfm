@@ -1,20 +1,21 @@
 object tmainform: tmainform
-  Left = 247
+  Left = 227
   Height = 650
-  Top = 56
+  Top = 61
   Width = 920
   Anchors = []
-  Caption = 'XY-Plot Client'
+  Caption = 'XY-Plot'
   ClientHeight = 650
   ClientWidth = 920
-  Color = clWindow
+  Color = clWhite
   Constraints.MinHeight = 650
   Constraints.MinWidth = 920
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ParentBiDiMode = False
   Position = poDesktopCenter
-  SessionProperties = 'optimizermi.Checked;portcb.Text;showpentransitmi.Checked;showreddotmi.Checked;pagesizecb.ItemIndex'
+  SessionProperties = 'addresscb.Text;portcb.Text'
   LCLVersion = '2.1.0.0'
   object screen: TBGRAVirtualScreen
     AnchorSideLeft.Control = controlpnl
@@ -24,376 +25,37 @@ object tmainform: tmainform
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 290
-    Height = 638
+    Left = 285
+    Height = 632
     Top = 12
-    Width = 630
+    Width = 627
     OnRedraw = screenredraw
     Alignment = taLeftJustify
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 4
     BorderSpacing.Top = 6
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 6
     BorderStyle = bsSingle
-    ClientHeight = 634
-    ClientWidth = 626
+    ClientHeight = 628
+    ClientWidth = 623
     Color = clWindow
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    OnClick = screenClick
     OnMouseDown = imagemousedown
     OnMouseMove = imagemousemove
     OnMouseUp = imagemouseup
-    object nextbtn: TBitBtn
-      AnchorSideLeft.Control = backbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = backbtn
-      Left = 79
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 4
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Glyph.Data = {
-        C6070000424DC607000000000000360000002800000016000000160000000100
-        2000000000009007000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000300000005000000080000
-        000B0000000E0000000E0000000C0000000A000000070000000400000001FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
-        0001000000060000000D0000001200000016000000190000001C0000001D0000
-        001E0000001D0000001C0000001900000016000000120000000B00000004FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000040000000C000000120000
-        00170000001D0000002200000026036E37CA02522A6C0000002D0000002C0000
-        002A00000026000000220000001D00000017000000120000000900000001FFFF
-        FF00FFFFFF00000000040000000B000000120000001900000020000000260000
-        002D0000003204733AFF1E834EF9035D2F960000003A00000037000000320000
-        002D000000260000002000000019000000120000000A00000001FFFFFF000000
-        00070000000E000000160000001D000000240000002C000000330000003A0473
-        3AFF7ACFA4FF298D5AF9026633BD000703450000003A000000330000002C0000
-        00240000001D000000160000000E00000004FFFFFF00000000070000000E0000
-        00160000001D000000240000002C000000330000003A04733AFF82D8ACFF76D6
-        A6FF3A9F6BF9047038D7001C0E47000000330000002C000000240000001D0000
-        00160000000E00000006FFFFFF00000000040000000B047339EA04733AFF0473
-        3AFF04733AFF04733AFF04733AFF05773DF983DBAEFF1FC671FF72DEA7FF4AB4
-        7FFC04743BE903391B4B000000260000002000000019000000120000000B0000
-        0002FFFFFF00FFFFFF000000000504733AFF7ECBA3FF7ECBA3FF7ECBA4FF7FCF
-        A6FF81D4A9FF82D8ACFF83DCAFFF11C369FF1ACC73FF69DFA3FF5AC38EFE0977
-        3EF302562C5600000017000000120000000C00000005FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0004733AFF7ECBA3FF069A4EFF069A4EFF08A152FF0AA857FF0CB0
-        5CFF0EB761FF10BD65FF11C167FF13C269FF59D395FF67C998FF0F7D44F5046E
-        386D0000000800000002FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000473
-        3AFF7ECBA3FF069A4EFF069A4EFF069C4FFF08A354FF0AA958FF0CAF5CFF0DB3
-        5EFF0EB660FF0EB660FF0DB45FFF47C484FF70CA9CFF16834AF503773B920080
-        0002FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFF85CDA8FF079A
-        4FFF069A4EFF069A4EFF069C4FFF08A152FF09A555FF0CAA58FF12AE5EFF15AF
-        60FF16AD61FF13AA5DFF3AB677FF75C79DFF228B55F504763BADFFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF0004733AFF97D5B5FF34AD6FFF28A866FF21A5
-        61FF21A561FF27A766FF2DAB6BFF2EAD6BFF2BAD6AFF27AB68FF22A964FF1CA5
-        5FFF41B278FF78C69FFF228A56F403753B92FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0004733AFF9CD7B9FF41B278FF41B278FF41B278FF3FB176FF3DB0
-        75FF3AAF73FF36AD70FF32AC6DFF2DAA6AFF28A866FF58BC89FF78C59DFF1881
-        4BF504733A73FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000473
-        3AFFA0D9BCFF4AB67FFF4AB67FFF49B57EFF47B57DFF44B37AFF42B278FF3EB1
-        76FF3AAF73FF36AE70FF6FC598FF71BF97FF107C45F403743C4DFFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFFA6DBC0FFA6DB
-        C0FFA6DBC0FFA6DBC0FFA4DABFFFA3DABEFFA1D9BCFF45B47BFF47B47CFF82CC
-        A6FF67B78DFD09763DED05723931FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF0004753AE804733AFF04733AFF04733AFF0473
-        3AFF04733AFF05773CF7A5DABFFF57BB87FF90D2B0FF5BAD83FA03743BDB0076
-        371CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000473
-        3AFFA9DCC1FF9BD5B7FF4AA174F804743BBF006A400CFFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFFA4D9BEFF3995
-        66F603763C9A00555503FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF0004733AFF298958F705753B71FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0004753BBF0372394CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00
-      }
-      Images = btnimages
-      ImageIndex = 2
-      OnClick = stepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 0
-    end
-    object backbtn: TBitBtn
-      AnchorSideLeft.Control = beginbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = beginbtn
-      Left = 43
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 4
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Glyph.Data = {
-        C6070000424DC607000000000000360000002800000016000000160000000100
-        2000000000009007000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000300000005000000080000
-        000B0000000E0000000E0000000C0000000A000000070000000400000001FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
-        0001000000060000000D0000001200000016000000190000001C0000001D0000
-        001E0000001D0000001C0000001900000016000000120000000B00000004FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000040000000C000000120000
-        00170000001D00000022000000260000002A0000002C024E2768036E37CC000B
-        052D00000026000000220000001D00000017000000120000000900000001FFFF
-        FF00FFFFFF00000000040000000B000000120000001900000020000000260000
-        002D000000320000003703592D911B814CF706743CFE0010083D000000320000
-        002D000000260000002000000019000000120000000A00000001FFFFFF000000
-        00070000000E000000160000001D000000240000002C000000330008043D0265
-        33B7258B57F879CEA3FF08763CFD000E07470000003A000000330000002C0000
-        00240000001D000000160000000E00000004FFFFFF00000000070000000E0000
-        00160000001D000000240000002C001B0F40036E37D2369866F975D0A1FF81D8
-        ACFF08763CFD000E07470000003A000000330000002C000000240000001D0000
-        00160000000E00000006FFFFFF00000000040000000B00000012000000190000
-        0020033C1E4403723AE745A675FB6FCE9DFF1CB969FF80DBADFF097D41F80473
-        3AFF04733AFF04733AFF04733AFF04733AFF04733BEC00170B160000000B0000
-        0002FFFFFF00FFFFFF00000000050000000C0000001203582C5007763CF253B0
-        81FE63C694FF14B161FF0EB660FF80DDAEFF84E1B2FF86E6B5FF85E5B4FF84E1
-        B2FF83DDAFFF82D9ADFF08763CFC00341A1400000005FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0000000003046D37690D7942F561B98CFF53BB86FF0CA557FF0BAC
-        5AFF0DB45FFF0FBB64FF11C168FF12C66BFF12C56AFF11C167FF0FBA63FF7FD7
-        AAFF08753CFC0066330AFFFFFF00FFFFFF00FFFFFF00FFFFFF00008000020474
-        3A91158249F46CC095FF44B37AFF069A4EFF07A052FF09A757FF0BAE5BFF0DB4
-        5FFF0EB862FF0FBB64FF0FBB63FF0EB862FF0DB35FFF7ED4A8FF08753DFC0080
-        4008FFFFFF00FFFFFF00FFFFFF00FFFFFF0003773BAC208A54F571C49AFF36AD
-        70FF0D9D53FF109E55FF0F9E54FF0FA457FF0BA757FF0AAB59FF0BAE5BFF0CB0
-        5CFF0CB05CFF0BAE5BFF0BAA5AFF84D3AAFF08753DFC00804008FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF0003753B92208854F474C49BFF3EB175FF17A15AFF1CA3
-        5EFF21A561FF25A764FF2BAB69FF2CAF6BFF28B06AFF23AF67FF23AF67FF29AF
-        6BFF36B272FF95D5B4FF08753DFC00804008FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0004743A72168049F574C39AFF55BA87FF23A663FF28A866FF2DAA
-        6AFF32AC6DFF36AD70FF3AAF73FF3DB075FF3FB176FF41B278FF41B278FF9AD6
-        B8FF09763EFC00804008FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF000372394C0F7B44F36CBC94FF6BC396FF31AC6DFF34AD6FFF39AF72FF3EB1
-        76FF42B278FF44B37AFF47B57DFF49B57EFF4AB67FFF9FD8BBFF0A763FFC0080
-        4008FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000575
-        3A3008773DEB63B68BFC7FCBA4FF42B278FF41B278FF9DD7B9FFA1D9BCFFA3DA
-        BEFFA4DABFFFA6DBC0FFA6DBC0FFA6DBC0FF0A763FFC00804008FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000763B1A0474
-        3CD955AA7EFA8ED1AFFF52B984FFA0D9BCFF0B7B41F604733AFF04733AFF0473
-        3AFF04733AFF04733AFF04753BEA00804004FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000074460B04753BBB459E
-        71F798D4B5FFA5DABFFF0B773FFC00804008FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000080000203743A95349262F59FD6
-        BAFF0B773FFC00804008FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0005753C6B258854F507753CFE0080
-        4008FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF000473394704743AC100804004FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00
-      }
-      Images = btnimages
-      ImageIndex = 1
-      OnClick = stepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 1
-    end
-    object beginbtn: TBitBtn
-      AnchorSideLeft.Control = screen
-      AnchorSideTop.Control = screen
-      AnchorSideBottom.Control = backbtn
-      AnchorSideBottom.Side = asrBottom
-      Left = 7
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 7
-      BorderSpacing.Top = 6
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Glyph.Data = {
-        C6070000424DC607000000000000360000002800000016000000160000000100
-        2000000000009007000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000200000005000000070000
-        000A0000000D0000000D0000000B000000090000000600000003FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00000000050000000B000000100000001400000017000000190000001B0000
-        001B0000001B0000001900000017000000140000000F0000000800000002FFFF
-        FF00FFFFFF00FFFFFF0004743AE804733AFF04733AFF04733AFF04733AE30000
-        00150000001A0000001F0000002300000026000000280000002902562B6E0470
-        38C9000000230000001F0000001A000000150000000F00000006FFFFFF00FFFF
-        FF0004733AFF7ECAA3FF7ECAA3FF7DC9A2FF04733AFC0000001D000000240000
-        00290000002F0000003300020137036231A11B824EF704733AFF0000002F0000
-        0029000000240000001D000000170000001000000008FFFFFF0004733AFF7ECA
-        A3FF069A4EFF7DC9A2FF04733AFC000000230000002A00000031000000380014
-        0A48036B36CD2D925EF77AD0A4FF04733AFF00000038000000310000002A0000
-        00230000001C000000150000000D0000000304733AFF7ECAA3FF069A4EFF7DC9
-        A2FF04733AFC000000250000002D00000034012F1857047139E942A472FB6FCF
-        9EFF81D8ACFF04733AFF0000003B000000340000002D000000250000001E0000
-        00160000000F0000000604733AFF7ECAA3FF069A4EFF7DC9A2FF04733AFC0000
-        00230000002A024C266A0A763EF457B485FE61C894FF15B463FF82DBAEFF0579
-        3DF904733AFF04733AFF04733AFF04733AFF04733AFF04743AEA0000000D0000
-        000504733AFF7ECAA3FF069A4EFF7DC9A2FF04733AFC0000001D0364328C157E
-        48F769BD92FF4ABB82FF0BAB59FF0DB35FFF82DBAEFF83DFB1FF85E4B3FF85E6
-        B5FF84E2B2FF83DDAFFF82D9ADFF04733AFF000000090000000104733AFF7ECA
-        A3FF069A4EFF7DC9A2FF04733AFC037038B6258A56F671C399FF33AC6EFF08A2
-        53FF0AAA58FF0CB25DFF0EB962FF10C067FF12C56AFF12C66BFF11C268FF0FBC
-        64FF81D8ACFF04733AFF00000003FFFFFF0004733AFF7ECAA3FF069A4EFF7DCA
-        A2FF04733AFD3A9C6AF86FC499FF20A460FF069A4EFF079F51FF09A656FF0BAD
-        5AFF0DB35FFF0EB862FF0FBC64FF0FBC65FF0FBA63FF0EB660FF81D6AAFF0473
-        3AFFFFFFFF00FFFFFF0004733AFF7ECAA3FF069A4EFF7ECAA3FF50B682FF64C0
-        91FF16A059FF0E9D54FF109E55FF0E9D54FF0DA356FF09A756FF0BAC5AFF0CB0
-        5CFF0DB25EFF0DB35EFF0CB15DFF0BAE5BFF80D2A8FF04733AFFFFFFFF00FFFF
-        FF0004733AFF7ECAA3FF069A4EFF7ECAA3FF50B682FF68C193FF1DA25EFF17A1
-        5AFF1CA35DFF21A561FF26A764FF2AAD69FF26AF68FF20AF65FF18AE61FF12AC
-        5DFF14AB5EFF1CAC62FF92D5B3FF04733AFFFFFFFF00FFFFFF0004733AFF7ECA
-        A3FF069A4EFF7DCAA2FF04733AFC3D9D6BF879C89FFF34AC6FFF23A562FF28A7
-        66FF2DA969FF31AB6DFF35AE70FF3AB274FF3DB477FF3FB478FF41B479FF40B3
-        78FF9CD6B8FF04733AFFFFFFFF00FFFFFF0004733AFF7ECAA3FF069A4EFF7DC9
-        A2FF04733AFC04753BAF298D59F57FC9A4FF50B882FF2FAA6BFF33AC6EFF39AE
-        72FF3DB075FF41B278FF45B37BFF47B47CFF49B57DFF4AB57EFFA1D8BCFF0473
-        3AFFFFFFFF00FFFFFF0004733AFF7ECAA3FF069A4EFF7DC9A2FF04733AFBFFFF
-        FF0004743A7918804AF57BC49FFF6AC395FF3AAF73FF40B177FF9ED7BAFFA0D8
-        BBFFA2D9BDFFA4DABEFFA5DABFFFA6DABFFFA6DABFFF04733AFFFFFFFF00FFFF
-        FF0004733AFF7ECAA3FF069A4EFF7DC9A2FF04733AFBFFFFFF00FFFFFF000473
-        3A470B773EF16CBA92FE84CCA7FF4CB67FFFA2D9BCFF04763BF704733AFF0473
-        3AFF04733AFF04733AFF04733AFF04743AE8FFFFFF00FFFFFF0004733AFF7ECA
-        A3FF069A4EFF7DC9A2FF04733AFBFFFFFF00FFFFFF00FFFFFF0004733A240475
-        3BE156AB7FFA95D3B3FFA5DABFFF04733AFFFFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFF7ECAA3FF069A4EFF7DC9
-        A2FF04733AFBFFFFFF00FFFFFF00FFFFFF00FFFFFF0004733A0D04753BBC3D99
-        69F7A0D7BBFF04733AFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF0004733AFF7ECAA3FF7ECAA3FF7DC9A2FF04733AFBFFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733A0104743A88278956F60473
-        3AFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF0004743AE804733AFF04733AFF04733AFF04743AE1FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733A5304753BC0FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00
-      }
-      Images = btnimages
-      ImageIndex = 0
-      OnClick = stepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 2
-    end
-    object endbtn: TBitBtn
-      AnchorSideLeft.Control = nextbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = nextbtn
-      Left = 115
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 4
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Glyph.Data = {
-        C6070000424DC607000000000000360000002800000016000000160000000100
-        2000000000009007000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000200000005000000070000
-        000A0000000D0000000D0000000B000000090000000600000003FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00000000050000000B000000100000001400000017000000190000001B0000
-        001B0000001B0000001900000017000000140000000F0000000800000002FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000000002000000090000000F0000
-        00150000001A0000001F047039C903572C6C0000002800000029000000280000
-        0026000000230000001F0000001A04733AE404733AFF04733AFF04733AFF0474
-        3AE8FFFFFF00000000020000000900000010000000170000001D000000240000
-        002904733AFF1B834EF7036332A10002013800000036000000330000002F0000
-        00290000002404733AFC7DCAA3FF7ECAA3FF7ECAA3FF04733AFFFFFFFF000000
-        00060000000D000000150000001C000000230000002A0000003104733AFF7BD3
-        A6FF2E9560F7046C37CE0013094C0000003E00000038000000310000002A0473
-        3AFC7ECCA4FF069A4EFF7ECAA3FF04733AFFFFFFFF00000000070000000F0000
-        00160000001E000000250000002D0000003404733AFF82D9ADFF72D9A5FF45AE
-        78FB04723AE9012C165E0000003B000000340000002D04733AFC7ECCA4FF069A
-        4EFF7ECAA3FF04733AFFFFFFFF000000000604733AE904733AFF04733AFF0473
-        3AFF04733AFF04733AFF04783CF982DAADFF19C36DFF67DCA1FF5CC791FE0A78
-        3FF50249246F000000310000002A04733AFC7ECDA5FF069A4EFF7ECAA3FF0473
-        3AFFFFFFFF000000000204733AFF7ECAA3FF7ECAA3FF7ECAA3FF7FCEA5FF80D2
-        A8FF81D6ABFF82DAADFF11C168FF13C96DFF54DB97FF6FD3A0FF15814AF70363
-        328F0000002404733AFC7ECDA5FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFF
-        FF0004733AFF7ECAA3FF069A4EFF069A4EFF07A052FF0AA857FF0CB05CFF0EB8
-        61FF10BF66FF12C56AFF13C86CFF3DCF85FF76D6A5FF26905AF6047139B70473
-        3AFC7ECCA4FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF0004733AFF7ECA
-        A3FF069A4EFF069A4EFF079F51FF09A656FF0BAE5BFF0DB560FF0FBB64FF10C0
-        67FF11C268FF10C067FF28C274FF73D3A3FF3DA26EF804743AFD7ECCA4FF069A
-        4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF0004733AFF7ECAA3FF069A4EFF069A
-        4EFF069D4FFF08A454FF0AAB59FF0CB15DFF0EB660FF15BB67FF19BD6AFF1CBD
-        6BFF1AB968FF1FB66AFF69CB99FF51BD86FF7ECCA3FF069A4EFF7ECAA3FF0473
-        3AFFFFFFFF00FFFFFF0004733AFF92D2B1FF19A15BFF109E55FF0E9D54FF16A5
-        5CFF21AF66FF2BB770FF31BC75FF30BE76FF2CBE74FF27BC70FF21B86BFF27B4
-        6CFF6DCA9AFF52BB86FF7ECAA3FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFF
-        FF0004733AFF9CD6B8FF40B177FF40B177FF40B177FF3EB277FF3EB678FF3CB9
-        79FF39BB78FF36BC77FF32BB74FF2CB971FF3DBB7BFF7ED0A6FF40A06FF80473
-        3AFC7DCAA2FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF0004733AFFA0D8
-        BBFF4AB57EFF4AB57EFF49B57DFF47B47CFF46B57CFF43B87CFF3FB97BFF3CB9
-        79FF37B875FF56C28BFF84CFA9FF2A8E5AF504753BAF04733AFC7DC9A2FF069A
-        4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF0004733AFFA5DABFFFA6DABFFFA6DA
-        BFFFA5DABFFFA4DABEFFA2D9BDFFA0D9BCFF46B77DFF42B77AFF70C99BFF7FC9
-        A3FF18804AF504743A79FFFFFF0004733AFB7DC9A2FF069A4EFF7ECAA3FF0473
-        3AFFFFFFFF00FFFFFF0004743AE804733AFF04733AFF04733AFF04733AFF0473
-        3AFF04763BF7A4DABEFF52B883FF88CEAAFF6EBC94FE0B773EF104733A47FFFF
-        FF00FFFFFF0004733AFB7DC9A2FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFFA8DB
-        C1FF98D4B5FF58AD81FA04753BE104733A24FFFFFF00FFFFFF00FFFFFF000473
-        3AFB7DC9A2FF069A4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFFA4D9BDFF3F9A6BF70475
-        3BBC04733A0DFFFFFF00FFFFFF00FFFFFF00FFFFFF0004733AFB7DC9A2FF069A
-        4EFF7ECAA3FF04733AFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF0004733AFF288957F604743A8804733A01FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF0004733AFB7DC9A2FF7ECAA3FF7ECAA3FF0473
-        3AFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF0004753BC004733A53FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF0004743AE104733AFF04733AFF04733AFF04743AE8FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00
-      }
-      Images = btnimages
-      ImageIndex = 3
-      OnClick = stepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 3
-    end
     object zoomlb: TLabel
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = zoomcb
       AnchorSideRight.Control = zoomcb
       AnchorSideBottom.Control = zoomcb
       AnchorSideBottom.Side = asrBottom
-      Left = 513
+      Left = 510
       Height = 23
-      Top = 605
+      Top = 6
       Width = 35
       Anchors = [akTop, akRight, akBottom]
       BorderSpacing.Right = 6
@@ -403,119 +65,18 @@ object tmainform: tmainform
       ParentColor = False
       ParentFont = False
     end
-    object decstepsbtn: TBitBtn
-      AnchorSideLeft.Control = endbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = endbtn
-      Left = 153
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 6
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      NumGlyphs = 2
-      Images = btnimages
-      ImageIndex = 14
-      OnClick = changestepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 4
-    end
-    object incstepsbtn: TBitBtn
-      AnchorSideLeft.Control = decstepsbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = decstepsbtn
-      Left = 189
-      Height = 32
-      Top = 6
-      Width = 32
-      BorderSpacing.Left = 4
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Layout = blGlyphRight
-      Images = btnimages
-      ImageIndex = 13
-      OnClick = changestepsbtnclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 5
-    end
-    object stepslb: TLabel
-      AnchorSideLeft.Control = incstepsbtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = incstepsbtn
-      AnchorSideBottom.Control = incstepsbtn
-      AnchorSideBottom.Side = asrBottom
-      Left = 227
-      Height = 32
-      Top = 6
-      Width = 43
-      Anchors = [akTop, akLeft, akBottom]
-      BorderSpacing.Left = 6
-      Caption = 'Step x1'
-      Font.Style = [fsBold]
-      Layout = tlCenter
-      ParentColor = False
-      ParentFont = False
-    end
-    object aboutbtn: TBitBtn
-      AnchorSideTop.Control = screen
-      AnchorSideRight.Control = screen
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Side = asrBottom
-      Left = 587
-      Height = 32
-      Top = 6
-      Width = 32
-      Anchors = [akTop, akRight]
-      BorderSpacing.Top = 6
-      BorderSpacing.Right = 7
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Images = btnimages
-      ImageIndex = 21
-      OnClick = aboutmiclick
-      ParentFont = False
-      Spacing = 0
-      TabOrder = 6
-    end
-    object toolsbtn: TBitBtn
-      AnchorSideTop.Control = screen
-      AnchorSideRight.Control = aboutbtn
-      Left = 549
-      Height = 32
-      Top = 6
-      Width = 32
-      Anchors = [akTop, akRight]
-      BorderSpacing.Top = 6
-      BorderSpacing.Right = 6
-      Constraints.MaxHeight = 32
-      Constraints.MaxWidth = 32
-      Constraints.MinHeight = 32
-      Constraints.MinWidth = 32
-      Images = btnimages
-      ImageIndex = 26
-      OnClick = toolsbtnclick
-      ParentFont = False
-      TabOrder = 7
-    end
     object zoomcb: TComboBox
+      AnchorSideTop.Control = screen
       AnchorSideRight.Control = screen
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = screen
       AnchorSideBottom.Side = asrBottom
-      Left = 554
+      Left = 551
       Height = 23
-      Top = 605
+      Top = 6
       Width = 65
-      Anchors = [akRight, akBottom]
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
       BorderSpacing.Right = 7
       BorderSpacing.Bottom = 6
       DropDownCount = 20
@@ -545,8 +106,26 @@ object tmainform: tmainform
       OnSelect = changezoombtnclick
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 8
+      TabOrder = 0
       Text = '100%'
+    end
+    object progressbar: TProgressBar
+      AnchorSideLeft.Control = screen
+      AnchorSideRight.Control = screen
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = screen
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 22
+      Top = 602
+      Width = 615
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
+      ParentFont = False
+      TabOrder = 1
+      Visible = False
     end
   end
   object controlpnl: TPanel
@@ -557,14 +136,19 @@ object tmainform: tmainform
     Left = 6
     Height = 638
     Top = 6
-    Width = 280
+    Width = 275
     Anchors = [akTop, akLeft, akBottom]
     BorderSpacing.Left = 6
     BorderSpacing.Top = 6
     BorderSpacing.Bottom = 6
+    BevelColor = clForm
     BevelOuter = bvNone
+    BidiMode = bdRightToLeft
     ClientHeight = 638
-    ClientWidth = 280
+    ClientWidth = 275
+    Constraints.MaxWidth = 275
+    Constraints.MinWidth = 275
+    ParentBidiMode = False
     ParentFont = False
     TabOrder = 1
     object connectionbvl: TDividerBevel
@@ -575,93 +159,50 @@ object tmainform: tmainform
       Left = 0
       Height = 15
       Top = 0
-      Width = 280
+      Width = 275
       Caption = 'Connection'
       Anchors = [akTop, akLeft, akRight]
       Color = clWhite
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentColor = False
       ParentFont = False
     end
-    object portlb: TLabel
+    object addresslb: TLabel
       AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = portcb
-      AnchorSideRight.Control = portcb
-      AnchorSideBottom.Control = portcb
+      AnchorSideTop.Control = addresscb
+      AnchorSideRight.Control = addresscb
+      AnchorSideBottom.Control = addresscb
       AnchorSideBottom.Side = asrBottom
-      Left = 4
+      Left = -1
       Height = 23
       Top = 23
-      Width = 84
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Left = 4
-      BorderSpacing.Right = 8
-      Caption = 'Port address:'
+      Width = 78
+      Anchors = [akTop, akRight, akBottom]
+      BorderSpacing.Right = 4
+      Caption = 'Server address:'
       Layout = tlCenter
+      ParentBidiMode = False
       ParentColor = False
       ParentFont = False
-    end
-    object portcb: TComboBox
-      AnchorSideTop.Control = connectionbvl
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = controlpnl
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Side = asrBottom
-      Left = 96
-      Height = 23
-      Top = 23
-      Width = 180
-      Anchors = [akTop, akRight]
-      BorderSpacing.Left = 4
-      BorderSpacing.Top = 8
-      BorderSpacing.Right = 4
-      Constraints.MaxWidth = 180
-      Constraints.MinWidth = 180
-      ItemHeight = 15
-      ParentFont = False
-      TabOrder = 1
-    end
-    object portbtn: TBitBtn
-      AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = portcb
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = controlpnl
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Side = asrBottom
-      Left = 4
-      Height = 32
-      Top = 52
-      Width = 272
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 4
-      BorderSpacing.Top = 6
-      BorderSpacing.Right = 4
-      Caption = 'Connect'
-      Constraints.MaxHeight = 32
-      Constraints.MinHeight = 32
-      Images = btnimages
-      ImageIndex = 12
-      OnClick = connectbtnclick
-      ParentFont = False
-      TabOrder = 0
     end
     object calibrationbvl: TDividerBevel
       AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = portbtn
+      AnchorSideTop.Control = connectbtn
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 92
-      Width = 280
+      Top = 90
+      Width = 275
       Caption = 'Calibration'
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentFont = False
     end
     object stepnumberlb: TLabel
@@ -672,13 +213,14 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 23
-      Top = 115
-      Width = 84
+      Top = 113
+      Width = 79
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Right = 8
-      Caption = 'Num. of steps:'
+      Caption = 'Step size [mm]'
       Layout = tlCenter
+      ParentBidiMode = False
       ParentColor = False
       ParentFont = False
     end
@@ -688,9 +230,9 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 96
+      Left = 91
       Height = 23
-      Top = 115
+      Top = 113
       Width = 180
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
@@ -700,7 +242,7 @@ object tmainform: tmainform
       Constraints.MinWidth = 180
       MaxValue = 1000000
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 0
     end
     object xupbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -709,7 +251,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 4
       Height = 30
-      Top = 144
+      Top = 142
       Width = 85
       BorderSpacing.Left = 4
       BorderSpacing.Top = 6
@@ -797,7 +339,7 @@ object tmainform: tmainform
       Margin = 5
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 1
     end
     object yupbtn: TBitBtn
       AnchorSideLeft.Control = xupbtn
@@ -808,7 +350,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 95
       Height = 30
-      Top = 144
+      Top = 142
       Width = 85
       Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Left = 6
@@ -895,7 +437,7 @@ object tmainform: tmainform
       }
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 2
     end
     object zdownbtn: TBitBtn
       AnchorSideLeft.Side = asrBottom
@@ -904,9 +446,9 @@ object tmainform: tmainform
       AnchorSideRight.Control = zupbtn
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 191
+      Left = 186
       Height = 30
-      Top = 178
+      Top = 176
       Width = 85
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 4
@@ -994,7 +536,7 @@ object tmainform: tmainform
       }
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 3
     end
     object zupbtn: TBitBtn
       AnchorSideLeft.Side = asrBottom
@@ -1003,9 +545,9 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 191
+      Left = 186
       Height = 30
-      Top = 144
+      Top = 142
       Width = 85
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 6
@@ -1094,7 +636,7 @@ object tmainform: tmainform
       }
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 4
     end
     object ydownbtn: TBitBtn
       AnchorSideLeft.Control = yupbtn
@@ -1103,7 +645,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 95
       Height = 30
-      Top = 178
+      Top = 176
       Width = 85
       Caption = 'Y-Axis'
       Color = clScrollBar
@@ -1189,7 +731,7 @@ object tmainform: tmainform
       }
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 5
     end
     object xdownbtn: TBitBtn
       AnchorSideLeft.Control = xupbtn
@@ -1198,7 +740,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 4
       Height = 30
-      Top = 178
+      Top = 176
       Width = 85
       BorderSpacing.Top = 4
       Caption = 'X-Axis'
@@ -1285,23 +827,24 @@ object tmainform: tmainform
       Margin = 5
       OnClick = motorbtnclick
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 6
     end
     object drawingbvl: TDividerBevel
       AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = zdownbtn
+      AnchorSideTop.Control = homebtn
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 216
-      Width = 280
+      Top = 250
+      Width = 275
       Caption = 'Drawing'
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentFont = False
     end
     object importbtn: TBitBtn
@@ -1312,7 +855,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 239
+      Top = 273
       Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
@@ -1325,7 +868,7 @@ object tmainform: tmainform
       ImageIndex = 11
       OnClick = importbtnclick
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 7
     end
     object clearbtn: TBitBtn
       AnchorSideLeft.Control = importbtn
@@ -1334,9 +877,9 @@ object tmainform: tmainform
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 191
+      Left = 186
       Height = 32
-      Top = 239
+      Top = 273
       Width = 85
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 4
@@ -1351,7 +894,7 @@ object tmainform: tmainform
       ImageIndex = 5
       OnClick = clearbtnclick
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 8
     end
     object editingbvl: TDividerBevel
       AnchorSideLeft.Control = controlpnl
@@ -1361,13 +904,14 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 279
-      Width = 280
+      Top = 313
+      Width = 275
       Caption = 'Drawing editing'
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentFont = False
     end
     object editinhlb: TLabel
@@ -1378,14 +922,15 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 23
-      Top = 302
-      Width = 84
+      Top = 336
+      Width = 79
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
       BorderSpacing.Right = 8
       Caption = 'Operation:'
       Layout = tlCenter
+      ParentBidiMode = False
       ParentColor = False
       ParentFont = False
     end
@@ -1394,9 +939,9 @@ object tmainform: tmainform
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 96
+      Left = 91
       Height = 23
-      Top = 302
+      Top = 336
       Width = 180
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 8
@@ -1415,9 +960,10 @@ object tmainform: tmainform
         'MOVE TO ORIGIN'
       )
       OnChange = editingcbchange
+      ParentBidiMode = False
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 11
+      TabOrder = 9
       Text = 'SCALE'
     end
     object editingvaluelb: TLabel
@@ -1429,12 +975,13 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 23
-      Top = 331
-      Width = 84
+      Top = 365
+      Width = 79
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       Caption = 'Value:'
       Layout = tlCenter
+      ParentBidiMode = False
       ParentColor = False
       ParentFont = False
     end
@@ -1445,9 +992,9 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 96
+      Left = 91
       Height = 23
-      Top = 331
+      Top = 365
       Width = 180
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
@@ -1456,7 +1003,7 @@ object tmainform: tmainform
       DecimalPlaces = 8
       MaxValue = 0
       ParentFont = False
-      TabOrder = 12
+      TabOrder = 10
       Value = 1
     end
     object editingbtn: TBitBtn
@@ -1467,8 +1014,8 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 4
       Height = 30
-      Top = 360
-      Width = 272
+      Top = 394
+      Width = 267
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
       BorderSpacing.Top = 6
@@ -1478,7 +1025,7 @@ object tmainform: tmainform
       Constraints.MinHeight = 30
       OnClick = editingbtnclick
       ParentFont = False
-      TabOrder = 13
+      TabOrder = 11
     end
     object pagesizebvl: TDividerBevel
       AnchorSideLeft.Control = controlpnl
@@ -1488,13 +1035,14 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 398
-      Width = 280
+      Top = 432
+      Width = 275
       Caption = 'Page sizing'
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentFont = False
     end
     object pagesizecb: TComboBox
@@ -1503,9 +1051,9 @@ object tmainform: tmainform
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 96
+      Left = 91
       Height = 23
-      Top = 421
+      Top = 455
       Width = 180
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
@@ -1527,9 +1075,10 @@ object tmainform: tmainform
         'A5 - Portrait'
       )
       OnChange = pagesizebtnclick
+      ParentBidiMode = False
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 14
+      TabOrder = 12
       Text = 'A4 - Landscape'
     end
     object pagesizelb: TLabel
@@ -1540,14 +1089,15 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 23
-      Top = 421
-      Width = 84
+      Top = 455
+      Width = 79
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
       BorderSpacing.Right = 8
       Caption = 'Page format:'
       Layout = tlCenter
+      ParentBidiMode = False
       ParentColor = False
       ParentFont = False
     end
@@ -1559,13 +1109,14 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 452
-      Width = 280
+      Top = 486
+      Width = 275
       Caption = 'Control'
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Font.Style = [fsBold]
       LeftIndent = 30
+      ParentBiDiMode = False
       ParentFont = False
     end
     object startbtn: TBitBtn
@@ -1577,7 +1128,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 473
+      Top = 507
       Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
@@ -1589,7 +1140,7 @@ object tmainform: tmainform
       ImageIndex = 6
       OnClick = startmiclick
       ParentFont = False
-      TabOrder = 15
+      TabOrder = 13
     end
     object killbtn: TBitBtn
       AnchorSideTop.Control = startbtn
@@ -1597,9 +1148,9 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = startbtn
       AnchorSideBottom.Side = asrBottom
-      Left = 191
+      Left = 186
       Height = 32
-      Top = 473
+      Top = 507
       Width = 85
       Anchors = [akTop, akRight, akBottom]
       BorderSpacing.Right = 4
@@ -1612,22 +1163,21 @@ object tmainform: tmainform
       ImageIndex = 8
       OnClick = killmiclick
       ParentFont = False
-      TabOrder = 16
+      TabOrder = 14
     end
     object homebtn: TBitBtn
       AnchorSideLeft.Control = controlbvl
-      AnchorSideTop.Control = startbtn
+      AnchorSideTop.Control = xdownbtn
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = controlbvl
+      AnchorSideRight.Control = ydownbtn
       AnchorSideRight.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 511
-      Width = 272
+      Top = 210
+      Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
-      BorderSpacing.Top = 6
-      BorderSpacing.Right = 4
+      BorderSpacing.Top = 4
       Caption = 'Move to Home'
       Constraints.MaxHeight = 32
       Constraints.MinHeight = 32
@@ -1635,22 +1185,120 @@ object tmainform: tmainform
       ImageIndex = 9
       OnClick = movetohomemiclick
       ParentFont = False
-      TabOrder = 17
+      TabOrder = 15
     end
-    object progressbar: TProgressBar
-      AnchorSideLeft.Control = homebtn
-      AnchorSideRight.Control = homebtn
+    object connectbtn: TBitBtn
+      AnchorSideLeft.Control = controlpnl
+      AnchorSideTop.Control = addresscb
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = controlpnl
+      AnchorSideRight.Side = asrBottom
+      Left = 4
+      Height = 30
+      Top = 52
+      Width = 267
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 4
+      Caption = 'Connect'
+      Constraints.MaxHeight = 30
+      Constraints.MinHeight = 30
+      OnClick = connectbtnclick
+      TabOrder = 16
+    end
+    object twopointslb: TLabel
+      AnchorSideLeft.Control = addresscb
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = addresscb
+      AnchorSideRight.Control = portcb
+      AnchorSideBottom.Control = addresscb
+      AnchorSideBottom.Side = asrBottom
+      Left = 205
+      Height = 23
+      Top = 23
+      Width = 3
+      Alignment = taCenter
+      Anchors = [akTop, akRight, akBottom]
+      BorderSpacing.Right = 3
+      Caption = ':'
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object addresscb: TComboBox
+      AnchorSideTop.Control = connectionbvl
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = twopointslb
+      AnchorSideBottom.Side = asrBottom
+      Left = 81
+      Height = 23
+      Top = 23
+      Width = 120
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 4
+      ItemHeight = 15
+      ParentBidiMode = False
+      ParentFont = False
+      TabOrder = 17
+      Text = '255.255.255.255'
+    end
+    object portcb: TComboBox
+      AnchorSideTop.Control = twopointslb
+      AnchorSideRight.Control = controlpnl
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = twopointslb
+      AnchorSideBottom.Side = asrBottom
+      Left = 211
+      Height = 23
+      Top = 23
+      Width = 60
+      Anchors = [akTop, akRight, akBottom]
+      BorderSpacing.Right = 4
+      ItemHeight = 15
+      ParentBidiMode = False
+      ParentFont = False
+      TabOrder = 18
+      Text = '8888'
+    end
+    object aboutbtn: TBitBtn
+      AnchorSideLeft.Control = controlpnl
+      AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = controlpnl
       AnchorSideBottom.Side = asrBottom
       Left = 4
-      Height = 22
-      Top = 616
-      Width = 272
+      Height = 32
+      Top = 606
+      Width = 267
       Anchors = [akLeft, akRight, akBottom]
-      ParentFont = False
-      TabOrder = 18
-      Visible = False
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = 'About'
+      Constraints.MaxHeight = 32
+      Constraints.MinHeight = 32
+      Images = btnimages
+      ImageIndex = 21
+      OnClick = aboutmiclick
+      TabOrder = 19
+    end
+    object sethomebtn: TBitBtn
+      AnchorSideLeft.Control = zdownbtn
+      AnchorSideTop.Control = zdownbtn
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = controlpnl
+      AnchorSideRight.Side = asrBottom
+      Left = 186
+      Height = 32
+      Top = 210
+      Width = 85
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 4
+      Caption = 'Set Home'
+      OnClick = sethomebtnclick
+      TabOrder = 20
     end
   end
   object savedialog: TSaveDialog
@@ -2276,213 +1924,11 @@ object tmainform: tmainform
       5CDC97109224A7B69CDA097D6E704F90FF03386173C4
     }
   end
-  object popup: TPopupMenu
-    Alignment = paRight
-    AutoPopup = False
-    Left = 352
-    Top = 288
-    object setupmi: TMenuItem
-      Caption = 'Layout setup ...'
-      Bitmap.Data = {
-        36040000424D3604000000000000360000002800000010000000100000000100
-        2000000000000004000064000000640000000000000000000000A0A0A0849B9B
-        9BFC9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B
-        9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFDA1A1A19B9D9D9DF3FFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9C9C9CFC9D9D9DF7FFFF
-        FFFFEEEEEEFFF0F0F0FFF2F2F2FFF4F4F4FFF6F6F6FFF8F8F8FFFAFAFAFFFBFB
-        FBFFFAFAFAFFF9F9F9FFF7F7F7FFF5F5F5FFFFFFFFFF9C9C9CFC9D9D9DF7FFFF
-        FFFFEDEDEDFF797567FF797567FF797567FF797567FFF1F1F1FF9B9B9BFF9B9B
-        9BFF9B9B9BFF9B9B9BFF9B9B9BFFA0A0A0FFFFFFFFFF9C9C9CFC9D9D9DF7FFFF
-        FFFFECECECFF757164FF757164FF757164FF757164FFEFEFEFFFA5A5A5FFFFFF
-        FFFFFFFFFFFFFFFFFFFFFDFDFDFF9F9F9FFFFFFFFFFF9C9C9CFC9D9D9DF7FFFF
-        FFFFEBEBEBFF6E6A5FFF6E6A5FFF6E6A5FFF6E6A5FFFEDEDEDFFA5A5A5FFFDFE
-        FEFFECEEEEFFEDEFEFFFFDFDFDFF9F9F9FFFFFFFFFFF9C9C9CFC9D9D9DF7FFFF
-        FFFFEAEAEAFF666359FF666359FF666359FF666359FFECECECFFA5A5A5FFFDFE
-        FEFFECEEEEFFEDEFEFFFFDFDFDFF9F9F9FFFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFFA5A5A5FFFFFF
-        FFFFFFFFFFFFFFFFFFFFFDFDFDFF9F9F9FFFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9B9B9BFF9B9B9BFF9B9B
-        9BFF9B9B9BFF9B9B9BFF9B9B9BFFA0A0A0FFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFFFFFFFFFFECEEEEFFECEEEEFFFFFFFFFF9B9B9BFFECECECFF6764
-        5AFF67645AFF67645AFF67645AFFEAEAEAFFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFFFFFFFFFFECEEEEFFECEEEEFFFFFFFFFF9B9B9BFFEAEAEAFF5F5D
-        54FF5F5D54FF5F5D54FF5F5D54FFE8E8E8FFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9B9B9BFFE8E8E8FF5755
-        4EFF57554EFF57554EFF57554EFFE6E6E6FFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFF9B9B9BFFE6E6E6FF4F4E
-        48FF4F4E48FF4F4E48FF4F4E48FFE5E5E5FFFFFFFFFF9C9C9CFC9C9C9CF7FFFF
-        FFFFE2E2E2FFE3E3E3FFE4E4E4FFE4E4E4FFE5E5E5FFE6E6E6FFE6E6E6FFE6E6
-        E6FFE6E6E6FFE6E6E6FFE5E5E5FFE5E5E5FFFFFFFFFF9C9C9CFC9D9D9DF1FAFA
-        FAFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFB
-        FBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFFFBFBFBFF9C9C9CFB9E9E9E759D9D
-        9DF29C9C9CF79C9C9CF79C9C9CF79C9C9CF79C9C9CF79C9C9CF79C9C9CF79C9C
-        9CF79C9C9CF79C9C9CF79C9C9CF79C9C9CF79D9D9DF49F9F9F8B
-      }
-      OnClick = setupmiclick
-    end
-    object showlogmi: TMenuItem
-      Caption = 'Show debug log ...'
-      Bitmap.Data = {
-        C6070000424DC607000000000000360000002800000016000000160000000100
-        2000000000009007000064000000640000000000000000000000000000000000
-        0000000000000000000800000008000000080000000800000008000000100000
-        0010000000100000001000000010000000100000000800000008000000080000
-        00080000000800000000000000000000000000000000000000080000001F0000
-        002E0000003F0000004600000046000000460000004D0000004D0000004D0000
-        004D0000004D0000004D0000004600000046000000460000003F0000002E0000
-        001F0000000800000000000000085D5F5E4B858A88FF858A88FF858A88FF858A
-        88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A
-        88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF3B3E3C4C0000
-        00087476763F858A88FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8
-        F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8
-        F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FF696E6CF7464A483F858A88FFF7F8
-        F7FFF6F8F7FFE0E4E2FFD2D7D4FFC5CBC8FFBFC4C2FFB9BFBCFFB9BFBCFFB9BF
-        BCFFB9BFBCFFB9BFBCFFB9BFBCFFB9BFBCFFB9BFBCFFB9BFBCFFB9BFBCFFBFC5
-        C2FFC1C7C4FFC3C9C6FFF7F8F7FF858A88FF858A88FFF7F8F7FFEAEDEBFFA06E
-        44FF874A20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A
-        20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A20FFA06E44FFC1C7
-        C4FFF7F8F7FF858A88FF858A88FFF7F8F7FFE4E8E6FF874A20FF885527FF915E
-        29FF98642FFFA06B31FFA57235FFAC783BFF7FB39DFFB5813FFFB17D3BFFAB78
-        39FFA57135FF9F6B33FF98632DFF8F5A29FF874A20FFBDC3C0FFF7F8F7FF858A
-        88FF858A88FFF7F8F7FFDDE1DFFF874A20FF885525FF8F5C29FF97632DFF9E6B
-        31FFA36F33FF8E9771FFA5F3FDFF929C74FFAD793BFFA87537FFA36F35FF9D69
-        2FFF96632DFF8E5C29FF874A20FFB3B9B6FFF7F8F7FF858A88FF858A88FFF7F8
-        F7FFDDE1DFFF874A20FF699E91FF6DA292FF71A594FF9A662FFFA06C31FF79AD
-        99FFFFFFFFFF7BAF9AFFA77537FFA57135FFA06B31FF9A662FFF94602BFF8C59
-        27FF874A20FFB3B9B6FFF7F8F7FF858A88FF858A88FFF7F8F7FFDDE1DFFF114D
-        44FF5BC3C7FF5DC5C8FF5EC7C9FF818A6AFF858D6CFF6ABDB6FFFFFFFFFF63CB
-        CBFFA26F33FF6ABDB6FF69BCB5FF67BAB3FF65B7B3FF63B5B2FF874A20FFB3B9
-        B6FFF7F8F7FF858A88FF858A88FFF7F8F7FFDDE1DFFF044942FFFFFFFFFFFFFF
-        FFFFFFFFFFFF65B9B3FF808A6AFFCAF8FEFF61C9CAFFFFFFFFFF848D6CFFCAF8
-        FEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF874A20FFAEBAB4FFF7F8F7FF858A
-        88FF858A88FFF7F8F7FFDDE1DFFF874A20FF58C1C6FF5AC2C7FFFFFFFFFF56D7
-        E2FF6EA293FFCAF8FEFF66B9B4FFA5F3FDFF5BD1D8FFFFFFFFFF64B7B3FF63B6
-        B2FF61B4B1FF5EB2B0FF874A20FFAEBAB4FFF7F8F7FF858A88FF858A88FFF7F8
-        F7FFDDE1DFFF874A20FF6E411DFF76471FFF5EB2B0FFFFFFFFFF5CC4C8FFCAF8
-        FEFF6DA292FF5EC5C8FFFFFFFFFF63B6B2FF768165FF737F63FF6F7A63FF6A77
-        60FF874A20FFAEBAB4FFF7F8F7FF858A88FF858A88FFF7F8F7FFDDE1DFFF874A
-        20FF87644DFF98775FFF94CBCAFFDDFAFEFF96E5ECFFDDFAFEFFA3AB9AFF9CA4
-        90FF89B3A8FF848D77FF7F4E23FF794921FF73451DFF6C3F1DFF874A20FFB4BA
-        B7FFF7F8F7FF858A88FF858A88FFF7F8F7FFDDE1DFFF874A20FF9B8370FF9F85
-        72FF9EA79CFF96DFE5FFFFFFFFFF98D9DCFFAD8F77FFAD9077FFA5AD9EFFAC8E
-        75FFA78B73FF916F53FF734A2BFF633919FF874A20FFB4BAB7FFF7F8F7FF858A
-        88FF858A88FFF7F8F7FFDDE1DFFF874A20FF937E6FFF988070FF9D8370FF97CC
-        CDFFDEFAFEFF9BBEB9FFA68A73FFA68A74FFA68A73FFA58973FFA38873FF9F87
-        72FF9D8370FF7B5E49FF874A20FFB4BAB7FFF7F8F7FF858A88FF858A88FFF7F8
-        F7FFDDE1DFFF874A20FF8B796CFF907D6EFF957E6FFF97A299FF97BBB8FF9AA3
-        9BFF9E8572FF9E8572FF9E8472FF9D8472FF9B8370FF99806FFF957E6EFF907D
-        6EFF874A20FFB4BAB7FFF7F8F7FF858A88FF858A88FFF7F8F7FFE4E8E6FF874A
-        20FF83756AFF88786BFF8D796CFF907D6EFF929F98FF957F6FFF967F6FFF967F
-        6FFF967F6FFF957F6FFF927D6EFF8F7C6EFF8D7A6CFF88786BFF874A20FFBEC4
-        C1FFF7F8F7FF858A88FF858A88FFF7F8F7FFEAEDECFFA06E44FF874A20FF874A
-        20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A20FF874A
-        20FF874A20FF874A20FF874A20FF874A20FF9F6D42FFCACFCDFFF7F8F7FF858A
-        88FF858A88FFF7F8F7FFF8F9F9FFEBEEECFFE4E8E6FFDDE1DFFFDDE1DFFFDDE1
-        DFFFDDE1DFFFDDE1DFFFDDE1DFFFDDE1DFFFDDE1DFFFDDE1DFFFDBDFDDFFD5D9
-        D8FFCFD4D1FFCFD4D1FFD3D8D5FFE5E7E6FFF7F8F7FF858A88FFA7AAA929858A
-        88FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8
-        F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8F7FFF7F8
-        F7FFF7F8F7FFF7F8F7FF6D7270F3656A682900000000A3A7A529858A88FF858A
-        88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A
-        88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A
-        88FF686D6B2900000000
-      }
-      OnClick = showlogmiclick
-    end
-    object popupn1: TMenuItem
-      Caption = '-'
-    end
-    object optimizemi: TMenuItem
-      Caption = 'Optimize toolpath'
-      OnClick = optimizemiclick
-    end
-    object cleanupmi: TMenuItem
-      Caption = 'Cleanup'
-      object cleanupoffmi: TMenuItem
-        Caption = 'OFF'
-        Checked = True
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup010mi: TMenuItem
-        Caption = '0.10'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup025mi: TMenuItem
-        Caption = '0.25'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup050mi: TMenuItem
-        Caption = '0.50'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup075mi: TMenuItem
-        Caption = '0.75'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup100mi: TMenuItem
-        Caption = '1.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup125mi: TMenuItem
-        Caption = '1.25'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup150mi: TMenuItem
-        Caption = '1.50'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup200mi: TMenuItem
-        Caption = '2.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup300mi: TMenuItem
-        Caption = '3.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup400mi: TMenuItem
-        Caption = '4.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup500mi: TMenuItem
-        Caption = '5.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup600mi: TMenuItem
-        Caption = '6.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup700mi: TMenuItem
-        Caption = '7.00'
-        OnClick = cleanupvaluemiclick
-      end
-      object cleanup800mi: TMenuItem
-        Caption = '8.00'
-        OnClick = cleanupvaluemiclick
-      end
-    end
-    object popupn2: TMenuItem
-      Caption = '-'
-    end
-    object optimizermi: TMenuItem
-      Caption = 'Automatically optimize toolpath '
-      Checked = True
-      OnClick = opimizermiclick
-    end
-    object showreddotmi: TMenuItem
-      Caption = 'Show each step point'
-      OnClick = showreddotmiclick
-    end
-    object showpentransitmi: TMenuItem
-      Caption = 'Show pen transit'
-      OnClick = showpentransitmiclick
-    end
-  end
   object propstorage: TXMLPropStorage
     StoredValues = <>
     OnRestoreProperties = propstoragerestoreproperties
     Left = 352
-    Top = 352
+    Top = 288
   end
   object opendialog: TOpenPictureDialog
     Filter = 'Scalable vector graphics (*.svg)|*.svg;|Drawing interchange format (*.dxf)|*.dxf;|Raster graphics (*.bmp, *.png)|*.bmp;*.png;'
@@ -2498,6 +1944,17 @@ object tmainform: tmainform
     OnStartTimer = schedulerstarttimer
     OnStopTimer = schedulerstoptimer
     Left = 352
-    Top = 417
+    Top = 352
+  end
+  object lnet: TLTCPComponent
+    Port = 8888
+    OnReceive = lnetreceive
+    OnError = ltpcerror
+    OnDisconnect = ltpcdsisconnect
+    OnConnect = ltpcconnect
+    Timeout = 0
+    ReuseAddress = False
+    Left = 352
+    Top = 416
   end
 end

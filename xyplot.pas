@@ -1,7 +1,7 @@
 {
-  Description: XY-Plot Client application.
+  Description: XY-Plot application.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -25,20 +25,24 @@ program xyplot;
 
 uses
  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms, aboutfrm,
- debugfrm, importfrm, mainfrm, settingfrm, xypdebug;
+ importfrm, mainfrm, lnetbase, lnetvisual, xyputils;
 
 {$R *.res}
 
 begin
+  {$ifopt D+}
+  printdbg('XY-PLOT', 'DEBUG');
+  {$endif}
   requirederivedformresource := true;
   Application.Scaled:=True;
-  Application.Title:='XY-Plot Client';
+  Application.Title:='XY-Plot';
   application.initialize;
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);
-  application.createform(tdebugform, debugform);
   application.createform(timportform, importform);
-  application.createform(tsettingform, settingform);
   application.run;
+  {$ifopt D+}
+  printdbg('XY-PLOT', 'END');
+  {$endif}
 end.
 

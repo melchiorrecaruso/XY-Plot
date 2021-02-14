@@ -1,7 +1,7 @@
 {
   Description: XY-Plot about form.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -41,9 +41,9 @@ type
     aboutlinklb: tlabel;
     aboutnamelb: tlabel;
     aboutversionlb: tlabel;
-    procedure aboutlinklbclick     (sender: tobject);
+    procedure aboutlinklbclick(sender: tobject);
     procedure aboutlinklbmouseleave(sender: tobject);
-    procedure aboutlinklbmousemove (sender: tobject;
+    procedure aboutlinklbmousemove(sender: tobject;
       shift: tshiftstate; x, y: integer);
   private
   public

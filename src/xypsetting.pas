@@ -1,7 +1,7 @@
 {
   Description: XY-Plot setting class.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -26,7 +26,7 @@ unit xypsetting;
 interface
 
 uses
-  dialogs, inifiles, sysutils, xypdebug, xypmath;
+  inifiles, sysutils, xypmath, xyputils;
 
 type
   txypsetting = class
@@ -37,18 +37,13 @@ type
     fxfactor: double;
     fyfactor: double;
     fpageheight: double;
-    fpagewidth:  double;
-    fpagedir: longint;
+    fpagewidth: double;
+    fpagelandscape: longint;
     // pulley-x/y/z
     fpxratio: double;
-    fpxdir: longint;
     fpyratio: double;
-    fpydir: longint;
     fpzratio: double;
-    fpzdir: longint;
     // ramps
-    frampkb: longint;
-    frampki: longint;
     frampkl: longint;
  public
     constructor create;
@@ -63,19 +58,14 @@ type
     property yoffset: double read fyoffset write fyoffset;
 
     property pxratio: double read fpxratio write fpxratio;
-    property pxdir: longint read fpxdir write fpxdir;
     property pyratio: double read fpyratio write fpyratio;
-    property pydir: longint read fpydir write fpydir;
     property pzratio: double read fpzratio write fpzratio;
-    property pzdir: longint read fpzdir write fpzdir;
 
-    property rampkb: longint read frampkb write frampkb;
-    property rampki: longint read frampki write frampki;
     property rampkl: longint read frampkl write frampkl;
 
     property pageheight: double read fpageheight write fpageheight;
     property pagewidth:  double read fpagewidth  write fpagewidth;
-    property pagedir:   longint read fpagedir    write fpagedir;
+    property pagelangscape: longint read fpagelandscape write fpagelandscape;
  end;
 
 
@@ -83,11 +73,17 @@ function getclientsettingfilename(global: boolean): string;
 function getsettingfilename(global: boolean): string;
 
 
+var
+  setting: txypsetting;
+
 implementation
 
 function getclientsettingfilename(global: boolean): string;
 begin
-  result := includetrailingbackslash(getappconfigdir(global)) + 'xyplot.client';
+  forcedirectories(getappconfigdir(global));
+  begin
+    result := includetrailingbackslash(getappconfigdir(global)) + 'xyplot.client';
+  end;
 end;
 
 function getsettingfilename(global: boolean): string;
@@ -126,8 +122,10 @@ var
 begin
   if fileexists(filename) = false then
   begin
-    messagedlg('XY-Plot Client', 'Setting file not found !', mterror, [mbok], 0);
-  end else
+    save(filename);
+  end;
+
+  if fileexists(filename) then
   begin
     ini := tinifile.create(filename);
     ini.formatsettings.decimalseparator := '.';
@@ -138,40 +136,33 @@ begin
     fxfactor := ini.readfloat('LAYOUT', 'X.FACTOR', 0);
     fyfactor := ini.readfloat('LAYOUT', 'Y.FACTOR', 0);
 
-    fpxratio      := ini.readfloat  ('X-AXIS', 'RATIO', 0);
-    fpxdir        := ini.readinteger('X-AXIS', 'DIR',   1);
-    fpyratio      := ini.readfloat  ('Y-AXIS', 'RATIO', 0);
-    fpydir        := ini.readinteger('Y-AXIS', 'DIR',   1);
-    fpzratio      := ini.readfloat  ('Z-AXIS', 'RATIO', 0);
-    fpzdir        := ini.readinteger('Z-AXIS', 'DIR',   1);
+    fpxratio := ini.readfloat  ('X-AXIS', 'RATIO', 0);
+    fpyratio := ini.readfloat  ('Y-AXIS', 'RATIO', 0);
+    fpzratio := ini.readfloat  ('Z-AXIS', 'RATIO', 0);
 
-    fpageheight := ini.readfloat  ('PAGE', 'HEIGHT', 0);
-    fpagewidth  := ini.readfloat  ('PAGE', 'WIDTH',  0);
-    fpagedir    := ini.readinteger('PAGE', 'DIR',    0);
+    fpageheight    := ini.readfloat  ('PAGE', 'HEIGHT',    0);
+    fpagewidth     := ini.readfloat  ('PAGE', 'WIDTH',     0);
+    fpagelandscape := ini.readinteger('PAGE', 'LANDSCAPE', 0);
 
-    frampkb := ini.readinteger('RAMP','KB', 0);
-    frampki := ini.readinteger('RAMP','KI', 0);
     frampkl := ini.readinteger('RAMP','KL', 0);
 
-    xyplog.add(format('   SETTING::X.OFFSET         %12.5f', [fxoffset]));
-    xyplog.add(format('   SETTING::Y.OFFSET         %12.5f', [fyoffset]));
-    xyplog.add(format('   SETTING::X.FACTOR         %12.5f', [fxfactor]));
-    xyplog.add(format('   SETTING::Y.FACTOR         %12.5f', [fyfactor]));
+    {$ifopt D+}
+    printdbg('SETTING', format('X.OFFSET         %12.5f', [fxoffset]));
+    printdbg('SETTING', format('Y.OFFSET         %12.5f', [fyoffset]));
+    printdbg('SETTING', format('X.FACTOR         %12.5f', [fxfactor]));
+    printdbg('SETTING', format('Y.FACTOR         %12.5f', [fyfactor]));
 
-    xyplog.add(format('   SETTING::X.RATIO          %12.5f', [fpxratio]));
-    xyplog.add(format('   SETTING::X.DIR            %12.5d', [fpxdir]));
-    xyplog.add(format('   SETTING::Y.RATIO          %12.5f', [fpyratio]));
-    xyplog.add(format('   SETTING::Y.DIR            %12.5d', [fpydir]));
-    xyplog.add(format('   SETTING::Z.RATIO          %12.5f', [fpzratio]));
-    xyplog.add(format('   SETTING::Z.DIR            %12.5d', [fpzdir]));
+    printdbg('SETTING', format('X.RATIO          %12.5f', [fpxratio]));
+    printdbg('SETTING', format('Y.RATIO          %12.5f', [fpyratio]));
+    printdbg('SETTING', format('Z.RATIO          %12.5f', [fpzratio]));
 
-    xyplog.add(format('   SETTING::PAGE.MAXHEIGHT   %12.5f', [fpageheight]));
-    xyplog.add(format('   SETTING::PAGE.MAXWIDTH    %12.5f', [fpagewidth]));
-    xyplog.add(format('   SETTING::PAGE.DIR         %12.5d', [fpagedir]));
+    printdbg('SETTING', format('PAGE.MAXHEIGHT   %12.5f', [fpageheight]));
+    printdbg('SETTING', format('PAGE.MAXWIDTH    %12.5f', [fpagewidth ]));
+    printdbg('SETTING', format('PAGE.LANDSCAPE   %12.5d', [fpagelandscape]));
 
-    xyplog.add(format('   SETTING::RAMP.KB          %12.5u', [frampkb]));
-    xyplog.add(format('   SETTING::RAMP.KI          %12.5u', [frampki]));
-    xyplog.add(format('   SETTING::RAMP.KL          %12.5u', [frampkl]));
+    printdbg('SETTING', format('RAMP.KL          %12.5u', [frampkl]));
+    {$endif}
+
     ini.destroy;
   end;
   forigin.x := 0;
@@ -192,18 +183,13 @@ begin
   ini.writefloat('LAYOUT', 'Y.FACTOR', fyfactor);
 
   ini.writefloat  ('X-AXIS', 'RATIO', fpxratio);
-  ini.writeinteger('X-AXIS', 'DIR',   fpxdir);
   ini.writefloat  ('Y-AXIS', 'RATIO', fpyratio);
-  ini.writeinteger('Y-AXIS', 'DIR',   fpydir);
   ini.writefloat  ('Z-AXIS', 'RATIO', fpzratio);
-  ini.writeinteger('Z-AXIS', 'DIR',   fpzdir);
 
   ini.writefloat  ('PAGE', 'HEIGHT', fpageheight);
-  ini.writefloat  ('PAGE', 'WIDTH',  fpagewidth);
-  ini.writeinteger('PAGE', 'DIR',    fpagedir);
+  ini.writefloat  ('PAGE', 'WIDTH', fpagewidth);
+  ini.writeinteger('PAGE', 'LANDSCAPE', fpagelandscape);
 
-  ini.writeinteger('RAMP','KB', frampkb);
-  ini.writeinteger('RAMP','KI', frampki);
   ini.writeinteger('RAMP','KL', frampkl);
   ini.destroy;
 end;
