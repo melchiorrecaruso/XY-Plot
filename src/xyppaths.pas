@@ -26,7 +26,7 @@ unit xyppaths;
 interface
 
 uses
-  bgrapath, classes, graphics, sysutils, xypdebug, xypmath;
+  bgrapath, classes, graphics, sysutils, xypmath;
 
 type
   txypelement = class(tobject)
@@ -734,7 +734,6 @@ begin
   begin
     txypelement(flist[i]).rotate(value);
   end;
-  xyplog.add(format('  DOCUMENT::ROTATE           %12.5f', [value]));
 end;
 
 procedure txypelementlist.scale(value: double);
@@ -745,7 +744,6 @@ begin
   begin
     txypelement(flist[i]).scale(value);
   end;
-  xyplog.add(format('  DOCUMENT::SCALE            %12.5f', [value]));
 end;
 
 function txypelementlist.firstpoint: txyppoint;
@@ -831,8 +829,6 @@ begin
     end;
     path.destroy;
   end;
-  xyplog.add(format('  DOCUMENT::PAGE WIDTH       %12.1f', [fxmax-fxmin]));
-  xyplog.add(format('  DOCUMENT::PAGE HEIGTH      %12.1f', [fymax-fymin]));
 end;
 
 procedure txypelementlist.centertoorigin;
@@ -841,7 +837,6 @@ begin
 
   updatepage;
   move(-(fxmax+fxmin)/2, -(fymax+fymin)/2);
-  xyplog.add('  DOCUMENT::MOVE ORIGIN TO CENTER');
 end;
 
 end.

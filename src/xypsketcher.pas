@@ -26,7 +26,7 @@ unit xypsketcher;
 interface
 
 uses
-  classes, bgrabitmap, math, fpimage, sysutils, xypdebug, xypmath, xyppaths;
+  classes, bgrabitmap, math, fpimage, sysutils, xypmath, xyppaths;
 
 type
   txypsketcher = class
@@ -169,11 +169,6 @@ begin
   pw := fpagewidth/nw;
   ph := fpageheight/nh;
   mx := false;
-
-  xyplog.add(format('  SKETCHER::PATTERN WIDTH    %12.2f', [pw]));
-  xyplog.add(format('  SKETCHER::PATTERN HEIGHT   %12.2f', [ph]));
-  xyplog.add(format('  SKETCHER::X DARKNESS RANGE %12.2f', [pw/fdotsize]));
-  xyplog.add(format('  SKETCHER::Y DARKNESS RANGE %12.2f', [ph/fdotsize]));
 
   j := 0;
   while j < nh do
@@ -366,9 +361,6 @@ begin
   pw := fpagewidth/nw;
   ph := fpageheight/nh;
   mx := false;
-
-  xyplog.add(format('  SKETCHER::PATTERN WIDTH    %12.2f', [pw]));
-  xyplog.add(format('  SKETCHER::PATTERN HEIGHT   %12.2f', [ph]));
 
   j := 0;
   while j < nh do

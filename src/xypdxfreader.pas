@@ -29,7 +29,7 @@ unit xypdxfreader;
 interface
 
 uses
-  classes, fpimage, math, sysutils, xypdebug, xypdriver, xypmath, xyppaths;
+  classes, fpimage, math, sysutils, xypdriver, xypmath, xyppaths;
 
 type
   tpolylineelement = record
@@ -1210,8 +1210,6 @@ procedure dxf2paths(const afilename: string; elements: txypelementlist);
 var
   reader: tvdxfreader;
 begin
-  xyplog.add(format('      LOAD::FILE %s', [afilename]));
-
   reader := tvdxfreader.create;
   reader.readfromfile(afilename, elements);
   reader.destroy;

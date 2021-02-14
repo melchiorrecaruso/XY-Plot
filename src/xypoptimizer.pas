@@ -25,7 +25,7 @@ unit xypoptimizer;
 interface
 
 uses
-  classes, sysutils, xypdebug, xypmath, xyppaths;
+  classes, sysutils, xypmath, xyppaths;
 
 type
   txyppathoptimizer = class
