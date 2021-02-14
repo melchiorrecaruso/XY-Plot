@@ -1,6 +1,6 @@
 GRABCAD Models
 
-Some models are downlodes from:
+Some models downloaded from:
 
 https://grabcad.com/library/gx12-4-pin-connector-male-1
 https://grabcad.com/library/2-position-screw-down-terminal-block-to-female-dc-power-adapter-1

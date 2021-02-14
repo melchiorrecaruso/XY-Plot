@@ -1,7 +1,7 @@
 // XY-Plotter Server for ESP8266/ESP32 boards
 
 // Author: Melchiorre Caruso
-// Date:   13 Feb 2021
+// Date:   14 Feb 2021
 
 // Specifica protocollo:
 
@@ -110,27 +110,9 @@ void loop() {
         digitalWrite(MOTOR_Z_DIR_PIN, bitRead(Bits, 5));  
         digitalWrite(MOTOR_X_STP_PIN, bitRead(Bits, 0));
         digitalWrite(MOTOR_Y_STP_PIN, bitRead(Bits, 2));   
-        digitalWrite(MOTOR_Z_STP_PIN, bitRead(Bits, 4));                                                          
-      }           
-      Bits = 0;
-      if (BufferIndex < BufferSize) {
-        Bits = Buffer[BufferIndex];
-        BufferIndex++;
-      }    
-      if (BufferIndex == BufferSize) {         
-        if (client1) {
-          if (client1.connected()) {     
-            BufferIndex = 0;            
-            if (client1.available() >= BUFFER_LEN) {              
-              BufferSize = client1.read(Buffer, BUFFER_LEN);              
-              client1.write(CRC8());
-            } else { BufferSize = 0; }
-          } else { client1.stop(); } 
-        } else { 
-          client1 = server1.available();
-          SpeedNow = SpeedMin;  
-        }             
-      }
+        digitalWrite(MOTOR_Z_STP_PIN, bitRead(Bits, 4)); 
+        Bits = 0;                                                         
+      }                 
     } 
   }  
 
@@ -143,5 +125,24 @@ void loop() {
       SpeedNow -= Acceleration;
       if(SpeedNow < SpeedMin) { SpeedNow = SpeedMin; }
     }
-  }   
+  } else {
+    if (BufferIndex < BufferSize) {
+      Bits = Buffer[BufferIndex];
+      BufferIndex++;
+    }    
+    if (BufferIndex == BufferSize) {         
+      if (client1) {
+        if (client1.connected()) {     
+          BufferIndex = 0;            
+          if (client1.available() >= BUFFER_LEN) {              
+            BufferSize = client1.read(Buffer, BUFFER_LEN);              
+            client1.write(CRC8());
+          } else { BufferSize = 0; }
+        } else { client1.stop(); } 
+      } else { 
+        client1 = server1.available();
+        SpeedNow = SpeedMin;  
+      }             
+    }
+  }  
 }  
