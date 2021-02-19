@@ -43,6 +43,11 @@ type
     fpxratio: double;
     fpyratio: double;
     fpzratio: double;
+    fpxdir: longint;
+    fpydir: longint;
+    fpzdir: longint;
+    fpzdown: double;
+    fpzup: double;
     // ramps
     frampkl: longint;
  public
@@ -60,6 +65,11 @@ type
     property pxratio: double read fpxratio write fpxratio;
     property pyratio: double read fpyratio write fpyratio;
     property pzratio: double read fpzratio write fpzratio;
+    property pxdir: longint read fpxdir write fpxdir;
+    property pydir: longint read fpydir write fpydir;
+    property pzdir: longint read fpzdir write fpzdir;
+    property pzdown: double read fpzdown write fpzdown;
+    property pzup: double read fpzup write fpzup;
 
     property rampkl: longint read frampkl write frampkl;
 
@@ -135,9 +145,14 @@ begin
     fxfactor := ini.readfloat('LAYOUT', 'X.FACTOR', 0);
     fyfactor := ini.readfloat('LAYOUT', 'Y.FACTOR', 0);
 
-    fpxratio := ini.readfloat  ('X-AXIS', 'RATIO', 0);
-    fpyratio := ini.readfloat  ('Y-AXIS', 'RATIO', 0);
-    fpzratio := ini.readfloat  ('Z-AXIS', 'RATIO', 0);
+    fpxratio := ini.readfloat('X-AXIS', 'RATIO', 0);
+    fpyratio := ini.readfloat('Y-AXIS', 'RATIO', 0);
+    fpzratio := ini.readfloat('Z-AXIS', 'RATIO', 0);
+    fpxdir := ini.readinteger('X-AXIS', 'DIR', 0);
+    fpydir := ini.readinteger('Y-AXIS', 'DIR', 0);
+    fpzdir := ini.readinteger('Z-AXIS', 'DIR', 0);
+    fpzdown := ini.readfloat('Z-AXIS', 'DOWN', 0);
+    fpzup   := ini.readfloat('Z-AXIS', 'UP',   0);
 
     fpageheight    := ini.readfloat  ('PAGE', 'HEIGHT',    0);
     fpagewidth     := ini.readfloat  ('PAGE', 'WIDTH',     0);
@@ -154,6 +169,11 @@ begin
     printdbg('SETTING', format('X.RATIO          %12.5f', [fpxratio]));
     printdbg('SETTING', format('Y.RATIO          %12.5f', [fpyratio]));
     printdbg('SETTING', format('Z.RATIO          %12.5f', [fpzratio]));
+    printdbg('SETTING', format('X.DIR            %12.5d', [fpxdir]));
+    printdbg('SETTING', format('Y.DIR            %12.5d', [fpydir]));
+    printdbg('SETTING', format('Z.DIR            %12.5d', [fpzdir]));
+    printdbg('SETTING', format('Z.DOWN           %12.5f', [fpzdown]));
+    printdbg('SETTING', format('Z.UP             %12.5f', [fpzup]));
 
     printdbg('SETTING', format('PAGE.MAXHEIGHT   %12.5f', [fpageheight]));
     printdbg('SETTING', format('PAGE.MAXWIDTH    %12.5f', [fpagewidth ]));
@@ -181,12 +201,17 @@ begin
   ini.writefloat('LAYOUT', 'X.FACTOR', fxfactor);
   ini.writefloat('LAYOUT', 'Y.FACTOR', fyfactor);
 
-  ini.writefloat  ('X-AXIS', 'RATIO', fpxratio);
-  ini.writefloat  ('Y-AXIS', 'RATIO', fpyratio);
-  ini.writefloat  ('Z-AXIS', 'RATIO', fpzratio);
+  ini.writefloat('X-AXIS', 'RATIO', fpxratio);
+  ini.writefloat('Y-AXIS', 'RATIO', fpyratio);
+  ini.writefloat('Z-AXIS', 'RATIO', fpzratio);
+  ini.writeinteger('X-AXIS', 'DIR', fpxdir);
+  ini.writeinteger('Y-AXIS', 'DIR', fpydir);
+  ini.writeinteger('Z-AXIS', 'DIR', fpzdir);
+  ini.writefloat('Z-AXIS', 'DOWN', fpzdown);
+  ini.writefloat('Z-AXIS', 'UP',   fpzup);
 
-  ini.writefloat  ('PAGE', 'HEIGHT', fpageheight);
-  ini.writefloat  ('PAGE', 'WIDTH', fpagewidth);
+  ini.writefloat  ('PAGE', 'HEIGHT',    fpageheight);
+  ini.writefloat  ('PAGE', 'WIDTH',     fpagewidth);
   ini.writeinteger('PAGE', 'LANDSCAPE', fpagelandscape);
 
   ini.writeinteger('RAMP','KL', frampkl);

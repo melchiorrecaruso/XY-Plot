@@ -32,6 +32,9 @@ uses
   extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypmath,
   xypsetting, xypsketcher;
 
+const
+  streambufsize = 1024;
+
 type
 
   { tmainform }
@@ -102,7 +105,6 @@ type
     procedure editingbtnclick(sender: tobject);
     // PAGE SIZE
     procedure pagesizebtnclick(sender: tobject);
-    procedure screenclick(sender: tobject);
     procedure sethomebtnclick(sender: tobject);
     // CONTROL
     procedure startmiclick(sender: tobject);
@@ -134,11 +136,12 @@ type
     py: longint;
     screenimage: tbgrabitmap;
     schedulerlist: tstringlist;
-    streaming: boolean;
+    scheduling: boolean;
     stream: tmemorystream;
-    streamsize: int64;
+    streaming: boolean;
+    streambuf: array[0..streambufsize-1] of byte;
     streamposition: int64;
-    streamcrc: byte;
+    streamsize: int64;
     procedure streamingstart;
     procedure streamingstop;
     procedure streamingrun;
@@ -180,9 +183,6 @@ implementation
 
 uses
   aboutfrm, importfrm, math, sysutils, xypdxfreader, xypsvgreader, xyputils;
-
-const
-  bufferlen = 1024;
 
 // SCREEN THREAD
 
@@ -419,7 +419,7 @@ begin
     end;
     // start scheduler
     schedulerlist.add('screen.update');
-    scheduler.enabled:= true;
+    scheduler.enabled := true;
   end;
 end;
 
@@ -429,7 +429,7 @@ begin
   page.clear;
   // start scheduler
   schedulerlist.add('screen.update');
-  scheduler.enabled:= true;
+  scheduler.enabled := true;
 end;
 
 // DRAWING EDITING
@@ -463,7 +463,7 @@ begin
   page.updatepage;
   // start scheduler
   schedulerlist.add('screen.update');
-  scheduler.enabled:= true;
+  scheduler.enabled := true;
 end;
 
 // PAGE SIZE
@@ -490,11 +490,6 @@ begin
   printdbg('PAGE', format('HEIGHT           %12.5u', [pageheight]));
   {$endif}
   changezoombtnclick(zoomcb);
-end;
-
-procedure tmainform.screenclick(Sender: TObject);
-begin
-
 end;
 
 // CONTROL
@@ -686,6 +681,7 @@ end;
 procedure tmainform.onscreenthreadstop;
 begin
   screenthread := nil;
+  scheduling := false;
 end;
 
 // SCHEDULER
@@ -705,37 +701,40 @@ end;
 
 procedure tmainform.schedulertimer(sender: tobject);
 begin
-  if streaming then
+  if scheduling then
   begin
-    progressbar.position := (100 * streamposition) div streamsize;
-  end else
-  if assigned(screenthread) then
-  begin
-    progressbar.position := screenthread.percentage;
+    if streaming then
+      progressbar.position := (100 * streamposition) div streamsize;
+    if assigned(screenthread) then
+      progressbar.position := screenthread.percentage;
   end else
   if schedulerlist.count > 0 then
   begin
     if ('screen.update' = schedulerlist[0]) then
     begin
-      screenthread         := tscreenthread.create;
+      scheduling := true;
+      screenthread := tscreenthread.create;
       screenthread.onstart := @onscreenthreadstart;
-      screenthread.onstop  := @onscreenthreadstop;
+      screenthread.onstop := @onscreenthreadstop;
       screenthread.start;
       lock;
     end else
     if ('screen.fit' = schedulerlist[0]) then
     begin
+      scheduling := true;
       movex := (screen.width  div 2) - trunc((pagewidth /2)*getzoom);
       movey := (screen.height div 2) - trunc((pageheight/2)*getzoom);
       screen.redrawbitmap;
+      scheduling := false;
     end else
     if ('driver.start' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'START'); {$endif}
+      scheduling := true;
       stream.clear;
       driver.sync;
       driver.move(page, pagewidth, pageheight);
-      driver.movez(+trunc(1/setting.pzratio));
+      driver.movez(trunc(setting.pzup/setting.pzratio));
       driver.movex(0);
       driver.movey(0);
       driver.movez(0);
@@ -745,15 +744,15 @@ begin
     if ('driver.setorigin' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'SET ORIGIN'); {$endif}
-      stream.clear;
       driver.setorigin;
     end else
     if ('driver.movetoorigin' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'MOVE TO ORIGIN'); {$endif}
+      scheduling := true;
       stream.clear;
       driver.sync;
-      driver.movez(+trunc(1/setting.pzratio));
+      driver.movez(trunc(setting.pzup/setting.pzratio));
       driver.movex(0);
       driver.movey(0);
       driver.movez(0);
@@ -763,6 +762,7 @@ begin
     if pos('driver.move', schedulerlist[0]) = 1 then
     begin
       {$ifopt D+} printdbg('DRIVER', 'MOVE'); {$endif}
+      scheduling := true;
       stream.clear;
       driver.sync;
       if (schedulerlist[0] = 'driver.movex+') then
@@ -785,6 +785,7 @@ begin
       driver.createramps;
       streamingstart;
     end;
+
     schedulerlist.delete(0);
   end else
   begin
@@ -796,60 +797,43 @@ end;
 
 procedure tmainform.streamingstart;
 begin
+  streaming := true;
   streamposition := 0;
   streamsize := stream.size;
   stream.seek(0, sofrombeginning);
-  if streamsize > 0 then
-  begin
-    {$ifopt D+} printdbg('TCP', 'STREAMING.START'); {$endif}
-    startbtn.caption    := 'Stop';
-    startbtn.imageindex := 7;
-    // ---
-    streaming := true;
-    {$ifopt D+}
-    printdbg('DRIVER', format('STATUS [CX-1 %10d -> CX-2 %10d]', [driver.xcount1, driver.xcount2]));
-    printdbg('DRIVER', format('STATUS [CY-1 %10d -> CY-2 %10d]', [driver.ycount1, driver.ycount2]));
-    printdbg('DRIVER', format('STATUS [CZ-1 %10d -> CZ-2 %10d]', [driver.zcount1, driver.zcount2]));
-    {$endif}
-    streamingrun;
-    lock;
-  end;
+  {$ifopt D+}
+  printdbg('TCP', 'STREAMING.START');
+  printdbg('DRIVER', format('SYNC-1 [X%10.2f] [Y%10.2f] [Z%10.2f]',
+    [driver.xcount1*setting.pxratio,
+     driver.ycount1*setting.pyratio,
+     driver.zcount1*setting.pzratio]));
+  {$endif}
+  startbtn.imageindex := 7;
+  startbtn.caption := 'Stop';
+  streamingrun;
+  lock;
 end;
 
 procedure tmainform.streamingstop;
 begin
-  startbtn.caption    := 'Start';
-  startbtn.imageindex := 6;
-  // ---
-  stream.clear;
-  streamsize := 0;
-  streamposition := 0;
   streaming := false;
-  {$ifopt D+}
-  printdbg('DRIVER', format('CHECK  [CX-1 %10d -> CX-2 %10d]', [driver.xcount1, driver.xcount2]));
-  printdbg('DRIVER', format('CHECK  [CY-1 %10d -> CY-2 %10d]', [driver.ycount1, driver.ycount2]));
-  printdbg('DRIVER', format('CHECK  [CZ-1 %10d -> CZ-2 %10d]', [driver.zcount1, driver.zcount2]));
-  printdbg('TCP', 'STREAMING.STOP');
-  {$endif}
-  if (driver.xcount1 <> driver.xcount2) or
-     (driver.ycount1 <> driver.ycount2) or
-     (driver.zcount1 <> driver.zcount2) then
-  begin
-    messagedlg('XY-Plot', 'Syncing Error !', mterror, [mbok], 0);
-  end;
+  streamposition := 0;
+  streamsize := 0;
+  stream.clear;
+  // ---
+  startbtn.imageindex := 6;
+  startbtn.caption := 'Start';
+  scheduling := false;
   unlock;
 end;
 
 procedure tmainform.streamingrun;
-var
-  buffer: array[0..bufferlen -1] of byte;
 begin
-  fillbyte(buffer, sizeof(buffer), 0);
-  if (stream.read(buffer, sizeof(buffer)) > 0) then
+  fillbyte(streambuf, streambufsize, 0);
+  if (stream.read(streambuf, streambufsize-1) > 0) then
   begin
-    lnet.send        (buffer, sizeof(buffer));
-    driver.sync      (buffer, sizeof(buffer));
-    streamcrc := crc8(buffer, sizeof(buffer));
+    streambuf[streambufsize-1] := crc8(streambuf, streambufsize-1);
+    lnet.send(streambuf, streambufsize);
   end;
 end;
 
@@ -880,18 +864,22 @@ var
 begin
   if lnet.get(crc, sizeof(crc)) = sizeof(crc) then
   begin
-    if (crc = streamcrc) then
+    if (crc = streambuf[streambufsize-1]) then
     begin
-      inc(streamposition, bufferlen);
+      driver.sync(streambuf, streambufsize-1);
+      inc(streamposition, streambufsize-1);
       if streamposition < streamsize then
       begin
         if scheduler.enabled then streamingrun;
       end else
+      begin
+        {$ifopt D+} printdbg('TCP', 'STREAMING.STOP'); {$endif}
         streamingstop;
+      end;
     end else
     begin
-      streamingstop;
-      {$ifopt D+} printdbg('TCP', 'ERROR (CRC STREAMING)'); {$endif}
+      {$ifopt D+} printdbg('TCP', 'RETRY (CRC STREAMING ERROR)'); {$endif}
+      lnet.send(streambuf, streambufsize);
     end;
   end;
 end;

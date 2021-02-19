@@ -186,7 +186,7 @@ begin
     //dx
     if getbit(data[i], 0) = 1 then
     begin
-      if getbit(data[i], 1) = 1 then
+      if getbit(data[i], 1) = setting.pxdir then
         dec(fxcount1)
       else
         inc(fxcount1);
@@ -194,7 +194,7 @@ begin
     //dy
     if getbit(data[i], 2) = 1 then
     begin
-      if getbit(data[i], 3) = 1 then
+      if getbit(data[i], 3) = setting.pydir then
         dec(fycount1)
       else
         inc(fycount1);
@@ -202,7 +202,7 @@ begin
     //dz
     if getbit(data[i], 4) = 1 then
     begin
-      if getbit(data[i], 5) = 1 then
+      if getbit(data[i], 5) = setting.pzdir then
         dec(fzcount1)
       else
         inc(fzcount1);
@@ -221,12 +221,6 @@ begin
   fxcount2 := fxcount1;
   fycount2 := fycount1;
   fzcount2 := fzcount1;
-  {$ifopt D+}
-  printdbg('DRIVER', format('SYNC-2 [X%10.2f] [Y%10.2f] [Z%10.2f]',
-    [fxcount2*setting.pxratio,
-     fycount2*setting.pyratio,
-     fzcount2*setting.pzratio]));
-  {$endif}
 end;
 
 procedure txypdriver.compute(const p: txyppoint; var cx, cy: longint);
@@ -247,9 +241,24 @@ begin
   dx := (cx - fxcount2);
   dy := (cy - fycount2);
   dz := (cz - fzcount2);
-  if (dx < 0) then setbit(b0, 1);
-  if (dy < 0) then setbit(b0, 3);
-  if (dz < 0) then setbit(b0, 5);
+  // dx
+  if setting.pxdir = 1 then
+  begin
+    if (dx < 0) then setbit(b0, 1);
+  end else
+    if (dx > 0) then setbit(b0, 1);
+  //dy
+  if setting.pydir = 1 then
+  begin
+    if (dy < 0) then setbit(b0, 3);
+  end else
+    if (dy > 0) then setbit(b0, 3);
+  //dz
+  if setting.pzdir = 1 then
+  begin
+    if (dz < 0) then setbit(b0, 5);
+  end else
+    if (dz > 0) then setbit(b0, 5);
 
   dx := abs(dx);
   dy := abs(dy);
@@ -326,9 +335,10 @@ begin
         p2.y := p2.y + yoffset;
         compute(p2, xcnt, ycnt);
         if distance(p1, p2) >= 0.2 then
-          move(xcnt, ycnt, +trunc(1/setting.pzratio))
+          move(fxcount2, fycount2, trunc(setting.pzup/setting.pzratio))
         else
-          move(xcnt, ycnt, -trunc(1/setting.pzratio));
+          move(fxcount2, fycount2, trunc(setting.pzdown/setting.pzratio));
+        move(xcnt, ycnt, fzcount2);
       end;
       p1 := p2;
     end;
@@ -373,7 +383,7 @@ begin
         //dx
         if getbit(buf[j], 0) = 1 then
         begin
-          if getbit(buf[j], 1) = 1 then
+          if getbit(buf[j], 1) = setting.pxdir then
             dec(dx[i])
           else
             inc(dx[i]);
@@ -381,7 +391,7 @@ begin
         //dy
         if getbit(buf[j], 2) = 1 then
         begin
-          if getbit(buf[j], 3) = 1 then
+          if getbit(buf[j], 3) = setting.pydir then
             dec(dy[i])
           else
             inc(dy[i]);
@@ -389,7 +399,7 @@ begin
         //dz
         if getbit(buf[j], 4) = 1 then
         begin
-          if getbit(buf[j], 5) = 1 then
+          if getbit(buf[j], 5) = setting.pzdir then
             dec(dz[i])
           else
             inc(dz[i]);
@@ -441,12 +451,6 @@ procedure txypdriver.destroyramps;
 begin
   // todo ...
 end;
-
-
-
-
-
-
 
 end.
 

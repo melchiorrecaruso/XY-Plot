@@ -1,7 +1,7 @@
 // XY-Plotter Server for ESP8266/ESP32 boards
 
 // Author: Melchiorre Caruso
-// Date:   14 Feb 2021
+// Date:   19 Feb 2021
 
 // Specifica protocollo:
 
@@ -36,6 +36,7 @@ WiFiServer server1(port1);
 #define  BUFFER_LEN 1024
 uint8_t  Bits = 0; 
 uint8_t  Buffer[BUFFER_LEN];
+uint8_t  BufferCrc   = 0;
 uint16_t BufferIndex = 0;
 uint16_t BufferSize  = 0;
 
@@ -133,16 +134,19 @@ void loop() {
     if (BufferIndex == BufferSize) {         
       if (client1) {
         if (client1.connected()) {     
-          BufferIndex = 0;            
+          BufferIndex = 0;  
+          BufferSize  = 0;          
           if (client1.available() >= BUFFER_LEN) {              
-            BufferSize = client1.read(Buffer, BUFFER_LEN);              
-            client1.write(CRC8());
-          } else { BufferSize = 0; }
+            client1.read(Buffer, BUFFER_LEN);              
+            
+            BufferCrc = CRC8();
+            if (BufferCrc == Buffer[BUFFER_LEN-1]) {
+              BufferSize = BUFFER_LEN-1;              
+            }
+            client1.write(BufferCrc);            
+          } else { SpeedNow = SpeedMin; }
         } else { client1.stop(); } 
-      } else { 
-        client1 = server1.available();
-        SpeedNow = SpeedMin;  
-      }             
+      } else { client1 = server1.available(); }             
     }
   }  
 }  

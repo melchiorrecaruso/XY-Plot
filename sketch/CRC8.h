@@ -21,7 +21,7 @@ static const uint8_t crc8_table[256] = {
 
 uint8_t CRC8() {
   uint8_t crc = 0x00;
-  for (uint16_t i = 0; i < BufferSize; i++) {
+  for (uint16_t i = 0; i < BUFFER_LEN-1; i++) {
    crc = (crc8_table[crc ^ Buffer[i]]);
   }
   return crc;

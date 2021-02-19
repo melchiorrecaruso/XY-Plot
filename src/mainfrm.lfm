@@ -1,14 +1,14 @@
 object tmainform: tmainform
-  Left = 227
-  Height = 650
-  Top = 61
+  Left = 233
+  Height = 600
+  Top = 46
   Width = 920
   Anchors = []
   Caption = 'XY-Plot'
-  ClientHeight = 650
+  ClientHeight = 600
   ClientWidth = 920
   Color = clWhite
-  Constraints.MinHeight = 650
+  Constraints.MinHeight = 600
   Constraints.MinWidth = 920
   OnClose = FormClose
   OnCreate = FormCreate
@@ -26,7 +26,7 @@ object tmainform: tmainform
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 285
-    Height = 632
+    Height = 582
     Top = 12
     Width = 627
     OnRedraw = screenredraw
@@ -37,13 +37,12 @@ object tmainform: tmainform
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 6
     BorderStyle = bsSingle
-    ClientHeight = 628
+    ClientHeight = 578
     ClientWidth = 623
     Color = clWindow
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    OnClick = screenClick
     OnMouseDown = imagemousedown
     OnMouseMove = imagemousemove
     OnMouseUp = imagemouseup
@@ -117,7 +116,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 22
-      Top = 602
+      Top = 552
       Width = 615
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -134,7 +133,7 @@ object tmainform: tmainform
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 6
-    Height = 638
+    Height = 588
     Top = 6
     Width = 275
     Anchors = [akTop, akLeft, akBottom]
@@ -144,7 +143,7 @@ object tmainform: tmainform
     BevelColor = clForm
     BevelOuter = bvNone
     BidiMode = bdRightToLeft
-    ClientHeight = 638
+    ClientHeight = 588
     ClientWidth = 275
     Constraints.MaxWidth = 275
     Constraints.MinWidth = 275
@@ -1270,7 +1269,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 606
+      Top = 556
       Width = 267
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -1939,7 +1938,7 @@ object tmainform: tmainform
   end
   object scheduler: TIdleTimer
     Enabled = False
-    Interval = 100
+    Interval = 250
     OnTimer = schedulertimer
     OnStartTimer = schedulerstarttimer
     OnStopTimer = schedulerstoptimer
