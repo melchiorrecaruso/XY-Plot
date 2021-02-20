@@ -42,7 +42,7 @@ uint16_t BufferSize  = 0;
 
 uint32_t Freq = 50000;
 uint32_t Num = 24; 
-uint32_t Acceleration = 16;
+uint32_t Acceleration = 32;
 volatile uint32_t Accumulator = 0;
 volatile uint32_t SpeedNow = 2 << (Num - 12);
 uint32_t SpeedMin = 2 << (Num - 12);
@@ -144,9 +144,12 @@ void loop() {
               BufferSize = BUFFER_LEN-1;              
             }
             client1.write(BufferCrc);            
-          } else { SpeedNow = SpeedMin; }
+          }
         } else { client1.stop(); } 
-      } else { client1 = server1.available(); }             
+      } else { 
+        client1 = server1.available(); 
+        SpeedNow = SpeedMin;
+      }             
     }
   }  
 }  
