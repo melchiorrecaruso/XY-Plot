@@ -29,11 +29,11 @@ uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
   lnetcomponents, lnet, bgrapath, buttons, classes, comctrls, controls, dialogs,
   extctrls, forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage,
-  extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypmath,
+  extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths,
   xypsetting, xypsketcher;
 
 const
-  streambufsize = 1024;
+  streambufsize = 1536;
 
 type
 

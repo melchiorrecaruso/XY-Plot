@@ -1,7 +1,7 @@
 // XY-Plotter Server for ESP8266/ESP32 boards
 
 // Author: Melchiorre Caruso
-// Date:   19 Feb 2021
+// Date:   21 Feb 2021
 
 // Specifica protocollo:
 
@@ -33,7 +33,7 @@ WiFiServer server1(port1);
 
 // VAR
 
-#define  BUFFER_LEN 1024
+#define  BUFFER_LEN 1536
 uint8_t  Bits = 0; 
 uint8_t  Buffer[BUFFER_LEN];
 uint8_t  BufferCrc   = 0;
@@ -58,7 +58,6 @@ uint32_t SpeedMax = 2 << (Num -  2);
 #include "CRC8.h"
           
 void setup() {
-  
   // disable stepper motors
   pinMode(MOTOR_OFF, OUTPUT);
   digitalWrite(MOTOR_OFF, HIGH);
@@ -87,12 +86,12 @@ void setup() {
 }
 
 void loop() { 
-   
+
   digitalWrite(MOTOR_X_STP_PIN, LOW);
   digitalWrite(MOTOR_Y_STP_PIN, LOW);   
   digitalWrite(MOTOR_Z_STP_PIN, LOW); 
-  delayMicroseconds(20);
-        
+  delayMicroseconds(20);  
+           
   #if defined(ESP32) 
     portENTER_CRITICAL(&timerMux); 
   #endif
@@ -111,22 +110,13 @@ void loop() {
         digitalWrite(MOTOR_Z_DIR_PIN, bitRead(Bits, 5));  
         digitalWrite(MOTOR_X_STP_PIN, bitRead(Bits, 0));
         digitalWrite(MOTOR_Y_STP_PIN, bitRead(Bits, 2));   
-        digitalWrite(MOTOR_Z_STP_PIN, bitRead(Bits, 4)); 
+        digitalWrite(MOTOR_Z_STP_PIN, bitRead(Bits, 4));   
         Bits = 0;                                                         
       }                 
     } 
-  }  
+  } 
 
-  if (Bits !=  0) {
-    if (bitRead(Bits, 6)) {
-      SpeedNow += Acceleration;
-      if(SpeedNow > SpeedMax) { SpeedNow = SpeedMax; }
-    }        
-    if (bitRead(Bits, 7)) {
-      SpeedNow -= Acceleration;
-      if(SpeedNow < SpeedMin) { SpeedNow = SpeedMin; }
-    }
-  } else {
+  if (Bits == 0) { 
     if (BufferIndex < BufferSize) {
       Bits = Buffer[BufferIndex];
       BufferIndex++;
@@ -152,4 +142,15 @@ void loop() {
       }             
     }
   }  
+
+  if (Bits !=  0) {
+    if (bitRead(Bits, 6)) {
+      SpeedNow += Acceleration;
+      if(SpeedNow > SpeedMax) { SpeedNow = SpeedMax; }
+    }        
+    if (bitRead(Bits, 7)) {
+      SpeedNow -= Acceleration;
+      if(SpeedNow < SpeedMin) { SpeedNow = SpeedMin; }
+    }
+  }   
 }  
