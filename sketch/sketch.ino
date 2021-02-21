@@ -24,8 +24,8 @@
 
 // CONST
 
-char ssid[] = "QUACK-NET";
-char pass[] = "0SVDTPGPQVGOVO7HN";
+char ssid[] = "";
+char pass[] = "";
 uint16_t port1 = 8888;
 
 WiFiClient client1;
