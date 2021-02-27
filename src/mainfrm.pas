@@ -33,7 +33,7 @@ uses
   xypsetting, xypsketcher;
 
 const
-  streambufsize = 1536;
+  streambufsize = 512;
 
 type
 
@@ -830,9 +830,9 @@ end;
 procedure tmainform.streamingrun;
 begin
   fillbyte(streambuf, streambufsize, 0);
-  if (stream.read(streambuf, streambufsize-1) > 0) then
+  if (stream.read(streambuf, streambufsize -1) > 0) then
   begin
-    streambuf[streambufsize-1] := crc8(streambuf, streambufsize-1);
+    streambuf[streambufsize -1] := crc8(streambuf, streambufsize -1);
     lnet.send(streambuf, streambufsize);
   end;
 end;
@@ -864,10 +864,10 @@ var
 begin
   if lnet.get(crc, sizeof(crc)) = sizeof(crc) then
   begin
-    if (crc = streambuf[streambufsize-1]) then
+    if (crc = streambuf[streambufsize -1]) then
     begin
-      driver.sync(streambuf, streambufsize-1);
-      inc(streamposition, streambufsize-1);
+      driver.sync(streambuf, streambufsize -1);
+      inc(streamposition, streambufsize -1);
       if streamposition < streamsize then
       begin
         if scheduler.enabled then streamingrun;
