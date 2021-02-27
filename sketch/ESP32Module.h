@@ -1,12 +1,12 @@
 // define PIN shield CNC V3
 
-#define MOTOR_X_STP_PIN   19
-#define MOTOR_Y_STP_PIN   18
-#define MOTOR_Z_STP_PIN    5
-#define MOTOR_X_DIR_PIN    4 
-#define MOTOR_Y_DIR_PIN    2
-#define MOTOR_Z_DIR_PIN   15
-#define MOTOR_OFF         21
+#define MOTOR_X_STP_PIN   12
+#define MOTOR_Y_STP_PIN   26
+#define MOTOR_Z_STP_PIN   27
+#define MOTOR_X_DIR_PIN   14 
+#define MOTOR_Y_DIR_PIN   15
+#define MOTOR_Z_DIR_PIN   33
+#define MOTOR_OFF         13
 
 hw_timer_t * timer    = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
