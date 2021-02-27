@@ -316,15 +316,15 @@ var
   xoffset: double;
   yoffset: double;
 begin
-  p1.x    := 0;
-  p1.y    := 0;
-  poly    := txyppolygonal.create;
+  p1.x := 0;
+  p1.y := 0;
+  poly := txyppolygonal.create;
   xoffset := pagewidth *setting.xfactor + setting.xoffset;
   yoffset := pageheight*setting.yfactor + setting.yoffset;
   for i := 0 to path.count -1 do
   begin
     item := path.items[i];
-    item.interpolate(poly, max(setting.pxratio, setting.pyratio));
+    item.interpolate(poly, max(setting.pxratio, setting.pyratio)/4);
     for j := 0 to poly.count -1 do
     begin
       p2 := poly[j];
