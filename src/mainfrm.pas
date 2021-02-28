@@ -813,7 +813,7 @@ begin
   stream.seek(0, sofrombeginning);
   {$ifopt D+}
   printdbg('TCP', 'STREAMING.START');
-  printdbg('DRIVER', format('SYNC-1 [X%10.2f] [Y%10.2f] [Z%10.2f]',
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
     [driver.xcount1*setting.pxratio,
      driver.ycount1*setting.pyratio,
      driver.zcount1*setting.pzratio]));

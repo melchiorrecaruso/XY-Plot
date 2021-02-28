@@ -209,7 +209,7 @@ begin
     end;
   end;
   {$ifopt D+}
-  printdbg('DRIVER', format('SYNC-1 [X%10.2f] [Y%10.2f] [Z%10.2f]',
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
     [fxcount1*setting.pxratio,
      fycount1*setting.pyratio,
      fzcount1*setting.pzratio]));
