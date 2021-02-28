@@ -161,22 +161,22 @@ begin
     frampkl := ini.readinteger('RAMP','KL', 0);
 
     {$ifopt D+}
-    printdbg('SETTING', format('X.OFFSET         %12.5f', [fxoffset]));
-    printdbg('SETTING', format('Y.OFFSET         %12.5f', [fyoffset]));
-    printdbg('SETTING', format('X.FACTOR         %12.5f', [fxfactor]));
-    printdbg('SETTING', format('Y.FACTOR         %12.5f', [fyfactor]));
+    printdbg('SETTING', format('X.OFFSET         %12.5f mm', [fxoffset]));
+    printdbg('SETTING', format('Y.OFFSET         %12.5f mm', [fyoffset]));
+    printdbg('SETTING', format('X.FACTOR         %12.5f   ', [fxfactor]));
+    printdbg('SETTING', format('Y.FACTOR         %12.5f   ', [fyfactor]));
 
-    printdbg('SETTING', format('X.RATIO          %12.5f', [fpxratio]));
-    printdbg('SETTING', format('Y.RATIO          %12.5f', [fpyratio]));
-    printdbg('SETTING', format('Z.RATIO          %12.5f', [fpzratio]));
-    printdbg('SETTING', format('X.DIR            %12.5d', [fpxdir]));
-    printdbg('SETTING', format('Y.DIR            %12.5d', [fpydir]));
-    printdbg('SETTING', format('Z.DIR            %12.5d', [fpzdir]));
-    printdbg('SETTING', format('Z.DOWN           %12.5f', [fpzdown]));
-    printdbg('SETTING', format('Z.UP             %12.5f', [fpzup]));
+    printdbg('SETTING', format('X.RATIO          %12.5f mm/step', [fpxratio]));
+    printdbg('SETTING', format('Y.RATIO          %12.5f mm/step', [fpyratio]));
+    printdbg('SETTING', format('Z.RATIO          %12.5f mm/step', [fpzratio]));
+    printdbg('SETTING', format('X.DIR            %12.5d ', [fpxdir]));
+    printdbg('SETTING', format('Y.DIR            %12.5d ', [fpydir]));
+    printdbg('SETTING', format('Z.DIR            %12.5d ', [fpzdir]));
+    printdbg('SETTING', format('Z.DOWN           %12.5f mm', [fpzdown]));
+    printdbg('SETTING', format('Z.UP             %12.5f mm', [fpzup]));
 
-    printdbg('SETTING', format('PAGE.MAXHEIGHT   %12.5f', [fpageheight]));
-    printdbg('SETTING', format('PAGE.MAXWIDTH    %12.5f', [fpagewidth ]));
+    printdbg('SETTING', format('PAGE.MAXHEIGHT   %12.5f mm', [fpageheight]));
+    printdbg('SETTING', format('PAGE.MAXWIDTH    %12.5f mm', [fpagewidth ]));
     printdbg('SETTING', format('PAGE.LANDSCAPE   %12.5d', [fpagelandscape]));
 
     printdbg('SETTING', format('RAMP.KL          %12.5u', [frampkl]));

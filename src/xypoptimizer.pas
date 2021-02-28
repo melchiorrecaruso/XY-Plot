@@ -25,7 +25,7 @@ unit xypoptimizer;
 interface
 
 uses
-  classes, sysutils, xypmath, xyppaths;
+  classes, sysutils, xypmath, xyppaths, xyputils;
 
 type
   txyppathoptimizer = class
@@ -38,6 +38,7 @@ type
     function getnextsubpath(const p: txyppoint): longint;
     function isaloop(item: txypelement): boolean;
     procedure clear;
+    procedure debug(var inkdist, traveldist: double; var raises: longint);
   public
     constructor create(path: txypelementlist);
     destructor destroy; override;
@@ -198,12 +199,19 @@ var
   i: longint;
   elem: txypelement;
   last: txyppoint;
+  a0, a1: double;
+  b0, b1: double;
+  c0, c1: longint;
   subpath: txypelementlist;
-  totalcount: longint;
 begin
+  {$ifopt D+}
+  a0 := 0;
+  b0 := 0;
+  c0 := 0;
+  debug(a0, b0, c0);
+  {$endif}
   last.x := 0;
   last.y := 0;
-  totalcount := fpath.count;
   while fpath.count > 0 do
   begin
     // create new subpath
@@ -259,6 +267,36 @@ begin
     end;
     subpath.destroy;
     fsubpaths.delete(i);
+  end;
+  {$ifopt D+}
+  a1 := 0;
+  b1 := 0;
+  c1 := 0;
+  debug(a1, b1, c1);
+  printdbg('OPTIMIZER', format('INK DISTANCE     %12.2f mm (%12.2f mm)', [a1, a0]));
+  printdbg('OPTIMIZER', format('TRAVEL DISTANCE  %12.2f mm (%12.2f mm)', [b1, b0]));
+  printdbg('OPTIMIZER', format('PEN RAISES       %12.0u    (%12.0u   )', [c1, c0]));
+  {$endif}
+end;
+
+procedure txyppathoptimizer.debug(var inkdist, traveldist: double; var raises: longint);
+var
+  i: longint;
+  p: txyppoint;
+  elem: txypelement;
+begin
+  p.x := 0;
+  p.y := 0;
+  for i := 0 to fpath.count -1 do
+  begin
+    elem := fpath.items[i];
+    if distance(p, elem.firstpoint) >= 0.2 then
+    begin
+      traveldist := traveldist + distance(p, elem.firstpoint);
+      inc(raises);
+    end;
+    inkdist := inkdist + elem.length;
+    p := elem.lastpoint;
   end;
 end;
 
