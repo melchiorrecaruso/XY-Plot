@@ -119,8 +119,8 @@ begin
       p.x := p.x + offsetx;
       p.y := p.y + offsety;
       {$ifopt D+}
-      printdbg('DRIVER', format('POINT.X          %12.5f', [p.x]));
-      printdbg('DRIVER', format('POINT.Y          %12.5f', [p.y]));
+      printdbg('DRIVER', format('POINT.X          %12.5f mm', [p.x]));
+      printdbg('DRIVER', format('POINT.Y          %12.5f mm', [p.y]));
       {$endif}
     end;
 end;
@@ -283,7 +283,7 @@ begin
       setbit(b1, 4);
       dec(dz);
     end;
-    fstream.write(b1, 1);
+    fstream.write(b1, sizeof(b1));
   end;
   fxcount2 := cx;
   fycount2 := cy;
@@ -324,7 +324,7 @@ begin
   for i := 0 to path.count -1 do
   begin
     item := path.items[i];
-    item.interpolate(poly, max(setting.pxratio, setting.pyratio)/4);
+    item.interpolate(poly, min(setting.pxratio, setting.pyratio)/10);
     for j := 0 to poly.count -1 do
     begin
       p2 := poly[j];
