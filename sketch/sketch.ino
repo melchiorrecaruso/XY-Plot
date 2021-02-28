@@ -1,7 +1,7 @@
 // XY-Plotter Server for ESP32/ESP8266 boards
 
 // Author: Melchiorre Caruso
-// Date:   27 Feb 2021
+// Date:   28 Feb 2021
 
 // Specifica protocollo:
 
@@ -11,8 +11,8 @@
 // bit3 -> y-stepper CCW dir (-1)
 // bit4 -> z-stepper tick
 // bit5 -> z-stepper CCW dir (-1)
-// bit6 -> decrease internal main-loop time
-// bit7 -> increase internal main-loop time
+// bit6 -> increase internal main-loop time
+// bit7 -> decrease internal main-loop time
 
 // LIBRARY
  
@@ -24,8 +24,8 @@
 
 // CONST
 
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "QUACK-NET";
+char pass[] = "0SVDTPGPQVGOVO7HN";
 uint16_t port1 = 8888;
 
 WiFiClient client1;
@@ -48,8 +48,8 @@ uint32_t Freq = 50000;
 uint32_t Num = 24; 
 uint32_t Acceleration = 64;
 volatile uint32_t Accumulator = 0;
-volatile uint32_t SpeedNow = 2 << (Num - 12);
-uint32_t SpeedMin = 2 << (Num - 12);
+volatile uint32_t SpeedNow = 2 << (Num - 10);
+uint32_t SpeedMin = 2 << (Num - 10);
 uint32_t SpeedMax = 2 << (Num -  2);
  uint8_t Shift1 = 0;
  uint8_t Shift2 = 0;
@@ -147,15 +147,12 @@ void loop() {
         if (client1.available() >= BUFFER_LEN) {                                 
           client1.read(Buffer, BUFFER_LEN);
           BufferCrc = CRC8();
-          if (BufferCrc == Buffer[BUFFER_LEN-1]) {
-            BufferSize = BUFFER_LEN-1;              
+          if (BufferCrc == Buffer[BUFFER_LEN -1]) {
+            BufferSize = BUFFER_LEN -1;              
           }
           client1.write(BufferCrc);            
         }
       } else { client1.stop(); } 
-    } else { 
-      client1 = server1.available(); 
-      SpeedNow = SpeedMin;
-    }             
+    } else { client1 = server1.available(); }             
   }  
 }  

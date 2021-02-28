@@ -139,7 +139,7 @@ type
     scheduling: boolean;
     stream: tmemorystream;
     streaming: boolean;
-    streambuf: array[0..streambufsize-1] of byte;
+    streambuf: array[0..streambufsize -1] of byte;
     streamposition: int64;
     streamsize: int64;
     procedure streamingstart;
@@ -486,8 +486,8 @@ begin
   else begin pagewidth :=  420; pageheight :=  297; pageformat := 'A3'; end  // Default
   end;
   {$ifopt D+}
-  printdbg('PAGE', format('WIDTH            %12.5u', [pagewidth]));
-  printdbg('PAGE', format('HEIGHT           %12.5u', [pageheight]));
+  printdbg('PAGE', format('WIDTH            %12.5u mm', [pagewidth]));
+  printdbg('PAGE', format('HEIGHT           %12.5u mm', [pageheight]));
   {$endif}
   changezoombtnclick(zoomcb);
 end;
@@ -700,6 +700,8 @@ begin
 end;
 
 procedure tmainform.schedulertimer(sender: tobject);
+var
+  i: longint;
 begin
   if scheduling then
   begin
@@ -744,7 +746,14 @@ begin
     if ('driver.setorigin' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'SET ORIGIN'); {$endif}
+      scheduling := true;
+      stream.clear;
       driver.setorigin;
+      for i := 0 to streambufsize -2 do
+      begin
+        stream.writebyte(128);
+      end;
+      streamingstart;
     end else
     if ('driver.movetoorigin' = schedulerlist[0]) then
     begin
@@ -797,6 +806,7 @@ end;
 
 procedure tmainform.streamingstart;
 begin
+  lock;
   streaming := true;
   streamposition := 0;
   streamsize := stream.size;
@@ -810,8 +820,8 @@ begin
   {$endif}
   startbtn.imageindex := 7;
   startbtn.caption := 'Stop';
+  // start streaming
   streamingrun;
-  lock;
 end;
 
 procedure tmainform.streamingstop;
