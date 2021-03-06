@@ -1,7 +1,7 @@
 object tmainform: tmainform
-  Left = 233
+  Left = 346
   Height = 600
-  Top = 46
+  Top = 66
   Width = 920
   Anchors = []
   Caption = 'XY-Plot'
@@ -174,7 +174,7 @@ object tmainform: tmainform
       AnchorSideRight.Control = addresscb
       AnchorSideBottom.Control = addresscb
       AnchorSideBottom.Side = asrBottom
-      Left = -1
+      Left = 13
       Height = 23
       Top = 23
       Width = 78
@@ -213,7 +213,7 @@ object tmainform: tmainform
       Left = 4
       Height = 23
       Top = 113
-      Width = 79
+      Width = 83
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Right = 8
@@ -229,16 +229,16 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 91
+      Left = 95
       Height = 23
       Top = 113
-      Width = 180
+      Width = 176
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
-      Constraints.MaxWidth = 180
-      Constraints.MinWidth = 180
+      Constraints.MaxWidth = 176
+      Constraints.MinWidth = 176
       MaxValue = 1000000
       ParentFont = False
       TabOrder = 0
@@ -922,7 +922,7 @@ object tmainform: tmainform
       Left = 4
       Height = 23
       Top = 336
-      Width = 79
+      Width = 83
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -938,15 +938,15 @@ object tmainform: tmainform
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 91
+      Left = 95
       Height = 23
       Top = 336
-      Width = 180
+      Width = 176
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
-      Constraints.MaxWidth = 180
-      Constraints.MinWidth = 180
+      Constraints.MaxWidth = 176
+      Constraints.MinWidth = 176
       ItemHeight = 15
       ItemIndex = 0
       Items.Strings = (
@@ -975,7 +975,7 @@ object tmainform: tmainform
       Left = 4
       Height = 23
       Top = 365
-      Width = 79
+      Width = 83
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       Caption = 'Value:'
@@ -991,10 +991,10 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 91
+      Left = 95
       Height = 23
       Top = 365
-      Width = 180
+      Width = 176
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 6
@@ -1050,10 +1050,10 @@ object tmainform: tmainform
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 91
+      Left = 95
       Height = 23
       Top = 455
-      Width = 180
+      Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
@@ -1089,7 +1089,7 @@ object tmainform: tmainform
       Left = 4
       Height = 23
       Top = 455
-      Width = 79
+      Width = 83
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -1206,60 +1206,27 @@ object tmainform: tmainform
       OnClick = connectbtnclick
       TabOrder = 16
     end
-    object twopointslb: TLabel
-      AnchorSideLeft.Control = addresscb
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = addresscb
-      AnchorSideRight.Control = portcb
-      AnchorSideBottom.Control = addresscb
-      AnchorSideBottom.Side = asrBottom
-      Left = 205
-      Height = 23
-      Top = 23
-      Width = 3
-      Alignment = taCenter
-      Anchors = [akTop, akRight, akBottom]
-      BorderSpacing.Right = 3
-      Caption = ':'
-      Layout = tlCenter
-      ParentColor = False
-    end
     object addresscb: TComboBox
       AnchorSideTop.Control = connectionbvl
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = twopointslb
+      AnchorSideRight.Control = controlpnl
+      AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 81
+      Left = 95
       Height = 23
       Top = 23
-      Width = 120
+      Width = 176
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 4
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
+      Constraints.MaxWidth = 176
+      Constraints.MinWidth = 176
       ItemHeight = 15
       ParentBidiMode = False
       ParentFont = False
       TabOrder = 17
-      Text = '255.255.255.255'
-    end
-    object portcb: TComboBox
-      AnchorSideTop.Control = twopointslb
-      AnchorSideRight.Control = controlpnl
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = twopointslb
-      AnchorSideBottom.Side = asrBottom
-      Left = 211
-      Height = 23
-      Top = 23
-      Width = 60
-      Anchors = [akTop, akRight, akBottom]
-      BorderSpacing.Right = 4
-      ItemHeight = 15
-      ParentBidiMode = False
-      ParentFont = False
-      TabOrder = 18
-      Text = '8888'
+      Text = '255.255.255.255:8888'
     end
     object aboutbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -1280,7 +1247,7 @@ object tmainform: tmainform
       Images = btnimages
       ImageIndex = 21
       OnClick = aboutmiclick
-      TabOrder = 19
+      TabOrder = 18
     end
     object sethomebtn: TBitBtn
       AnchorSideLeft.Control = zdownbtn
@@ -1297,7 +1264,7 @@ object tmainform: tmainform
       BorderSpacing.Right = 4
       Caption = 'Set Home'
       OnClick = sethomebtnclick
-      TabOrder = 20
+      TabOrder = 19
     end
   end
   object savedialog: TSaveDialog

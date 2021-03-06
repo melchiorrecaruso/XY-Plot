@@ -32,20 +32,14 @@ uses
   extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths,
   xypsetting, xypsketcher;
 
-const
-  streambufsize = 512;
-
 type
-
   { tmainform }
 
   tmainform = class(tform)
     addresscb: TComboBox;
     aboutbtn: TBitBtn;
     sethomebtn: TBitBtn;
-    twopointslb: TLabel;
     connectbtn: TBitBtn;
-    portcb: tcombobox;
     progressbar: TProgressBar;
     scheduler: tidletimer;
     opendialog: topenpicturedialog;
@@ -139,12 +133,11 @@ type
     scheduling: boolean;
     stream: tmemorystream;
     streaming: boolean;
-    streambuf: array[0..streambufsize -1] of byte;
     streamposition: int64;
     streamsize: int64;
     procedure streamingstart;
     procedure streamingstop;
-    procedure streamingrun;
+    procedure streamingrun(count: longint);
 
     function getzoom: double;
     procedure lockinternal(value: boolean);
@@ -330,7 +323,7 @@ begin
       messagedlg('XY-Plot', 'Please move the plotter to origin (Home) before disconnecting !', mterror, [mbok], 0);
   end else
   begin
-    lnet.connect(addresscb.text, strtoint(portcb.text));
+    lnet.connect(parseaddresses(addresscb.text), parseport(addresscb.text));
   end;
 end;
 
@@ -503,7 +496,7 @@ begin
     begin
       startbtn.caption    := 'Stop';
       startbtn.imageindex := 7;
-      streamingrun;
+      streamingrun(1024);
     end else
     begin
       startbtn.caption    := 'Start';
@@ -749,7 +742,7 @@ begin
       scheduling := true;
       stream.clear;
       driver.setorigin;
-      for i := 0 to streambufsize -2 do
+      for i := 0 to setting.rampkl -1 do
       begin
         stream.writebyte(128);
       end;
@@ -806,7 +799,6 @@ end;
 
 procedure tmainform.streamingstart;
 begin
-  lock;
   streaming := true;
   streamposition := 0;
   streamsize := stream.size;
@@ -821,7 +813,8 @@ begin
   startbtn.imageindex := 7;
   startbtn.caption := 'Stop';
   // start streaming
-  streamingrun;
+  streamingrun(1024);
+  lock;
 end;
 
 procedure tmainform.streamingstop;
@@ -837,13 +830,15 @@ begin
   unlock;
 end;
 
-procedure tmainform.streamingrun;
+procedure tmainform.streamingrun(count: longint);
+var
+  buffer: array[0..$FFFF] of byte;
 begin
-  fillbyte(streambuf, streambufsize, 0);
-  if (stream.read(streambuf, streambufsize -1) > 0) then
+  count := stream.read(buffer, count);
+  if (count > 0) then
   begin
-    streambuf[streambufsize -1] := crc8(streambuf, streambufsize -1);
-    lnet.send(streambuf, streambufsize);
+    driver.sync(buffer, count);
+    lnet.send(buffer, count);
   end;
 end;
 
@@ -870,26 +865,18 @@ end;
 
 procedure tmainform.lnetreceive(asocket: tlsocket);
 var
-  crc: byte;
+  count: byte;
 begin
-  if lnet.get(crc, sizeof(crc)) = sizeof(crc) then
+  while lnet.get(count, sizeof(count)) = sizeof(count) do
   begin
-    if (crc = streambuf[streambufsize -1]) then
+    inc(streamposition, count);
+    if streamposition < streamsize then
     begin
-      driver.sync(streambuf, streambufsize -1);
-      inc(streamposition, streambufsize -1);
-      if streamposition < streamsize then
-      begin
-        if scheduler.enabled then streamingrun;
-      end else
-      begin
-        {$ifopt D+} printdbg('TCP', 'STREAMING.STOP'); {$endif}
-        streamingstop;
-      end;
+      if scheduler.enabled then streamingrun(count);
     end else
     begin
-      {$ifopt D+} printdbg('TCP', 'RETRY (CRC STREAMING ERROR)'); {$endif}
-      lnet.send(streambuf, streambufsize);
+      {$ifopt D+} printdbg('TCP', 'STREAMING.STOP'); {$endif}
+      streamingstop;
     end;
   end;
 end;

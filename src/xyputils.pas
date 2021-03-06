@@ -37,6 +37,9 @@ function  crc8(var buffer; count: longint): byte;
 function  getbit(const bits: byte; index: longint): byte;
 procedure setbit(var   bits: byte; index: longint);
 
+function parseaddresses(const s: string): string;
+function parseport(const s: string): longint;
+
 procedure printdbg(const s1, s2: string);
 
 {$IFDEF UNIX}
@@ -118,6 +121,24 @@ begin
 end;
 
 {$ENDIF}
+
+function parseaddresses(const s: string): string;
+begin
+  result := '';
+  if pos(':', s) > 1 then
+  begin
+    result := copy(s, 1, pos(':', s) -1);
+  end;
+end;
+
+function parseport(const s: string): longint;
+begin
+  result := 0;
+  if pos(':', s) > 1 then
+  begin
+    trystrtoint(copy(s, pos(':', s) + 1, length(s) - pos(':', s)), result);
+  end;
+end;
 
 procedure printdbg(const s1, s2: string);
 begin

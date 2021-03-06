@@ -14,13 +14,14 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 void IRAM_ATTR onESP32Timer() {
   portENTER_CRITICAL_ISR(&timerMux);
   Accumulator += SpeedNow; 
+  Flag++; 
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
 void initESP32Interrupt() {
   timer = timerBegin(1, 80, true);                
   timerAttachInterrupt(timer, &onESP32Timer, true);    
-  timerAlarmWrite(timer, 1000000/Freq, true);      
+  timerAlarmWrite(timer, (F_CPU/16)/Freq, true);      
   timerAlarmEnable(timer);
 }
  
