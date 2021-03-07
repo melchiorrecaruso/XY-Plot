@@ -30,6 +30,7 @@ uses
 type
   txyppathoptimizer = class
   private
+    fcleanup: double;
     fpath: txypelementlist;
     fsubpaths: tfplist;
     function getfirst(const p: txyppoint): longint;
@@ -43,6 +44,8 @@ type
     constructor create(path: txypelementlist);
     destructor destroy; override;
     procedure execute;
+  public
+    property cleanup: double read fcleanup write fcleanup;
   end;
 
 
@@ -55,6 +58,7 @@ const
 
 constructor txyppathoptimizer.create(path: txypelementlist);
 begin
+  fcleanup  := 0;
   fpath     := path;
   fsubpaths := tfplist.create;
   inherited create;
@@ -260,10 +264,13 @@ begin
   begin
     i := getnextsubpath(last);
     subpath := txypelementlist(fsubpaths[i]);
-    last := subpath.items[subpath.count-1].lastpoint;
-    while subpath.count > 0 do
+    if subpath.length > fcleanup then
     begin
-      fpath.add(subpath.extract(0));
+      last := subpath.items[subpath.count-1].lastpoint;
+      while subpath.count > 0 do
+      begin
+        fpath.add(subpath.extract(0));
+      end;
     end;
     subpath.destroy;
     fsubpaths.delete(i);

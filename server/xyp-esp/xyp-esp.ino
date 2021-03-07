@@ -32,7 +32,7 @@ uint8_t BufferSize = 0;
 
 uint32_t Num = 24; 
 uint32_t Freq = 20000;
-uint32_t Acceleration = 1024;
+uint32_t Acceleration = 1024+512;
 volatile uint8_t Flag = 0;
 volatile uint32_t Accumulator = 0;
 volatile uint32_t SpeedNow = 1 << (Num - 7);
@@ -80,9 +80,8 @@ void setup() {
 }
 
 void loop() {
-
+  
   if (Flag > 0) {
-    noInterrupts(); 
     #if defined(ESP32) 
       portENTER_CRITICAL(&timerMux); 
     #endif
@@ -120,9 +119,9 @@ void loop() {
         } 
       }     
     }    
-    Flag--; 
-    interrupts();
+    Flag--;  
   }
+  
   /*
   if (BufferIndex == BufferSize) {         
     BufferIndex = 0;  
@@ -147,5 +146,5 @@ void loop() {
       client1 = server1.available(); 
       client1.setNoDelay(true);      
     } 
-  }  
+  }    
 }
