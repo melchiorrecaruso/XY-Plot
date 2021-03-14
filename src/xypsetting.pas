@@ -82,9 +82,6 @@ type
 function getclientsettingfilename(global: boolean): string;
 function getsettingfilename(global: boolean): string;
 
-var
-  setting: txypsetting;
-
 implementation
 
 function getclientsettingfilename(global: boolean): string;

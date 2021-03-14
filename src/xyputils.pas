@@ -34,11 +34,10 @@ type
   tsinglelist  = specialize tfpglist<single>;
 
 function  crc8(var buffer; count: longint): byte;
-function  getbit(const bits: byte; index: longint): byte;
-procedure setbit(var   bits: byte; index: longint);
-
-function parseaddresses(const s: string): string;
-function parseport(const s: string): longint;
+procedure clearbit(var value: byte; index: longint);
+procedure setbit(var value: byte; index: longint);
+procedure putbit(var value: byte; index: longint; state: boolean);
+function  getbit(value: byte; index: longint): byte;
 
 procedure printdbg(const s1, s2: string);
 
@@ -83,25 +82,24 @@ begin
   end;
 end;
 
-function getbit(const bits: byte; index: longint): byte;
-var
-  bt: byte;
+procedure clearbit(var value: byte; index: longint);
 begin
-  bt :=  $01;
-  bt :=  bt shl index;
-  if (bits and bt) = bt then
-    result := 1
-  else
-    result := 0;
+  value := value and ((byte(1) shl index) xor high(byte));
 end;
 
-procedure setbit(var bits: byte; index: longint);
-var
-  bt: byte;
+procedure setbit(var value: byte; index: longint);
 begin
-  bt := $01;
-  bt := bt shl index;
-  bits := bits or bt;
+  value:=  value or (byte(1) shl index);
+end;
+
+procedure putbit(var value: byte; index: longint; state: boolean);
+begin
+  value := (value and ((byte(1) shl index) xor high(byte))) or (byte(state) shl index);
+end;
+
+function getbit(value: byte; index: longint): byte;
+begin
+  result := (value shr index) and (byte(1));
 end;
 
 {$IFDEF UNIX}
@@ -121,24 +119,6 @@ begin
 end;
 
 {$ENDIF}
-
-function parseaddresses(const s: string): string;
-begin
-  result := '';
-  if pos(':', s) > 1 then
-  begin
-    result := copy(s, 1, pos(':', s) -1);
-  end;
-end;
-
-function parseport(const s: string): longint;
-begin
-  result := 0;
-  if pos(':', s) > 1 then
-  begin
-    trystrtoint(copy(s, pos(':', s) + 1, length(s) - pos(':', s)), result);
-  end;
-end;
 
 procedure printdbg(const s1, s2: string);
 begin

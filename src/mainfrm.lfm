@@ -1,7 +1,7 @@
 object tmainform: tmainform
-  Left = 346
+  Left = 233
   Height = 600
-  Top = 66
+  Top = 46
   Width = 920
   Anchors = []
   Caption = 'XY-Plot'
@@ -169,18 +169,17 @@ object tmainform: tmainform
       ParentFont = False
     end
     object addresslb: TLabel
-      AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = addresscb
-      AnchorSideRight.Control = addresscb
-      AnchorSideBottom.Control = addresscb
+      AnchorSideTop.Control = portcb
+      AnchorSideRight.Control = portcb
+      AnchorSideBottom.Control = portcb
       AnchorSideBottom.Side = asrBottom
-      Left = 13
+      Left = 31
       Height = 23
       Top = 23
-      Width = 78
+      Width = 60
       Anchors = [akTop, akRight, akBottom]
       BorderSpacing.Right = 4
-      Caption = 'Server address:'
+      Caption = 'Server port:'
       Layout = tlCenter
       ParentBidiMode = False
       ParentColor = False
@@ -217,7 +216,7 @@ object tmainform: tmainform
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Right = 8
-      Caption = 'Step size [mm]'
+      Caption = 'Step size [mm]:'
       Layout = tlCenter
       ParentBidiMode = False
       ParentColor = False
@@ -997,6 +996,8 @@ object tmainform: tmainform
       Width = 176
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
+      AutoSelect = False
+      AutoSize = False
       BorderSpacing.Top = 6
       BorderSpacing.Right = 4
       DecimalPlaces = 8
@@ -1188,7 +1189,7 @@ object tmainform: tmainform
     end
     object connectbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = addresscb
+      AnchorSideTop.Control = portcb
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
@@ -1206,7 +1207,7 @@ object tmainform: tmainform
       OnClick = connectbtnclick
       TabOrder = 16
     end
-    object addresscb: TComboBox
+    object portcb: TComboBox
       AnchorSideTop.Control = connectionbvl
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
@@ -1217,7 +1218,6 @@ object tmainform: tmainform
       Top = 23
       Width = 176
       Anchors = [akTop, akRight]
-      BorderSpacing.Left = 4
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
       Constraints.MaxWidth = 176
@@ -1226,7 +1226,7 @@ object tmainform: tmainform
       ParentBidiMode = False
       ParentFont = False
       TabOrder = 17
-      Text = '255.255.255.255:8888'
+      Text = '8888'
     end
     object aboutbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -1911,16 +1911,5 @@ object tmainform: tmainform
     OnStopTimer = schedulerstoptimer
     Left = 352
     Top = 352
-  end
-  object lnet: TLTCPComponent
-    Port = 8888
-    OnReceive = lnetreceive
-    OnError = ltpcerror
-    OnDisconnect = ltpcdsisconnect
-    OnConnect = ltpcconnect
-    Timeout = 0
-    ReuseAddress = False
-    Left = 352
-    Top = 416
   end
 end
