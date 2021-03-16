@@ -1,7 +1,7 @@
 {
   Description: XY-Plot import form.
 
-  Copyright (C) 2020 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free

@@ -26,7 +26,8 @@ unit xypserial;
 interface
 
 uses
-  {$IFDEF UNIX} baseunix, unix, {$ENDIF} classes, dateutils, serial, sysutils;
+  {$IFDEF UNIX} baseunix, unix, {$ENDIF} classes,
+  dateutils, serial, sysutils, xyputils;
 
 type
   txypserialstream = class
@@ -87,6 +88,7 @@ end;
 procedure txypserialmonitor.execute;
 begin
   while assigned(fserial) do
+  begin
     if fserial.connected then
     begin
       if fserial.frxindex < fserial.frxcount then
@@ -96,7 +98,8 @@ begin
       end else
         fserial.fill;
     end else
-      sleep(10);
+      sleep(5);
+  end;
 end;
 
 // txypserialstream
@@ -115,7 +118,7 @@ begin
   frxcount  := 0;
   frxevent  := nil;
   fstopbits := 1;
-  ftimeout  := 2000;
+  ftimeout  := 5;
    monitor  := txypserialmonitor.create(self);
    monitor.start;
 end;
@@ -146,7 +149,7 @@ begin
   begin
     serflushinput (fhandle);
     serflushoutput(fhandle);
-    while serreadtimeout(fhandle, cc, 10) > 0 do;
+    while serreadtimeout(fhandle, cc, 50) > 0 do;
   end;
 end;
 
@@ -164,7 +167,7 @@ end;
 procedure txypserialstream.fill;
 begin
   frxindex := 0;
-  frxcount := serreadtimeout(fhandle, frxbuffer[0], sizeof(frxbuffer), 10);
+  frxcount := serreadtimeout(fhandle, frxbuffer[0], sizeof(frxbuffer), 5);
 end;
 
 function txypserialstream.read(var buffer; count: longint): longint;

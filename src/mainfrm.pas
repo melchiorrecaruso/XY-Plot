@@ -27,9 +27,9 @@ interface
 
 uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
-  lnetcomponents, lnet, bgrapath, buttons, classes, comctrls, controls, dialogs,
-  extctrls, forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage,
-  extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypserial,
+  bgrapath, buttons, classes, comctrls, controls, dialogs, extctrls, forms,
+  graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
+  dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypserial,
   xypsetting, xypsketcher;
 
 type
@@ -819,7 +819,7 @@ begin
     stream.seek(0, sofrombeginning);
     lockinternal(false);
     // start streaming
-    streamingrun(60);
+    streamingrun(80);
   end else
     streamingstop;
 end;
@@ -832,6 +832,10 @@ begin
   streamsize := 0;
   stream.clear;
   {$ifopt D+}
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
+    [driver.xcount1*setting.pxratio,
+     driver.ycount1*setting.pyratio,
+     driver.zcount1*setting.pzratio]));
   printdbg('TCP', 'STREAMING.STOP');
   {$endif}
   // ---

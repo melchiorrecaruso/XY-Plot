@@ -25,7 +25,7 @@ program xyplot;
 
 uses
  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms, aboutfrm,
- importfrm, mainfrm, lnetbase, lnetvisual, xyputils;
+ importfrm, mainfrm, xyputils;
 
 {$R *.res}
 
@@ -34,8 +34,8 @@ begin
   printdbg('XY-PLOT', 'DEBUG');
   {$endif}
   requirederivedformresource := true;
-  Application.Scaled:=True;
-  Application.Title:='XY-Plot';
+  application.scaled := true;
+  application.title := 'XY-Plot';
   application.initialize;
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);

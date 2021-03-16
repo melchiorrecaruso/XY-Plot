@@ -209,12 +209,6 @@ begin
         dec(fzcount1);
     end;
   end;
-  {$ifopt D+}
-  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
-    [fxcount1*fsetting.pxratio,
-     fycount1*fsetting.pyratio,
-     fzcount1*fsetting.pzratio]));
-  {$endif}
 end;
 
 procedure txypdriver.sync;

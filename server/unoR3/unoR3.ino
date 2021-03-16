@@ -1,7 +1,7 @@
 // XY-Plotter Server for Arduino Uno R3
 
 // Author: Melchiorre Caruso
-// Date:   14 Mar 2021
+// Date:   16 Mar 2021
 
 // Serial data format
 
@@ -27,7 +27,7 @@ uint32_t LoopDelay = 440;
 
 #define  RampLen 250
 uint16_t Ramps[RampLen];
-uint32_t RampKB = 20000;
+uint32_t RampKB = 40000;
 uint16_t RampIndex = 0;
 
 void setup() {
@@ -52,12 +52,13 @@ void loop() {
   LoopNow = micros();
   if ((unsigned long)(LoopNow - LoopStart) >= LoopDelay) {
 
-    // SET X-DIR, Y-DIR and Z-DIR PIN     
+    // SET X-DIR, Y-DIR and Z-DIR PIN,   
+    // SET LOW X-STEP, Y-STEP and Z-STEP PIN
     PORTD = (PORTD & B00000011) | (Bits & B11100000);             
     // SET HIGH X-STEP, Y-STEP and Z-STEP PIN
     PORTD = (PORTD & B11100011) | (Bits & B00011100);
     // SET LOW X-STEP, Y-STEP and Z-STEP PIN             
-    PORTD &= B11100011;                                        
+    // PORTD &= B11100011;                                        
     if (Bits & B00000001) {        
       if (RampIndex < RampLen-1) { RampIndex++; }    
     }     

@@ -41,15 +41,14 @@ function  getbit(value: byte; index: longint): byte;
 
 procedure printdbg(const s1, s2: string);
 
-{$IFDEF UNIX}
-
 procedure sleepmicroseconds(microseconds: longword);
 
-{$ENDIF}
 
 implementation
 
-{$IFDEF UNIX} baseunix, unix; {$ENDIF}
+uses
+  {$IFDEF UNIX} baseunix, unix; {$ENDIF}
+  {$IFDEF MSWINDOWS} windows; {$ENDIF}
 
 const
   crc8_table: array[0.. 255] of byte = (
@@ -116,6 +115,23 @@ begin
     res := fpnanosleep(@timeout, @timeoutresult);
     timeout := timeoutresult;
   until (res <> -1) or (fpgeterrno <> esyseintr);
+end;
+
+{$ENDIF}
+
+{$IFDEF MSWINDOWS}
+
+procedure sleepmicroseconds(microseconds: longword);
+var
+  start, stop, freq: int64;
+begin
+  queryperformancecounter(start);
+  queryperformancefrequency(freq);
+  stop := start + (microseconds*freq) div 1000000;
+  while (start > stop) do
+  begin
+    queryperformancecounter(start);
+  end;
 end;
 
 {$ENDIF}
