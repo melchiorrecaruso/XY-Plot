@@ -1,18 +1,18 @@
-// XY-Plotter Server for Arduino Uno R3
+// XY-Plotter Server for Arduino Mega 2560
 
 // Author: Melchiorre Caruso
-// Date:   18 Mar 2021
+// Date:   21 Mar 2021
 
 // Serial data format
 
 // bit0 -> increase internal main-loop time
 // bit1 -> decrease internal main-loop time
-// bit2 -> x-motor stp
-// bit3 -> y-motor stp
-// bit4 -> z-motor stp
-// bit5 -> x-motor dir
-// bit6 -> y-motor dir
-// bit7 -> z-motor dir
+// bit2 -> x-motor stp (avr register PORTE4)
+// bit3 -> y-motor stp (avr register PORTE5)
+// bit4 -> z-motor stp (avr register PORTG5)
+// bit5 -> x-motor dir (avr register PORTE3)
+// bit6 -> y-motor dir (avr register PORTH3)
+// bit7 -> z-motor dir (avr register PORTH4)
 
 #include <math.h>
 
@@ -39,12 +39,14 @@ void setup() {
     Ramps[i] = round(RampKB*(sqrt(i+2)-sqrt(i+1)));
   }
   // disable stepper motors
-  DDRB |= B00000001; 
-  PORTB |= B00000001; 
+  DDRH |= B00100000;
+  PORTH |= B00100000; 
   // init stepper X/Y/Z
-  DDRD |= B11111100;
+  DDRE |= B00111000;
+  DDRG |= B00100000;
+  DDRH |= B00011000;
   // enable stepper motors   
-  PORTB &= B11111110;
+  PORTH &= B11011111;
 }
 
 void loop() {
@@ -53,10 +55,15 @@ void loop() {
   if ((unsigned long)(LoopNow - LoopStart) >= LoopDelay) {
 
     // SET X-DIR, Y-DIR and Z-DIR PIN,   
-    // SET LOW X-STEP, Y-STEP and Z-STEP PIN
-    PORTD = (PORTD & B00000011) | (Bits & B11100000);             
+    PORTE = (PORTE & B11110111) | ((Bits & B00100000) >> 2); 
+    PORTH = (PORTH & B11100111) | ((Bits & B11000000) >> 3);             
     // SET HIGH X-STEP, Y-STEP and Z-STEP PIN
-    PORTD = (PORTD & B11100011) | (Bits & B00011100);                   
+    PORTE = (PORTE & B11001111) | ((Bits & B00000011) << 4);
+    PORTG = (PORTG & B11011111) | ((Bits & B00000100) << 3);
+    // SET LOW X-STEP, Y-STEP and Z-STEP PIN
+    PORTE = (PORTE & B11001111);
+    PORTG = (PORTG & B11011111);
+                   
     if (Bits & B00000001) {        
       if (RampIndex < RampLen-1) { RampIndex++; }    
     }     

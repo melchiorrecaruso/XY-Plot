@@ -37,13 +37,14 @@ type
   { tmainform }
 
   tmainform = class(tform)
-    aboutbtn: TBitBtn;
-    sethomebtn: TBitBtn;
-    connectbtn: TBitBtn;
+    aboutbtn: tbitbtn;
+    progresstimer: TIdleTimer;
+    sethomebtn: tbitbtn;
+    connectbtn: tbitbtn;
     portcb: tcombobox;
-    progressbar: TProgressBar;
-    scheduler: tidletimer;
+    schedulertimer: tidletimer;
     opendialog: topenpicturedialog;
+    stepnumberedt: tfloatspinedit;
     zoomcb: tcombobox;
     btnimages: timagelist;
     propstorage: txmlpropstorage;
@@ -77,14 +78,15 @@ type
     yupbtn: tbitbtn;
     savedialog: tsavedialog;
     screen: tbgravirtualscreen;
-    stepnumberedt: tspinedit;
     stepnumberlb: tlabel;
     // FORM EVENTS
     procedure formcreate (sender: tobject);
     procedure formdestroy(sender: tobject);
     procedure formclose(sender: tobject; var closeaction: tcloseaction);
+    procedure progresstick(Sender: TObject);
     procedure propstoragerestoreproperties(sender: tobject);
     // CONNECTION
+    procedure portcbgetitems(sender: tobject);
     procedure connectbtnclick(sender: tobject);
     // CALIBRATION
     procedure motorbtnclick(sender: tobject);
@@ -111,10 +113,10 @@ type
     procedure imagemouseup  (sender: tobject; button: tmousebutton; shift: tshiftstate; x, y: integer);
     procedure imagemousedown(sender: tobject; button: tmousebutton; shift: tshiftstate; x, y: integer);
     procedure imagemousemove(sender: tobject; shift: tshiftstate; x, y: integer);
-    // SCHEDULER EVENTS
-    procedure schedulerstarttimer(sender: tobject);
-    procedure schedulerstoptimer(sender: tobject);
-    procedure schedulertimer(sender: tobject);
+    // schedulertimer EVENTS
+    procedure schedulerstart(sender: tobject);
+    procedure schedulerstop(sender: tobject);
+    procedure schedulertick(sender: tobject);
   private
     mouseisdown: boolean;
     movex: longint;
@@ -131,19 +133,17 @@ type
     stream: tmemorystream;
     streaming1: boolean;
     streaming2: boolean;
-    streamposition: int64;
-    streamsize: int64;
+    streamposition1: int64;
+    streamposition2: int64;
+    streamsize1: int64;
     procedure streamingstart;
     procedure streamingstop;
     procedure streamingrun(count: longint);
     procedure streamingcallback;
-
-    function getzoom: double;
-    procedure lockinternal(value: boolean);
-
-
     procedure onscreenthreadstart;
     procedure onscreenthreadstop;
+    procedure lockinternal(value: boolean);
+    function getzoom: double;
   end;
 
   tscreenthread = class(tthread)
@@ -174,6 +174,9 @@ implementation
 
 uses
   aboutfrm, importfrm, math, sysutils, xypdxfreader, xypsvgreader, xyputils;
+
+const
+  serialpacksize = 80;
 
 // SCREEN THREAD
 
@@ -258,8 +261,6 @@ end;
 // FORM EVENTS
 
 procedure tmainform.formcreate(sender: tobject);
-var
-  ports: tstringlist;
 begin
   defaultformatsettings.decimalseparator := '.';
   // properties storage
@@ -280,23 +281,15 @@ begin
   screenimage := tbgrabitmap.create(screen.width, screen.height);
   // create sheduler list
   schedulerlist := tstringlist.create;
-  scheduler.enabled := false;
-  // create serial stream
+  schedulertimer.enabled := false;
+  // create monitor stream
   serialstream := txypserialstream.create;
   serialstream.rxevent := @streamingcallback;
-  // load serial ports
-  ports := serialportnames;
-  while ports.count > 0 do
-  begin
-    portcb.items.add(ports[0]);
-    ports.delete(0);
-  end;
-  ports.destroy;
 end;
 
 procedure tmainform.formdestroy(sender: tobject);
 begin
-  scheduler.enabled := false;
+  schedulertimer.enabled := false;
   // destroy
   driver.destroy;
   page.destroy;
@@ -321,6 +314,20 @@ begin
 end;
 
 // CONNECTION
+
+procedure tmainform.portcbgetitems(Sender: TObject);
+var
+  ports: tstringlist;
+begin
+  // load monitor ports
+  ports := serialportnames;
+  while ports.count > 0 do
+  begin
+    portcb.items.add(ports[0]);
+    ports.delete(0);
+  end;
+  ports.destroy;
+end;
 
 procedure tmainform.connectbtnclick(sender: tobject);
 begin
@@ -364,19 +371,19 @@ begin
   if sender = ydownbtn then schedulerlist.add('driver.movey-');
   if sender = zupbtn   then schedulerlist.add('driver.movez+');
   if sender = zdownbtn then schedulerlist.add('driver.movez-');
-  scheduler.enabled := true;
+  schedulertimer.enabled := true;
 end;
 
 procedure tmainform.movetohomemiclick(sender: tobject);
 begin
   schedulerlist.add('driver.movetoorigin');
-  scheduler.enabled := true;
+  schedulertimer.enabled := true;
 end;
 
 procedure tmainform.sethomebtnclick(sender: tobject);
 begin
   schedulerlist.add('driver.setorigin');
-  scheduler.enabled := true;
+  schedulertimer.enabled := true;
 end;
 
 // DRAWING IMPORT/CLEAR
@@ -429,9 +436,9 @@ begin
         bit.destroy;
       end;
     end;
-    // start scheduler
+    // start schedulertimer
     schedulerlist.add('screen.update');
-    scheduler.enabled := true;
+    schedulertimer.enabled := true;
   end;
 end;
 
@@ -439,9 +446,9 @@ procedure tmainform.clearbtnclick(sender: tobject);
 begin
   caption := 'XY-Plot';
   page.clear;
-  // start scheduler
+  // start schedulertimer
   schedulerlist.add('screen.update');
-  scheduler.enabled := true;
+  schedulertimer.enabled := true;
 end;
 
 // DRAWING EDITING
@@ -473,9 +480,9 @@ begin
     6: page.centertoorigin;                     // MOVE TO ORIGIN
   end;
   page.updatepage;
-  // start scheduler
+  // start schedulertimer
   schedulerlist.add('screen.update');
-  scheduler.enabled := true;
+  schedulertimer.enabled := true;
 end;
 
 // PAGE SIZE
@@ -525,7 +532,7 @@ begin
   end else
   begin
     schedulerlist.add('driver.start');
-    scheduler.enabled := true;
+    schedulertimer.enabled := true;
   end;
 end;
 
@@ -552,7 +559,7 @@ begin
   begin
     schedulerlist.add('screen.update');
     schedulerlist.add('screen.fit');
-    scheduler.enabled := true;
+    schedulertimer.enabled := true;
   end;
 end;
 
@@ -686,29 +693,49 @@ begin
   scheduling := false;
 end;
 
-// SCHEDULER
+// PROGRESS MONITOR
 
-procedure tmainform.schedulerstarttimer(sender: tobject);
+procedure tmainform.progresstick(sender: tobject);
 begin
-  lockinternal(false);
-  progressbar.position := 100;
-  progressbar.visible  := schedulerlist.count <> 0;
+  if streaming1 then
+  begin
+    if streaming2 then
+    begin
+      caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec', [
+        ((100*streamposition1) div streamsize1), (streamposition2)]);
+      streamposition2 := 0;
+    end else
+    begin
+      caption := format('XY-Plot | Pause %u%%', [
+        (100*streamposition1) div streamsize1]);
+    end;
+  end;
+
+  if assigned(screenthread) then
+  begin
+    caption := format('XY-Plot | Progress %u%%', [screenthread.percentage]);
+  end;
 end;
 
-procedure tmainform.schedulerstoptimer(sender: tobject);
+// SCHEDULER TIMER
+
+procedure tmainform.schedulerstart(sender: tobject);
 begin
-  progressbar.visible := schedulerlist.count <> 0;
+  lockinternal(false);
+  progresstimer.enabled := true;
+end;
+
+procedure tmainform.schedulerstop(sender: tobject);
+begin
+  progresstimer.enabled := false;
   lockinternal(true);
 end;
 
-procedure tmainform.schedulertimer(sender: tobject);
+procedure tmainform.schedulertick(sender: tobject);
 begin
   if scheduling then
   begin
-    if streaming1 then
-      progressbar.position := (100 * streamposition) div streamsize;
-    if assigned(screenthread) then
-      progressbar.position := screenthread.percentage;
+    // nothing to do
   end else
   if schedulerlist.count > 0 then
   begin
@@ -793,7 +820,7 @@ begin
     schedulerlist.delete(0);
   end else
   begin
-    scheduler.enabled := false;
+    schedulertimer.enabled := false;
   end;
 end;
 
@@ -814,22 +841,31 @@ begin
   begin
     streaming1 := true;
     streaming2 := true;
-    streamposition := 0;
-    streamsize := stream.size;
+    streamposition1 := 0;
+    streamposition2 := 0;
+    streamsize1 := stream.size;
     stream.seek(0, sofrombeginning);
     lockinternal(false);
     // start streaming
-    streamingrun(80);
+    streamingrun(SerialPackSize);
   end else
     streamingstop;
 end;
 
 procedure tmainform.streamingstop;
 begin
+  caption := 'XY-Plot';
+  {$ifopt D+}
+  if streamposition1 <> streamsize1 then
+  begin
+    printdbg('TCP', 'STREAMING.ERROR');
+  end;
+  {$endif}
   streaming1 := false;
   streaming2 := false;
-  streamposition := 0;
-  streamsize := 0;
+  streamposition1 := 0;
+  streamposition2 := 0;
+  streamsize1 := 0;
   stream.clear;
   {$ifopt D+}
   printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
@@ -855,10 +891,16 @@ begin
     serialstream.write(buffer, count);
     driver.sync(buffer, count);
     {$ifopt D+}
-    printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
-      [driver.xcount1*setting.pxratio,
-       driver.ycount1*setting.pyratio,
-       driver.zcount1*setting.pzratio]));
+    if count = serialpacksize then
+      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
+        [driver.xcount1*setting.pxratio,
+         driver.ycount1*setting.pyratio,
+         driver.zcount1*setting.pzratio]))
+    else
+      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] WARNING: SERIAL SPEED SLOW ',
+        [driver.xcount1*setting.pxratio,
+         driver.ycount1*setting.pyratio,
+         driver.zcount1*setting.pzratio]));
     {$endif}
   end;
 end;
@@ -869,8 +911,9 @@ var
 begin
   while serialstream.read(count, sizeof(count)) = sizeof(count) do
   begin
-    inc(streamposition, count);
-    if streamposition < streamsize then
+    inc(streamposition1, count);
+    inc(streamposition2, count);
+    if streamposition1 < streamsize1 then
     begin
       if streaming2 then
         streamingrun(count);

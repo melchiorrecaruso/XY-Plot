@@ -26,16 +26,20 @@ unit xypserial;
 interface
 
 uses
-  {$IFDEF UNIX} baseunix, unix, {$ENDIF} classes,
-  dateutils, serial, sysutils, xyputils;
+  classes, dateutils, serial, sysutils,
+  {$IFDEF UNIX} baseunix, unix; {$ENDIF}
+  {$IFDEF MSWINDOWS} registry, windows; {$ENDIF}
 
 type
+  txypserialmonitor = class;
+
   txypserialstream = class
   private
     fbaudrate: longint;
     fbits:     longint;
     fflags:    tserialflags;
     fhandle:   longint;
+    fmonitor:  txypserialmonitor;
     fparity:   tparitytype;
     frxindex:  longint;
     frxcount:  longint;
@@ -68,8 +72,6 @@ type
   public
     constructor create(aserial: txypserialstream);
     procedure execute; override;
-  public
-
   end;
 
 function serialportnames: tstringlist;
@@ -81,13 +83,13 @@ implementation
 constructor txypserialmonitor.create(aserial: txypserialstream);
 begin
   fserial := aserial;
-  freeonterminate := true;
+  freeonterminate := false;
   inherited create(true);
 end;
 
 procedure txypserialmonitor.execute;
 begin
-  while assigned(fserial) do
+  while assigned(fserial) and (not terminated) do
   begin
     if fserial.connected then
     begin
@@ -105,26 +107,26 @@ end;
 // txypserialstream
 
 constructor txypserialstream.create;
-var
-  monitor: txypserialmonitor;
 begin
   inherited create;
   fbits     := 8;
   fbaudrate := 115200;
   fflags    := [];
   fhandle   := -1;
+  fmonitor  := txypserialmonitor.create(self);
   fparity   := noneparity;
   frxindex  := 0;
   frxcount  := 0;
   frxevent  := nil;
   fstopbits := 1;
   ftimeout  := 5;
-   monitor  := txypserialmonitor.create(self);
-   monitor.start;
+  fmonitor.start;
 end;
 
 destructor txypserialstream.destroy;
 begin
+  fmonitor.terminate;
+  fmonitor.destroy;
   close;
   inherited destroy;
 end;
@@ -203,12 +205,26 @@ end;
 {$IFDEF MSWINDOWS}
 function serialportnames: tstringlist;
 var
-  i: longint;
+  i: integer;
+  l: tstringlist;
+  reg: tregistry;
 begin
+  l := tstringlist.create;
+  reg := tregistry.create;
   result := tstringlist.create;
-  for i := 0 to 12 do
-  begin
-    result.add('COM' + inttostr(i));
+  try
+    reg.rootkey := hkey_local_machine;
+    if reg.openkeyreadonly('HARDWARE\DEVICEMAP\SERIALCOMM') then
+    begin
+      reg.getvaluenames(l);
+      for i := 0 to l.count -1 do
+      begin
+        result.add(reg.readstring(l[i]));
+      end;
+    end;
+  finally
+    l.destroy;
+    reg.destroy;
   end;
 end;
 {$ENDIF}
