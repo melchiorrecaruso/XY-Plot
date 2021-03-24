@@ -75,8 +75,9 @@
       <Unit>
         <Filename Value="xyplot.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="10"/>
-        <CursorPos X="19" Y="23"/>
+        <CursorPos Y="47"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -168,7 +169,8 @@
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <CursorPos X="21" Y="177"/>
+        <TopLine Value="311"/>
+        <CursorPos X="45" Y="43"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -202,6 +204,7 @@
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
+        <TopLine Value="508"/>
         <CursorPos X="40" Y="244"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -226,7 +229,8 @@
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <CursorPos X="10" Y="117"/>
+        <TopLine Value="48"/>
+        <CursorPos X="11" Y="67"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -388,10 +392,9 @@
         <ComponentName Value="tmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="328"/>
-        <CursorPos X="36" Y="348"/>
+        <TopLine Value="776"/>
+        <CursorPos X="38" Y="771"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -1068,15 +1071,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="27">
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="267" Column="3" TopLine="258"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="268" Column="3" TopLine="259"/>
-      </Position>
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/mainfrm.pas"/>
         <Caret Line="267" Column="3" TopLine="258"/>
@@ -1180,6 +1175,22 @@
       <Position>
         <Filename Value="src/xypserial.pas"/>
         <Caret Line="173" Column="51" TopLine="123"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="787" Column="57" TopLine="774"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdriver.pas"/>
+        <Caret Line="43" Column="42" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdriver.pas"/>
+        <Caret Line="47" Column="20" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="771" Column="38" TopLine="776"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>

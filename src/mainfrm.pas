@@ -765,8 +765,7 @@ begin
       driver.sync;
       driver.move(page, pagewidth, pageheight);
       driver.movez(trunc(setting.pzup/setting.pzratio));
-      driver.movex(0);
-      driver.movey(0);
+      driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
       driver.movez(0);
       driver.createramps;
       streamingstart;
@@ -785,8 +784,7 @@ begin
       stream.clear;
       driver.sync;
       driver.movez(trunc(setting.pzup/setting.pzratio));
-      driver.movex(0);
-      driver.movey(0);
+      driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
       driver.movez(0);
       driver.createramps;
       streamingstart;

@@ -40,13 +40,13 @@ type
     fycount2: longint;
     fzcount2: longint;
     procedure compute(const p: txyppoint; var cx, cy: longint);
-    procedure move(cx, cy, cz: longint);
   public
     constructor create(astream: tstream; asetting: txypsetting);
     destructor destroy; override;
     procedure movex(cx: longint);
     procedure movey(cy: longint);
     procedure movez(cz: longint);
+    procedure move(cx, cy, cz: longint);
     procedure move(path: txypelementlist; pagewidth, pageheight: longint);
     procedure setoriginx;
     procedure setoriginy;
