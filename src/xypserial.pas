@@ -112,7 +112,7 @@ begin
   fbits     := 8;
   fbaudrate := 115200;
   fflags    := [];
-  fhandle   := -1;
+  fhandle   := 0;
   fmonitor  := txypserialmonitor.create(self);
   fparity   := noneparity;
   frxindex  := 0;
@@ -134,7 +134,7 @@ end;
 function txypserialstream.open(const device: string): boolean;
 begin
   close;
-  fhandle := seropen(device);
+  fhandle := seropen('\\.\\' + device);
   result  := connected;
   if result then
   begin

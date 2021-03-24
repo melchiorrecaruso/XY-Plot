@@ -320,6 +320,7 @@ var
   ports: tstringlist;
 begin
   // load monitor ports
+  portcb.items.clear;
   ports := serialportnames;
   while ports.count > 0 do
   begin

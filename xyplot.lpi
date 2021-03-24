@@ -175,9 +175,8 @@
       <Unit>
         <Filename Value="src/xypsetting.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="12"/>
-        <TopLine Value="56"/>
+        <TopLine Value="139"/>
         <CursorPos X="78" Y="78"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -389,10 +388,10 @@
         <ComponentName Value="tmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="789"/>
-        <CursorPos X="22" Y="738"/>
-        <FoldState Value=" T3v70/7"/>
+        <TopLine Value="328"/>
+        <CursorPos X="36" Y="348"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -436,8 +435,8 @@
       <Unit>
         <Filename Value="src/xypserial.pas"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="85"/>
-        <CursorPos X="42" Y="170"/>
+        <TopLine Value="130"/>
+        <CursorPos X="33" Y="131"/>
         <UsageCount Value="83"/>
         <Loaded Value="True"/>
       </Unit>
@@ -689,7 +688,7 @@
       <Unit>
         <Filename Value="src/xypoptimizer.pas"/>
         <EditorIndex Value="7"/>
-        <CursorPos X="9" Y="47"/>
+        <CursorPos X="50" Y="14"/>
         <UsageCount Value="101"/>
         <Loaded Value="True"/>
       </Unit>
@@ -1022,8 +1021,8 @@
         <Filename Value="../../../../../FPC/3.2.0/source/packages/rtl-extra/src/win/serial.pp"/>
         <UnitName Value="Serial"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="440"/>
-        <CursorPos X="43" Y="458"/>
+        <TopLine Value="180"/>
+        <CursorPos X="51" Y="192"/>
         <UsageCount Value="10"/>
       </Unit>
       <Unit>
@@ -1054,44 +1053,22 @@
         <CursorPos X="3" Y="48"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.0/source/rtl/win/wininc/defines.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1784"/>
+        <CursorPos X="6" Y="1803"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.0/source/rtl/win/wininc/ascdef.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="73"/>
+        <CursorPos X="20" Y="117"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="322" Column="22" TopLine="310"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="727" Column="37" TopLine="699"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="854" Column="51" TopLine="837"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="135" Column="20" TopLine="126"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="725" TopLine="708"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="714" Column="38" TopLine="705"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="713" Column="38" TopLine="704"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="714" Column="38" TopLine="704"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="713" Column="38" TopLine="703"/>
-      </Position>
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="src/mainfrm.pas"/>
         <Caret Line="267" Column="3" TopLine="258"/>
@@ -1175,6 +1152,34 @@
       <Position>
         <Filename Value="src/mainfrm.pas"/>
         <Caret Line="700" Column="3" TopLine="697"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="323" Column="22" TopLine="312"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="316" Column="19" TopLine="304"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="351" Column="3" TopLine="333"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypserial.pas"/>
+        <Caret Line="54" Column="18" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypserial.pas"/>
+        <Caret Line="205" Column="25" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypserial.pas"/>
+        <Caret Line="137" Column="30" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypserial.pas"/>
+        <Caret Line="173" Column="51" TopLine="123"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
