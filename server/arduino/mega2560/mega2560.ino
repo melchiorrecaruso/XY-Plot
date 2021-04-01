@@ -1,12 +1,12 @@
 // XY-Plotter Server for Arduino Mega 2560
 
 // Author: Melchiorre Caruso
-// Date:   21 Mar 2021
+// Date:   27 Mar 2021
 
 // Serial data format
 
-// bit0 -> increase internal main-loop time
-// bit1 -> decrease internal main-loop time
+// bit0 -> decrease internal main-loop time
+// bit1 -> increase internal main-loop time
 // bit2 -> x-motor stp (avr register PORTE4)
 // bit3 -> y-motor stp (avr register PORTE5)
 // bit4 -> z-motor stp (avr register PORTG5)
@@ -53,7 +53,6 @@ void loop() {
 
   LoopNow = micros();
   if ((unsigned long)(LoopNow - LoopStart) >= LoopDelay) {
-
     // SET X-DIR, Y-DIR and Z-DIR PIN,   
     PORTE = (PORTE & B11110111) | ((Bits & B00100000) >> 2); 
     PORTH = (PORTH & B11100111) | ((Bits & B11000000) >> 3);             

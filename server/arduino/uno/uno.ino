@@ -1,12 +1,12 @@
 // XY-Plotter Server for Arduino Uno
 
 // Author: Melchiorre Caruso
-// Date:   21 Mar 2021
+// Date:   27 Mar 2021
 
 // Serial data format
 
-// bit0 -> increase internal main-loop time
-// bit1 -> decrease internal main-loop time
+// bit0 -> decrease internal main-loop time
+// bit1 -> increase internal main-loop time
 // bit2 -> x-motor stp (avr register PORTD2)
 // bit3 -> y-motor stp (avr register PORTD3)
 // bit4 -> z-motor stp (avr register PORTD4)
@@ -51,7 +51,6 @@ void loop() {
 
   LoopNow = micros();
   if ((unsigned long)(LoopNow - LoopStart) >= LoopDelay) {
-
     // SET X-DIR, Y-DIR and Z-DIR PIN,   
     // SET LOW X-STEP, Y-STEP and Z-STEP PIN
     PORTD = (PORTD & B00000011) | (Bits & B11100000);             
