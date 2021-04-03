@@ -41,6 +41,9 @@ function  getbit(value: byte; index: longint): byte;
 
 procedure printdbg(const s1, s2: string);
 
+function parseaddresses(const s: string): string;
+function parseport(const s: string): longint;
+
 procedure sleepmicroseconds(microseconds: longword);
 
 
@@ -135,6 +138,24 @@ begin
 end;
 
 {$ENDIF}
+
+function parseaddresses(const s: string): string;
+begin
+  result := '';
+  if pos(':', s) > 1 then
+  begin
+    result := copy(s, 1, pos(':', s) -1);
+  end;
+end;
+
+function parseport(const s: string): longint;
+begin
+  result := 0;
+  if pos(':', s) > 1 then
+  begin
+    trystrtoint(copy(s, pos(':', s) + 1, length(s) - pos(':', s)), result);
+  end;
+end;
 
 procedure printdbg(const s1, s2: string);
 begin

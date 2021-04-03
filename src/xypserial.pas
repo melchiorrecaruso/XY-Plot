@@ -26,9 +26,9 @@ unit xypserial;
 interface
 
 uses
-  classes, dateutils, serial, sysutils,
-  {$IFDEF UNIX} baseunix, unix; {$ENDIF}
-  {$IFDEF MSWINDOWS} registry, windows; {$ENDIF}
+  classes, dateutils, lnet, serial, sysutils,
+  {$IFDEF UNIX} baseunix, unix, {$ENDIF}
+  {$IFDEF MSWINDOWS} registry, windows, {$ENDIF} xyputils;
 
 type
   txypserialmonitor = class;
@@ -36,34 +36,39 @@ type
   txypserialstream = class
   private
     fbaudrate: longint;
-    fbits:     longint;
-    fflags:    tserialflags;
-    fhandle:   longint;
-    fmonitor:  txypserialmonitor;
-    fparity:   tparitytype;
-    frxindex:  longint;
-    frxcount:  longint;
+    fbits: longint;
+    fflags: tserialflags;
+    fhandle: longint;
+    fmonitor: txypserialmonitor;
+    fonconnect: tthreadmethod;
+    fondisconnect: tthreadmethod;
+    fonreceive: tthreadmethod;
+    fparity: tparitytype;
+    frxindex: longint;
+    frxcount: longint;
     frxbuffer: array[0..31] of byte;
-    frxevent:  tthreadmethod;
     fstopbits: longint;
-    ftimeout:  longint;
+    ftimeout: longint;
     procedure fill;
   public
     constructor create;
     destructor destroy; override;
-    function open(const device: string): boolean;
-    function read (var buffer; count: longint): longint;
-    function write(var buffer; count: longint): longint;
+    function connect(const port: string): boolean;
+    function get (var buffer; count: longint): longint;
+    function send(var buffer; count: longint): longint;
     function connected: boolean;
     procedure clear;
-    procedure close;
+    procedure disconnect;
   public
     property baudrate: longint       read fbaudrate write fbaudrate;
     property bits:     longint       read fbits     write fbits;
     property flags:    tserialflags  read fflags    write fflags;
     property parity:   tparitytype   read fparity   write fparity;
-    property rxevent:  tthreadmethod read frxevent  write frxevent;
     property stopbits: longint       read fstopbits write fstopbits;
+
+    property onconnect: tthreadmethod read fonconnect write fonconnect;
+    property ondisconnect: tthreadmethod read fondisconnect write fondisconnect;
+    property onreceive: tthreadmethod read fonreceive write fonreceive;
   end;
 
   txypserialmonitor = class(tthread)
@@ -95,8 +100,8 @@ begin
     begin
       if fserial.frxindex < fserial.frxcount then
       begin
-        if assigned(fserial.frxevent) then
-          synchronize(fserial.frxevent);
+        if assigned(fserial.fonreceive) then
+          synchronize(fserial.fonreceive);
       end else
         fserial.fill;
     end else
@@ -109,17 +114,19 @@ end;
 constructor txypserialstream.create;
 begin
   inherited create;
-  fbits     := 8;
+  fbits := 8;
   fbaudrate := 115200;
-  fflags    := [];
-  fhandle   := 0;
-  fmonitor  := txypserialmonitor.create(self);
-  fparity   := noneparity;
-  frxindex  := 0;
-  frxcount  := 0;
-  frxevent  := nil;
+  fflags := [];
+  fhandle := 0;
+  fmonitor := txypserialmonitor.create(self);
+  fparity := noneparity;
+  frxindex := 0;
+  frxcount:= 0;
+  fonconnect := nil;
+  fondisconnect := nil;
+  fonreceive := nil;
   fstopbits := 1;
-  ftimeout  := 5;
+  ftimeout := 5;
   fmonitor.start;
 end;
 
@@ -127,18 +134,22 @@ destructor txypserialstream.destroy;
 begin
   fmonitor.terminate;
   fmonitor.destroy;
-  close;
+  disconnect;
   inherited destroy;
 end;
 
-function txypserialstream.open(const device: string): boolean;
+function txypserialstream.connect(const port: string): boolean;
 begin
-  close;
-  fhandle := seropen('\\.\\' + device);
+  disconnect;
+  fhandle := seropen('\\.\\' + port);
   result  := connected;
   if result then
   begin
     sersetparams(fhandle, fbaudrate, fbits, noneparity, fstopbits, fflags);
+    if assigned(fonconnect) then
+    begin
+      fonconnect;
+    end;
     clear;
   end;
 end;
@@ -155,7 +166,7 @@ begin
   end;
 end;
 
-procedure txypserialstream.close;
+procedure txypserialstream.disconnect;
 begin
   if connected then
   begin
@@ -164,6 +175,10 @@ begin
     serclose      (fhandle);
   end;
   fhandle := -1;
+  if assigned(fondisconnect) then
+  begin
+    fondisconnect;
+  end;
 end;
 
 procedure txypserialstream.fill;
@@ -172,7 +187,7 @@ begin
   frxcount := serreadtimeout(fhandle, frxbuffer[0], sizeof(frxbuffer), 5);
 end;
 
-function txypserialstream.read(var buffer; count: longint): longint;
+function txypserialstream.get(var buffer; count: longint): longint;
 var
   data: array[0..$FFFF] of byte absolute buffer;
 begin
@@ -192,7 +207,7 @@ begin
   end;
 end;
 
-function txypserialstream.write(var buffer; count: longint): longint;
+function txypserialstream.send(var buffer; count: longint): longint;
 begin
   result := serwrite(fhandle, buffer, count);
 end;

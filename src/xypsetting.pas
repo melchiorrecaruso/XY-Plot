@@ -31,6 +31,7 @@ uses
 type
   txypsetting = class
   private
+    // layout
     forigin: txyppoint;
     fxoffset: double;
     fyoffset: double;
@@ -156,7 +157,6 @@ begin
     fpagelandscape := ini.readinteger('PAGE', 'LANDSCAPE', 0);
 
     frampkl := ini.readinteger('RAMP','KL', 0);
-
     {$ifopt D+}
     printdbg('SETTING', format('X.OFFSET         %12.5f mm', [fxoffset]));
     printdbg('SETTING', format('Y.OFFSET         %12.5f mm', [fyoffset]));

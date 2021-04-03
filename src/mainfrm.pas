@@ -23,14 +23,16 @@ unit mainfrm;
 
 {$mode objfpc}
 
+{*$DEFINE ETHERNET}
+
 interface
 
 uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
-  bgrapath, buttons, classes, comctrls, controls, dialogs, extctrls, forms,
-  graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
-  dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypserial,
-  xypsetting, xypsketcher;
+  lnetcomponents, bgrapath, buttons, classes, comctrls, controls, dialogs,
+  extctrls, forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage,
+  extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypserial,
+  xypsetting, xypsketcher, lnet;
 
 type
 
@@ -38,7 +40,7 @@ type
 
   tmainform = class(tform)
     aboutbtn: tbitbtn;
-    progresstimer: TIdleTimer;
+    progresstimer: tidletimer;
     sethomebtn: tbitbtn;
     connectbtn: tbitbtn;
     portcb: tcombobox;
@@ -139,7 +141,15 @@ type
     procedure streamingstart;
     procedure streamingstop;
     procedure streamingrun(count: longint);
-    procedure streamingcallback;
+    {$ifdef ETHERNET}
+    procedure streamingonconnect(asocket: tlsocket);
+    procedure streamingondisconnect(asocket: tlsocket);
+    procedure streamingonreceive(asocket: tlsocket);
+    {$else}
+    procedure streamingonconnect;
+    procedure streamingondisconnect;
+    procedure streamingonreceive;
+    {$endif}
     procedure onscreenthreadstart;
     procedure onscreenthreadstop;
     procedure lockinternal(value: boolean);
@@ -165,7 +175,11 @@ var
   driver:       txypdriver       = nil;
   mainform:     tmainform;
   screenthread: tscreenthread    = nil;
+  {$ifdef ETHERNET}
+  serialstream: tltcpcomponent   = nil;
+  {$else}
   serialstream: txypserialstream = nil;
+  {$endif}
   setting:      txypsetting;
 
 implementation
@@ -176,7 +190,11 @@ uses
   aboutfrm, importfrm, math, sysutils, xypdxfreader, xypsvgreader, xyputils;
 
 const
-  serialpacksize = 80;
+  {$ifdef ETHERNET}
+    serialpacksize = 1024;
+  {$else}
+    serialpacksize = 80;
+  {$endif}
 
 // SCREEN THREAD
 
@@ -283,8 +301,14 @@ begin
   schedulerlist := tstringlist.create;
   schedulertimer.enabled := false;
   // create monitor stream
+  {$ifdef ETHERNET}
+  serialstream := tltcpcomponent.create(nil);
+  {$else}
   serialstream := txypserialstream.create;
-  serialstream.rxevent := @streamingcallback;
+  {$endif}
+  serialstream.onconnect    := @streamingonconnect;
+  serialstream.ondisconnect := @streamingondisconnect;
+  serialstream.onreceive    := @streamingonreceive;
 end;
 
 procedure tmainform.formdestroy(sender: tobject);
@@ -319,7 +343,9 @@ procedure tmainform.portcbgetitems(Sender: TObject);
 var
   ports: tstringlist;
 begin
-  // load monitor ports
+  {$ifdef ETHERNET}
+
+  {$else}
   portcb.items.clear;
   ports := serialportnames;
   while ports.count > 0 do
@@ -328,6 +354,7 @@ begin
     ports.delete(0);
   end;
   ports.destroy;
+  {$endif}
 end;
 
 procedure tmainform.connectbtnclick(sender: tobject);
@@ -338,20 +365,21 @@ begin
        (driver.ycount1 = 0) and
        (driver.zcount1 = 0) then
     begin
-      {$ifopt D+} printdbg('TCP', 'DISCONNECTED'); {$endif}
-      connectbtn.caption := 'Connect';
-      serialstream.close;
-      lockinternal(true);
+      {$ifdef ETHERNET}
+      serialstream.disconnect(false);
+      {$else}
+      serialstream.disconnect;
+      {$endif}
     end else
       messagedlg('XY-Plot', 'Please move the plotter to origin (Home) before disconnecting !', mterror, [mbok], 0);
   end else
-    serialstream.open(portcb.text);
-    if serialstream.connected then
-    begin
-      {$ifopt D+} printdbg('TCP', 'CONNECTED'); {$endif}
-      connectbtn.caption := 'Disconnect';
-      lockinternal(true);
-    end;
+  begin
+    {$ifdef ETHERNET}
+    serialstream.connect(parseaddresses(portcb.text), parseport(portcb.text));
+    {$else}
+    serialstream.connect(portcb.text)
+    {$endif}
+  end;
 end;
 
 procedure tmainform.propstoragerestoreproperties(sender: tobject);
@@ -523,7 +551,7 @@ begin
     begin
       startbtn.caption    := 'Stop';
       startbtn.imageindex := 7;
-      streamingrun(64);
+      streamingrun(serialpacksize);
     end else
     begin
       startbtn.caption    := 'Start';
@@ -830,7 +858,7 @@ begin
   startbtn.caption := 'Stop';
   startbtn.imageindex := 7;
   {$ifopt D+}
-  printdbg('TCP', 'STREAMING.START');
+  printdbg('STREAMING', 'START');
   printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
     [driver.xcount1*setting.pxratio,
      driver.ycount1*setting.pyratio,
@@ -846,7 +874,7 @@ begin
     stream.seek(0, sofrombeginning);
     lockinternal(false);
     // start streaming
-    streamingrun(SerialPackSize);
+    streamingrun(serialpacksize);
   end else
     streamingstop;
 end;
@@ -857,7 +885,7 @@ begin
   {$ifopt D+}
   if streamposition1 <> streamsize1 then
   begin
-    printdbg('TCP', 'STREAMING.ERROR');
+    printdbg('STREAMING', 'ERROR');
   end;
   {$endif}
   streaming1 := false;
@@ -871,7 +899,7 @@ begin
     [driver.xcount1*setting.pxratio,
      driver.ycount1*setting.pyratio,
      driver.zcount1*setting.pzratio]));
-  printdbg('TCP', 'STREAMING.STOP');
+  printdbg('STREAMING', 'STOP');
   {$endif}
   // ---
   startbtn.caption := 'Start';
@@ -887,7 +915,7 @@ begin
   count := stream.read(buffer, count);
   if count > 0 then
   begin
-    serialstream.write(buffer, count);
+    serialstream.send(buffer, count);
     driver.sync(buffer, count);
     {$ifopt D+}
     if count = serialpacksize then
@@ -896,7 +924,7 @@ begin
          driver.ycount1*setting.pyratio,
          driver.zcount1*setting.pzratio]))
     else
-      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] WARNING: SERIAL SPEED SLOW ',
+      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] WARNING: CONNECTION SPEED SLOW ',
         [driver.xcount1*setting.pxratio,
          driver.ycount1*setting.pyratio,
          driver.zcount1*setting.pzratio]));
@@ -904,11 +932,41 @@ begin
   end;
 end;
 
-procedure tmainform.streamingcallback;
+{$ifdef ETHERNET}
+procedure tmainform.streamingonconnect(asocket: tlsocket);
+{$else}
+procedure tmainform.streamingonconnect;
+{$endif}
+begin
+  {$ifopt D+}
+  printdbg('STREAMING', 'CONNECTED');
+  {$endif}
+  connectbtn.caption := 'Disconnect';
+  lockinternal(true);
+end;
+
+{$ifdef ETHERNET}
+procedure tmainform.streamingondisconnect(asocket: tlsocket);
+{$else}
+procedure tmainform.streamingondisconnect;
+{$endif}
+begin
+  {$ifopt D+}
+  printdbg('STREAMING', 'DISCONNECTED');
+  {$endif}
+  connectbtn.caption := 'Connect';
+  lockinternal(true);
+end;
+
+{$ifdef ETHERNET}
+procedure tmainform.streamingonreceive(asocket: tlsocket);
+{$else}
+procedure tmainform.streamingonreceive;
+{$endif}
 var
   count: byte;
 begin
-  while serialstream.read(count, sizeof(count)) = sizeof(count) do
+  while serialstream.get(count, sizeof(count)) = sizeof(count) do
   begin
     inc(streamposition1, count);
     inc(streamposition2, count);

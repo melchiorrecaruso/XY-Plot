@@ -24,8 +24,8 @@ program xyplot;
 {$mode objfpc}
 
 uses
- {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, forms, aboutfrm,
- importfrm, mainfrm, xyputils;
+ {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, lnetvisual,
+ lnetbase, forms, aboutfrm, importfrm, mainfrm, xyputils;
 
 {$R *.res}
 
