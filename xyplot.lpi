@@ -175,15 +175,14 @@
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="8"/>
-        <TopLine Value="296"/>
-        <CursorPos X="52" Y="306"/>
+        <TopLine Value="31"/>
+        <CursorPos X="43" Y="38"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsetting.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="14"/>
         <TopLine Value="109"/>
         <CursorPos Y="139"/>
@@ -406,9 +405,10 @@
         <ComponentName Value="tmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="481"/>
-        <CursorPos X="44" Y="499"/>
+        <TopLine Value="125"/>
+        <CursorPos X="54" Y="132"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -454,7 +454,7 @@
         <EditorIndex Value="9"/>
         <TopLine Value="191"/>
         <CursorPos X="31" Y="210"/>
-        <UsageCount Value="96"/>
+        <UsageCount Value="97"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -898,7 +898,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="52"/>
         <CursorPos X="32" Y="92"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -1105,124 +1105,124 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="src/xypdriver.pas"/>
-        <Caret Line="113" Column="37" TopLine="97"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdriver.pas"/>
-        <Caret Line="120" Column="9" TopLine="99"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdriver.pas"/>
-        <Caret Line="306" Column="2" TopLine="289"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="738" Column="8" TopLine="719"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="696" TopLine="656"/>
+        <Caret Line="882" Column="5" TopLine="863"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="498" Column="44" TopLine="479"/>
+        <Caret Line="905" Column="3" TopLine="886"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="499" Column="44" TopLine="479"/>
+        <Caret Line="983" Column="10" TopLine="953"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="512" Column="58" TopLine="480"/>
+        <Caret Line="137" Column="15" TopLine="116"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="513" Column="58" TopLine="481"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="827" Column="61" TopLine="808"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="829" Column="63" TopLine="808"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="894" Column="57" TopLine="875"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="896" Column="59" TopLine="875"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="958" Column="65" TopLine="939"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="959" Column="65" TopLine="939"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1034" Column="22" TopLine="1015"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1035" Column="33" TopLine="1015"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1073" Column="46" TopLine="1054"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1083" Column="46" TopLine="1054"/>
+        <Caret Line="560" Column="19" TopLine="539"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="513" Column="58" TopLine="481"/>
+        <Caret Line="636" Column="15" TopLine="617"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="512" Column="58" TopLine="481"/>
+        <Caret Line="738" Column="26" TopLine="717"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="37" Column="5" TopLine="18"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="734" Column="38" TopLine="710"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="141" Column="19" TopLine="124"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="722" Column="6" TopLine="699"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="37" Column="5" TopLine="17"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="133" Column="27" TopLine="127"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="68" Column="42" TopLine="50"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="560" Column="31" TopLine="541"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="37" Column="5" TopLine="17"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="637" Column="15" TopLine="618"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="68" Column="42" TopLine="50"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="727" Column="36" TopLine="715"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="141" Column="5" TopLine="122"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="731" Column="43" TopLine="717"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="156" Column="60" TopLine="125"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="738" Column="64" TopLine="717"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="66" Column="67" TopLine="49"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="133" Column="31" TopLine="112"/>
       </Position>
       <Position>
-        <Filename Value="src/xypsetting.pas"/>
-        <Caret Line="135" Column="13" TopLine="111"/>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="559" Column="16" TopLine="540"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="637" Column="16" TopLine="618"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="727" Column="20" TopLine="706"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="731" Column="45" TopLine="711"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="738" Column="26" TopLine="717"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="862" Column="15" TopLine="843"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="884" Column="23" TopLine="866"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="787" Column="18" TopLine="782"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="142" Column="27" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="927" Column="47" TopLine="905"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="922" Column="50" TopLine="902"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="964" Column="47" TopLine="840"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="922" TopLine="906"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>

@@ -80,6 +80,6 @@ void loop() {
     if (BufferSize > 0) {                                 
       Serial.readBytes(Buffer, BufferSize);
       Serial.write(BufferSize);   
-    }            
+    } else { RampIndex = 0; }          
   }
 }

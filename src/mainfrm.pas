@@ -132,7 +132,6 @@ type
     scheduling: boolean;
     stream: tmemorystream;
     streaming1: boolean;
-    streaming2: boolean;
     streamposition1: int64;
     streamposition2: int64;
     streamsize1: int64;
@@ -559,18 +558,7 @@ procedure tmainform.startmiclick(sender: tobject);
 begin
   if streaming1 then
   begin
-    streaming2 := not streaming2;
-    if streaming2 then
-    begin
-      startbtn.caption    := 'Stop';
-      startbtn.imageindex := 7;
-      streamingrun(serialpacksize);
-    end else
-    begin
-      startbtn.caption    := 'Start';
-      startbtn.imageindex := 6;
-    end;
-
+    streamingstop;
   end else
   begin
     schedulerlist.add('driver.start');
@@ -719,7 +707,7 @@ end;
 
 procedure tmainform.onscreenthreadstart;
 begin
-
+  // nothing to do
 end;
 
 procedure tmainform.onscreenthreadstop;
@@ -736,26 +724,18 @@ var
 begin
   if streaming1 then
   begin
-    if streaming2 then
-    begin
-      inc(streamtime1);
-      // calculate remaining time
-      try
-        remainingtime := secondstostr((streamsize1 - streamposition1)
-          div (streamposition1 div streamtime1));
-      except
-        remainingtime := '---';
-      end;
-      //
-      caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec | Remaining time %s',
-        [((100*streamposition1) div streamsize1), (streamposition2), remainingtime]);
-      // reset speed
-      streamposition2 := 0;
-    end else
-    begin
-      caption := format('XY-Plot | Pause %u%%',
-        [(100*streamposition1) div streamsize1]);
+    inc(streamtime1);
+    // calculate remaining time
+    try
+      remainingtime := secondstostr((streamsize1 - streamposition1)
+        div (streamposition1 div streamtime1));
+    except
+      remainingtime := '---';
     end;
+    caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec | Remaining time %s',
+      [((100*streamposition1) div streamsize1), (streamposition2), remainingtime]);
+    // reset speed
+    streamposition2 := 0;
   end;
 end;
 
@@ -880,7 +860,6 @@ begin
   if stream.size > 0 then
   begin
     streaming1 := true;
-    streaming2 := true;
     streamposition1 := 0;
     streamposition2 := 0;
     streamsize1 := stream.size;
@@ -903,7 +882,6 @@ begin
   end;
   {$endif}
   streaming1 := false;
-  streaming2 := false;
   streamposition1 := 0;
   streamposition2 := 0;
   streamsize1 := 0;
@@ -981,7 +959,7 @@ begin
     inc(streamposition2, count);
     if streamposition1 < streamsize1 then
     begin
-      if streaming2 then
+      if streaming1 then
         streamingrun(count);
     end else
       streamingstop;
