@@ -1,11 +1,11 @@
 object tmainform: tmainform
-  Left = 229
-  Height = 615
-  Top = 65
+  Left = 290
+  Height = 696
+  Top = 2
   Width = 920
   Anchors = []
   Caption = 'XY-Plot'
-  ClientHeight = 615
+  ClientHeight = 696
   ClientWidth = 920
   Color = clWhite
   Constraints.MinHeight = 600
@@ -26,7 +26,7 @@ object tmainform: tmainform
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 285
-    Height = 597
+    Height = 678
     Top = 12
     Width = 627
     OnRedraw = screenredraw
@@ -37,7 +37,7 @@ object tmainform: tmainform
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 6
     BorderStyle = bsSingle
-    ClientHeight = 593
+    ClientHeight = 674
     ClientWidth = 623
     Color = clWindow
     ParentColor = False
@@ -115,7 +115,7 @@ object tmainform: tmainform
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 6
-    Height = 603
+    Height = 684
     Top = 6
     Width = 275
     Anchors = [akTop, akLeft, akBottom]
@@ -124,7 +124,7 @@ object tmainform: tmainform
     BorderSpacing.Bottom = 6
     BevelColor = clForm
     BevelOuter = bvNone
-    ClientHeight = 603
+    ClientHeight = 684
     ClientWidth = 275
     Constraints.MaxWidth = 275
     Constraints.MinWidth = 275
@@ -174,7 +174,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 90
+      Top = 92
       Width = 275
       Caption = 'Calibration'
       Anchors = [akTop, akLeft, akRight]
@@ -186,14 +186,17 @@ object tmainform: tmainform
     end
     object stepnumberlb: TLabel
       AnchorSideLeft.Control = xupbtn
+      AnchorSideTop.Control = stepnumberedt
+      AnchorSideRight.Control = stepnumberedt
+      AnchorSideBottom.Control = stepnumberedt
       AnchorSideBottom.Side = asrBottom
       Left = 4
-      Height = 15
-      Top = 113
-      Width = 92
+      Height = 23
+      Top = 115
+      Width = 87
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Right = 8
+      BorderSpacing.Right = 4
       Caption = 'Step size [mm]:'
       Layout = tlCenter
       ParentBidiMode = False
@@ -786,7 +789,7 @@ object tmainform: tmainform
     end
     object drawingbvl: TDividerBevel
       AnchorSideLeft.Control = controlpnl
-      AnchorSideTop.Control = homebtn
+      AnchorSideTop.Control = sethomebtn
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
@@ -912,6 +915,7 @@ object tmainform: tmainform
         'X-MIRROR'
         'Y-MIRROR'
         'ROTATE'
+        'MOVE TO CENTER'
         'MOVE TO ORIGIN'
       )
       OnChange = editingcbchange
@@ -956,9 +960,9 @@ object tmainform: tmainform
       BorderSpacing.Top = 6
       BorderSpacing.Right = 4
       DecimalPlaces = 8
-      MaxValue = 0
       ParentFont = False
       TabOrder = 9
+      Value = 1
     end
     object editingbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -967,7 +971,7 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       Left = 4
-      Height = 30
+      Height = 32
       Top = 396
       Width = 267
       Anchors = [akTop, akLeft, akRight]
@@ -975,8 +979,8 @@ object tmainform: tmainform
       BorderSpacing.Top = 6
       BorderSpacing.Right = 4
       Caption = 'Update'
-      Constraints.MaxHeight = 30
-      Constraints.MinHeight = 30
+      Constraints.MaxHeight = 32
+      Constraints.MinHeight = 32
       OnClick = editingbtnclick
       ParentFont = False
       TabOrder = 10
@@ -989,7 +993,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 434
+      Top = 436
       Width = 275
       Caption = 'Page sizing'
       Anchors = [akTop, akLeft, akRight]
@@ -1007,7 +1011,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 95
       Height = 23
-      Top = 457
+      Top = 459
       Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
@@ -1043,7 +1047,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 23
-      Top = 457
+      Top = 459
       Width = 83
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -1063,7 +1067,7 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 15
-      Top = 488
+      Top = 490
       Width = 275
       Caption = 'Control'
       Anchors = [akTop, akLeft, akRight]
@@ -1082,7 +1086,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 509
+      Top = 511
       Width = 176
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
@@ -1096,50 +1100,29 @@ object tmainform: tmainform
       ParentFont = False
       TabOrder = 12
     end
-    object killbtn: TBitBtn
+    object homebtn: TBitBtn
+      AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = startbtn
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = startbtn
       AnchorSideBottom.Side = asrBottom
       Left = 186
       Height = 32
-      Top = 509
+      Top = 511
       Width = 85
       Anchors = [akTop, akRight, akBottom]
+      BorderSpacing.Left = 4
       BorderSpacing.Right = 4
-      Caption = 'KiLL'
+      Caption = 'Home'
       Constraints.MaxHeight = 32
       Constraints.MaxWidth = 85
       Constraints.MinHeight = 32
       Constraints.MinWidth = 85
       Images = btnimages
-      ImageIndex = 8
-      OnClick = killmiclick
-      ParentFont = False
-      TabOrder = 13
-    end
-    object homebtn: TBitBtn
-      AnchorSideLeft.Control = controlbvl
-      AnchorSideTop.Control = xdownbtn
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = ydownbtn
-      AnchorSideRight.Side = asrBottom
-      Left = 4
-      Height = 32
-      Top = 212
-      Width = 176
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 4
-      BorderSpacing.Top = 4
-      Caption = 'Move to Home'
-      Constraints.MaxHeight = 32
-      Constraints.MinHeight = 32
-      Images = btnimages
       ImageIndex = 9
       OnClick = movetohomemiclick
       ParentFont = False
-      TabOrder = 14
+      TabOrder = 13
     end
     object connectbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -1148,7 +1131,7 @@ object tmainform: tmainform
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
       Left = 4
-      Height = 30
+      Height = 32
       Top = 52
       Width = 267
       Anchors = [akTop, akLeft, akRight]
@@ -1156,10 +1139,10 @@ object tmainform: tmainform
       BorderSpacing.Top = 6
       BorderSpacing.Right = 4
       Caption = 'Connect'
-      Constraints.MaxHeight = 30
-      Constraints.MinHeight = 30
+      Constraints.MaxHeight = 32
+      Constraints.MinHeight = 32
       OnClick = connectbtnclick
-      TabOrder = 15
+      TabOrder = 14
     end
     object portcb: TComboBox
       AnchorSideTop.Control = connectionbvl
@@ -1180,7 +1163,7 @@ object tmainform: tmainform
       OnGetItems = portcbgetitems
       ParentBidiMode = False
       ParentFont = False
-      TabOrder = 16
+      TabOrder = 15
     end
     object aboutbtn: TBitBtn
       AnchorSideLeft.Control = controlpnl
@@ -1190,7 +1173,7 @@ object tmainform: tmainform
       AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 32
-      Top = 571
+      Top = 652
       Width = 267
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -1201,41 +1184,43 @@ object tmainform: tmainform
       Images = btnimages
       ImageIndex = 21
       OnClick = aboutmiclick
-      TabOrder = 17
+      TabOrder = 16
     end
     object sethomebtn: TBitBtn
-      AnchorSideLeft.Control = zdownbtn
+      AnchorSideLeft.Control = xdownbtn
       AnchorSideTop.Control = zdownbtn
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 186
+      Left = 4
       Height = 32
       Top = 212
-      Width = 85
+      Width = 267
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4
       Caption = 'Set Home'
+      Constraints.MaxHeight = 32
+      Constraints.MinHeight = 32
       OnClick = sethomebtnclick
-      TabOrder = 18
+      TabOrder = 17
     end
     object stepnumberedt: TFloatSpinEdit
+      AnchorSideLeft.Control = portcb
       AnchorSideTop.Control = calibrationbvl
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = controlpnl
       AnchorSideRight.Side = asrBottom
-      Left = 104
+      Left = 95
       Height = 23
-      Top = 113
-      Width = 167
+      Top = 115
+      Width = 176
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Right = 4
       DecimalPlaces = 0
-      MaxValue = 0
-      TabOrder = 19
+      TabOrder = 18
     end
   end
   object savedialog: TSaveDialog

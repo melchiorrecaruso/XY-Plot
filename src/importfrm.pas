@@ -30,7 +30,6 @@ uses
   dialogs, stdctrls, spin, buttons, extctrls;
 
 type
-
   { timportform }
 
   timportform = class(tform)

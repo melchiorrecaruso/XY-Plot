@@ -212,7 +212,8 @@ begin
   end;
   list1.destroy;
   page.mirrorx;
-  page.centertoorigin;
+  page.movetoorigin;
+  page.updatepage;
 end;
 
 // txypsketcherroundedsquare
@@ -404,7 +405,8 @@ begin
   end;
   list1.destroy;
   page.mirrorx;
-  page.centertoorigin;
+  page.movetoorigin;
+  page.updatepage;
 end;
 
 

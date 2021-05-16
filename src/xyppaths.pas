@@ -26,7 +26,7 @@ unit xyppaths;
 interface
 
 uses
-  bgrapath, classes, graphics, sysutils, xypmath;
+  bgrapath, classes, graphics, sysutils, xypmath, xyputils;
 
 type
   txypelement = class(tobject)
@@ -153,7 +153,9 @@ type
     fymax: double;
     function getcount: longint;
     function getitem(index: longint): txypelement;
-    function getpageheigth: double;
+    function getpagebottom: double;
+    function getpageleft: double;
+    function getpageheight: double;
     function getpagewidth: double;
   public
     constructor create;
@@ -164,11 +166,11 @@ type
     function extract(index: longint): txypelement;
     procedure insert(index: longint; element: txypelement);
     //
-    procedure centertoorigin;
     procedure invert;
     procedure mirrorx;
     procedure mirrory;
     procedure move(dx, dy: double);
+    procedure movetoorigin;
     procedure rotate(value: double);
     procedure scale(value: double);
     //
@@ -180,7 +182,9 @@ type
   public
     property count: longint read getcount;
     property items[index: longint]: txypelement read getitem;
-    property pageheigh: double read getpageheigth;
+    property pagebottom: double read getpagebottom;
+    property pageleft: double read getpageleft;
+    property pageheight: double read getpageheight;
     property pagewidth: double read getpagewidth;
   end;
 
@@ -661,6 +665,7 @@ procedure txypelementlist.clear;
 var
   i: longint;
 begin
+  fisneededupdatepage := false;
   for i := 0 to count -1 do
   begin
     txypelement(flist[i]).destroy;
@@ -674,6 +679,7 @@ end;
 
 procedure txypelementlist.add(element: txypelement);
 begin
+  fisneededupdatepage := true;
   flist.add(element);
 end;
 
@@ -687,7 +693,19 @@ begin
   result := txypelement(flist[index]);
 end;
 
-function txypelementlist.getpageheigth: double;
+function txypelementlist.getpagebottom: double;
+begin
+  updatepage;
+  result := fymin;
+end;
+
+function txypelementlist.getpageleft: double;
+begin
+  updatepage;
+  result := fxmin;
+end;
+
+function txypelementlist.getpageheight: double;
 begin
   updatepage;
   result := fymax-fymin;
@@ -701,17 +719,20 @@ end;
 
 procedure txypelementlist.insert(index: longint; element: txypelement);
 begin
+  fisneededupdatepage := true;
   flist.insert(index, element);
 end;
 
 function txypelementlist.extract(index: longint): txypelement;
 begin
+  fisneededupdatepage := true;
   result := txypelement(flist[index]);
   flist.delete(index);
 end;
 
 procedure txypelementlist.delete(index: longint);
 begin
+  fisneededupdatepage := true;
   txypelement(flist[index]).destroy;
   flist.delete(index);
 end;
@@ -720,6 +741,7 @@ procedure txypelementlist.move(dx, dy: double);
 var
   i: longint;
 begin
+  fisneededupdatepage := true;
   for i := 0 to flist.count -1 do
   begin
     txypelement(flist[i]).move(dx, dy);
@@ -730,6 +752,7 @@ procedure txypelementlist.rotate(value: double);
 var
   i: longint;
 begin
+  fisneededupdatepage := true;
   for i := 0 to flist.count -1 do
   begin
     txypelement(flist[i]).rotate(value);
@@ -740,6 +763,7 @@ procedure txypelementlist.scale(value: double);
 var
   i: longint;
 begin
+  fisneededupdatepage := true;
   for i := 0 to flist.count -1 do
   begin
     txypelement(flist[i]).scale(value);
@@ -771,6 +795,7 @@ procedure txypelementlist.mirrorx;
 var
   i: longint;
 begin
+  fisneededupdatepage := true;
   for i := 0 to flist.count -1 do
   begin
     txypelement(flist[i]).mirrorx;
@@ -781,6 +806,7 @@ procedure txypelementlist.mirrory;
 var
   i: longint;
 begin
+  fisneededupdatepage := true;
   for i := 0 to flist.count -1 do
   begin
     txypelement(flist[i]).mirrory;
@@ -791,6 +817,7 @@ procedure txypelementlist.invert;
 var
   i, cnt: longint;
 begin
+  fisneededupdatepage := true;
   cnt := flist.count -1;
   for i := 0 to cnt do
   begin
@@ -809,34 +836,45 @@ begin
   if fisneededupdatepage then
   begin
     fisneededupdatepage := false;
-    fxmin  := + maxint;
-    fxmax  := - maxint;
-    fymin  := + maxint;
-    fymax  := - maxint;
-    path := txyppolygonal.create;
-    for i := 0 to flist.count -1 do
+    if flist.count > 0 then
     begin
-      getitem(i).interpolate(path, 0.5);
-      for j := 0 to path.count -1 do
+      fxmin := + maxint;
+      fxmax := - maxint;
+      fymin := + maxint;
+      fymax := - maxint;
+      path := txyppolygonal.create;
+      for i := 0 to flist.count -1 do
       begin
-        point := path[j];
-        fxmin := min(fxmin, point.x);
-        fxmax := max(fxmax, point.x);
-        fymin := min(fymin, point.y);
-        fymax := max(fymax, point.y);
+        getitem(i).interpolate(path, 0.5);
+        for j := 0 to path.count -1 do
+        begin
+          point := path[j];
+          fxmin := min(fxmin, point.x);
+          fxmax := max(fxmax, point.x);
+          fymin := min(fymin, point.y);
+          fymax := max(fymax, point.y);
+        end;
+        path.clear;
       end;
-      path.clear;
+      path.destroy;
+    end else
+    begin
+      fxmin := 0;
+      fxmax := 0;
+      fymin := 0;
+      fymax := 0;
     end;
-    path.destroy;
   end;
+  {$ifopt D+}
+  printdbg('IMAGE', format('WIDTH              %10.2f mm', [abs(fxmax-fxmin)]));
+  printdbg('IMAGE', format('HEIGHT             %10.2f mm', [abs(fymax-fymin)]));
+  {$endif}
 end;
 
-procedure txypelementlist.centertoorigin;
+procedure txypelementlist.movetoorigin;
 begin
-  fisneededupdatepage := true;
-
   updatepage;
-  move(-(fxmax+fxmin)/2, -(fymax+fymin)/2);
+  move(-fxmin, -fymin);
 end;
 
 end.

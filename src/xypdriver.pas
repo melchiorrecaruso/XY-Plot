@@ -84,8 +84,6 @@ const
 procedure driverdebug(adriver: txypdriver);
 var
   i, j: longint;
-  offsetx: double;
-  offsety: double;
   page: array[0..2, 0..2] of txyppoint;
   p: txyppoint;
 begin
@@ -111,22 +109,15 @@ begin
     page[2, 1].y := -pageheight / 2;
     page[2, 2].x := +pagewidth  / 2;
     page[2, 2].y := -pageheight / 2;
-
-    offsetx := (pagewidth )*xfactor + xoffset;
-    offsety := (pageheight)*yfactor + yoffset;
   end;
 
   for i := 0 to 2 do
-  begin
     for j := 0 to 2 do
     begin
-      p   := page[i, j];
-      p.x := p.x + offsetx;
-      p.y := p.y + offsety;
+      p := page[i, j];
       printdbg('DRIVER', format('POINT.X          %12.5f mm', [p.x]));
       printdbg('DRIVER', format('POINT.Y          %12.5f mm', [p.y]));
     end;
-  end;
 end;
 
 // txypdriverengine
@@ -308,14 +299,11 @@ var
   poly: txyppolygonal;
   xcount: longint;
   ycount: longint;
-  xoffset: double;
-  yoffset: double;
 begin
   p1.x := 0;
   p1.y := 0;
   poly := txyppolygonal.create;
-  xoffset := pagewidth *fsetting.xfactor + fsetting.xoffset;
-  yoffset := pageheight*fsetting.yfactor + fsetting.yoffset;
+
   for i := 0 to path.count -1 do
   begin
     item := path.items[i];
@@ -323,19 +311,17 @@ begin
     for j := 0 to poly.count -1 do
     begin
       p2 := poly[j];
-      if (abs(p2.x) < (pagewidth /2)) and
-         (abs(p2.y) < (pageheight/2)) then
+      if (trunc(p2.x) > pagewidth ) or
+         (trunc(p2.y) > pageheight) then
       begin
-        p2.x := p2.x + xoffset;
-        p2.y := p2.y + yoffset;
         compute(p2, xcount, ycount);
         if distance(p1, p2) > 0.2 then
           move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio))
         else
           move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio));
         move(xcount, ycount, fzcount2);
+        p1 := p2;
       end;
-      p1 := p2;
     end;
     poly.clear;
   end;
@@ -356,7 +342,9 @@ var
    dz: array of longint;
   i, j, k, r: longint;
 begin
-  {$ifopt D+} printdbg('DRIVER', 'CREATE RAMPS'); {$endif}
+  {$ifopt D+}
+  printdbg('DRIVER', 'CREATE RAMPS');
+  {$endif}
   bufsize := fstream.size;
   if bufsize > 0 then
   begin
@@ -449,7 +437,9 @@ var
   buf: array of byte;
   i: longint;
 begin
-  {$ifopt D+} printdbg('DRIVER', 'DESTROY RAMPS'); {$endif}
+  {$ifopt D+}
+  printdbg('DRIVER', 'DESTROY RAMPS');
+  {$endif}
   bufsize := fstream.size;
   if bufsize > 0 then
   begin

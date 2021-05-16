@@ -29,10 +29,10 @@ interface
 
 uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
-  lnetcomponents, bgrapath, buttons, classes, comctrls, controls, dialogs,
+  lnet, lnetcomponents, bgrapath, buttons, classes, comctrls, controls, dialogs,
   extctrls, forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage,
-  extdlgs, dividerbevel, spinex, xypdriver, xypoptimizer, xyppaths, xypserial,
-  xypsetting, xypsketcher, lnet;
+  extdlgs, dividerbevel, spinex, xypdriver, xypfiller, xypoptimizer, xyppaths,
+  xypserial, xypsetting, xypsketcher;
 
 type
 
@@ -53,7 +53,6 @@ type
     zoomlb: tlabel;
     homebtn: tbitbtn;
     startbtn: tbitbtn;
-    killbtn: tbitbtn;
     controlbvl: tdividerbevel;
     calibrationbvl: tdividerbevel;
     clearbtn: tbitbtn;
@@ -104,7 +103,6 @@ type
     procedure pagesizebtnclick(sender: tobject);
     // CONTROL
     procedure startmiclick(sender: tobject);
-    procedure killmiclick(sender: tobject);
     // ZOOM
     procedure changezoombtnclick(sender: tobject);
     // ABOUT POPUP
@@ -138,6 +136,7 @@ type
     streamposition1: int64;
     streamposition2: int64;
     streamsize1: int64;
+    streamtime1: int64;
     procedure streamingstart;
     procedure streamingstop;
     procedure streamingrun(count: longint);
@@ -160,7 +159,6 @@ type
   private
     fonstart: tthreadmethod;
     fonstop: tthreadmethod;
-    fpercentage: longint;
   public
     constructor create;
     destructor destroy; override;
@@ -168,7 +166,6 @@ type
   public
     property onstart: tthreadmethod read fonstart write fonstart;
     property onstop:  tthreadmethod read fonstop  write fonstop;
-    property percentage: longint read fpercentage;
   end;
 
 var
@@ -191,9 +188,9 @@ uses
 
 const
   {$ifdef ETHERNET}
-    serialpacksize = 1024;
+  serialpacksize = 1024;
   {$else}
-    serialpacksize = 80;
+  serialpacksize = 80;
   {$endif}
 
 // SCREEN THREAD
@@ -218,7 +215,6 @@ var
   path: tbgrapath;
   zoom: double;
 begin
-  fpercentage := 0;
   if assigned(fonstart) then
     synchronize(fonstart);
 
@@ -250,8 +246,8 @@ begin
     screenimage.canvas.font.color := bgra(255, 0, 0);
     screenimage.canvas.textout(5, 2, pageformat);
     // updtare preview ...
-    x0 := trunc((pagewidth /2)*zoom);
-    y0 := trunc((pageheight/2)*zoom);
+    x0 := 0;
+    y0 := trunc(pageheight*zoom);
 
     path := tbgrapath.create;
     for i := 0 to page.count -1 do
@@ -375,7 +371,7 @@ begin
   end else
   begin
     {$ifdef ETHERNET}
-    serialstream.connect(parseaddresses(portcb.text), parseport(portcb.text));
+    serialstream.connect(portcb.text, 8888);
     {$else}
     serialstream.connect(portcb.text)
     {$endif}
@@ -420,6 +416,7 @@ end;
 procedure tmainform.importbtnclick(sender: tobject);
 var
   bit: tbgrabitmap;
+  filler: txypfiller;
   opt: txyppathoptimizer;
   sk:  txypsketcher;
 begin
@@ -449,19 +446,29 @@ begin
       begin
         bit := tbgrabitmap.create;
         bit.loadfromfile(opendialog.filename);
-        case (importform.methodcb.itemindex + 1) of
-          1: sk := txypsketchersquare.create(bit);
-          2: sk := txypsketcherroundedsquare.create(bit);
-          3: sk := txypsketchertriangular.create(bit);
-        else sk := txypsketchersquare.create(bit);
-        end;
-        sk.patternheight := trunc(importform.patternpxse.value);
-        sk.patternwidth  := trunc(importform.patternpxse.value);
-        sk.pageheight    := importform.patternmmse.value*(bit.height/bit.width);
-        sk.pagewidth     := importform.patternmmse.value;
-        sk.dotsize       := importform.dotsizese.value;
-        sk.update(page);
-        sk.destroy;
+        if importform.methodcb.itemindex < 3 then
+        begin
+          case (importform.methodcb.itemindex) of
+            0: sk := txypsketchersquare.create(bit);
+            1: sk := txypsketcherroundedsquare.create(bit);
+            2: sk := txypsketchertriangular.create(bit);
+          else sk := txypsketchersquare.create(bit);
+          end;
+          sk.patternheight := trunc(importform.patternpxse.value);
+          sk.patternwidth  := trunc(importform.patternpxse.value);
+          sk.pageheight    := importform.patternmmse.value*(bit.height/bit.width);
+          sk.pagewidth     := importform.patternmmse.value;
+          sk.dotsize       := importform.dotsizese.value;
+          sk.update(page);
+          sk.destroy;
+        end else
+          if importform.methodcb.itemindex = 3 then
+          begin
+            filler := txypfiller.create(bit, importform.dotsizese.value);
+            filler.update(page);
+            filler.destroy;
+          end;
+
         bit.destroy;
       end;
     end;
@@ -499,14 +506,20 @@ end;
 
 procedure tmainform.editingbtnclick(sender: tobject);
 begin
+  page.updatepage;
   case editingcb.itemindex of
-    0: page.scale(editingedt.value   );         // SCALE
-    1: page.move (editingedt.value, 0);         // X-OFFSET
-    2: page.move (0, editingedt.value);         // Y-OFFSET
-    3: page.mirrorx;                            // X-MIRROR
-    4: page.mirrory;                            // Y-MIRROR
-    5: page.rotate(degtorad(editingedt.value)); // ROTATE
-    6: page.centertoorigin;                     // MOVE TO ORIGIN
+    0: page.scale(editingedt.value);                // SCALE
+    1: page.move (editingedt.value, 0);             // X-OFFSET
+    2: page.move (0, editingedt.value);             // Y-OFFSET
+    3: page.mirrorx;                                // X-MIRROR
+    4: page.mirrory;                                // Y-MIRROR
+    5: page.rotate(degtorad(editingedt.value));     // ROTATE
+    6: begin                                        // MOVE TO CENTER
+         page.movetoorigin;
+         page.move((pagewidth  - page.pagewidth )/2,
+                   (pageheight - page.pageheight)/2);
+       end;
+    7: page.movetoorigin;                           // MOVE TO ORIGIN
   end;
   page.updatepage;
   // start schedulertimer
@@ -563,11 +576,6 @@ begin
     schedulerlist.add('driver.start');
     schedulertimer.enabled := true;
   end;
-end;
-
-procedure tmainform.killmiclick(sender: tobject);
-begin
-  streamingstop;
 end;
 
 // ZOOM BUTTONS
@@ -662,7 +670,6 @@ begin
     pagesizecb     .enabled := false;
     // control
     startbtn       .enabled := true;
-    killbtn        .enabled := true;
     homebtn        .enabled := false;
     sethomebtn     .enabled := false;
     // about popup
@@ -695,7 +702,6 @@ begin
     pagesizecb     .enabled := value;
     // control
     startbtn       .enabled := value and (serialstream.connected);
-    killbtn        .enabled := value and (serialstream.connected);
     homebtn        .enabled := value and (serialstream.connected);
     sethomebtn     .enabled := value and (serialstream.connected);
     // about popup
@@ -725,24 +731,31 @@ end;
 // PROGRESS MONITOR
 
 procedure tmainform.progresstick(sender: tobject);
+var
+  remainingtime: string;
 begin
   if streaming1 then
   begin
     if streaming2 then
     begin
-      caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec', [
-        ((100*streamposition1) div streamsize1), (streamposition2)]);
+      inc(streamtime1);
+      // calculate remaining time
+      try
+        remainingtime := secondstostr((streamsize1 - streamposition1)
+          div (streamposition1 div streamtime1));
+      except
+        remainingtime := '---';
+      end;
+      //
+      caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec | Remaining time %s',
+        [((100*streamposition1) div streamsize1), (streamposition2), remainingtime]);
+      // reset speed
       streamposition2 := 0;
     end else
     begin
-      caption := format('XY-Plot | Pause %u%%', [
-        (100*streamposition1) div streamsize1]);
+      caption := format('XY-Plot | Pause %u%%',
+        [(100*streamposition1) div streamsize1]);
     end;
-  end;
-
-  if assigned(screenthread) then
-  begin
-    caption := format('XY-Plot | Progress %u%%', [screenthread.percentage]);
   end;
 end;
 
@@ -871,6 +884,7 @@ begin
     streamposition1 := 0;
     streamposition2 := 0;
     streamsize1 := stream.size;
+    streamtime1 := 0;
     stream.seek(0, sofrombeginning);
     lockinternal(false);
     // start streaming
@@ -893,6 +907,7 @@ begin
   streamposition1 := 0;
   streamposition2 := 0;
   streamsize1 := 0;
+  streamtime1 := 0;
   stream.clear;
   {$ifopt D+}
   printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
@@ -918,16 +933,10 @@ begin
     serialstream.send(buffer, count);
     driver.sync(buffer, count);
     {$ifopt D+}
-    if count = serialpacksize then
-      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
-        [driver.xcount1*setting.pxratio,
-         driver.ycount1*setting.pyratio,
-         driver.zcount1*setting.pzratio]))
-    else
-      printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] WARNING: CONNECTION SPEED SLOW ',
-        [driver.xcount1*setting.pxratio,
-         driver.ycount1*setting.pyratio,
-         driver.zcount1*setting.pzratio]));
+    printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] %u bytes',
+      [driver.xcount1*setting.pxratio,
+       driver.ycount1*setting.pyratio,
+       driver.zcount1*setting.pzratio, count]));
     {$endif}
   end;
 end;

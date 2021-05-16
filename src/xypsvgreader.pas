@@ -133,7 +133,8 @@ begin
   svg.destroy;
 
   elements.mirrorx;
-  elements.centertoorigin;
+  elements.movetoorigin;
+  elements.updatepage;
 end;
 
 end.
