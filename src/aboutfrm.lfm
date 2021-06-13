@@ -33,7 +33,6 @@ object taboutform: taboutform
     BorderSpacing.Right = 40
     Caption = 'This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
     WordWrap = True
   end
@@ -53,7 +52,6 @@ object taboutform: taboutform
     Caption = 'XY-Plotter 1.4'
     Font.Style = [fsBold]
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object aboutimage: TImage
@@ -227,7 +225,6 @@ object taboutform: taboutform
     BorderSpacing.Top = 6
     Caption = 'Vertical Plotter Client '
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object aboutlinklb: TLabel
@@ -247,7 +244,6 @@ object taboutform: taboutform
     Caption = 'Visita il sito'
     Font.Style = [fsUnderline]
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
     OnClick = aboutlinklbClick
     OnMouseLeave = aboutlinklbMouseLeave
@@ -268,7 +264,6 @@ object taboutform: taboutform
     BorderSpacing.Top = 10
     Caption = 'Copyright 2021 Melchiorre Caruso'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object aboutversionlb: TLabel
@@ -284,9 +279,8 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Build 20210516'
+    Caption = 'Build 20210613'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
 end

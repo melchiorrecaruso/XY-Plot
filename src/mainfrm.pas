@@ -323,12 +323,15 @@ end;
 procedure tmainform.formclose(sender: tobject; var closeaction: tcloseaction);
 begin
   closeaction := canone;
-  if serialstream.connected then
+  if schedulertimer.enabled then
   begin
-    messagedlg('XY-Plot', 'Please disconnect before closing window !', mterror, [mbok], 0);
+    messagedlg('XY-Plot', 'Please wait for the last operation to finish !', mterror, [mbok], 0);
   end else
   begin
-    closeaction := cafree;
+    if serialstream.connected then
+      messagedlg('XY-Plot', 'Please disconnect before closing window !', mterror, [mbok], 0)
+    else
+      closeaction := cafree;
   end;
 end;
 
@@ -490,24 +493,42 @@ end;
 
 procedure tmainform.editingcbchange(sender: tobject);
 begin
-  editingedt.enabled := editingbtn.enabled;
   if sender = editingcb then
+  begin
     case editingcb.itemindex of
       0: editingedt.value   := 1.0;   // SCALE
       1: editingedt.value   := 0.0;   // X-OFFSET
       2: editingedt.value   := 0.0;   // Y-OFFSET
-      3: editingedt.enabled := false; // X-MIRROR
-      4: editingedt.enabled := false; // Y-MIRROR
-      5: editingedt.value   := 90.0;  // ROTATE
-      6: editingedt.enabled := false; // MOVE TO ORIGIN
+      3: editingedt.value   := 0.0;   // X-MIRROR
+      4: editingedt.value   := 0.0;   // Y-MIRROR
+      5: editingedt.value   := 0.0;   // ROTATE
+      6: editingedt.value   := 0.0;   // MOVE TO CENTER
+      7: editingedt.value   := 0.0;   // MOVE TO ORIGIN
+      8: editingedt.value   := 0.0;   // FIT
     end;
+  end;
+
+  case editingcb.itemindex of
+    0: editingedt.enabled  := editingbtn.enabled;   // SCALE
+    1: editingedt.enabled  := editingbtn.enabled;   // X-OFFSET
+    2: editingedt.enabled  := editingbtn.enabled;   // Y-OFFSET
+    3: editingedt.enabled  := false;                // X-MIRROR
+    4: editingedt.enabled  := false;                // Y-MIRROR
+    5: editingedt.enabled  := editingbtn.enabled;   // ROTATE
+    6: editingedt.enabled  := false;                // MOVE TO CENTER
+    7: editingedt.enabled  := false;                // MOVE TO ORIGIN
+    8: editingedt.enabled  := false;                // FIT
+  end;
 end;
 
 procedure tmainform.editingbtnclick(sender: tobject);
 begin
   page.updatepage;
   case editingcb.itemindex of
-    0: page.scale(editingedt.value);                // SCALE
+    0: begin                                        // SCALE
+        if editingedt.value > 0 then
+          page.scale(editingedt.value);
+       end;
     1: page.move (editingedt.value, 0);             // X-OFFSET
     2: page.move (0, editingedt.value);             // Y-OFFSET
     3: page.mirrorx;                                // X-MIRROR
@@ -519,6 +540,20 @@ begin
                    (pageheight - page.pageheight)/2);
        end;
     7: page.movetoorigin;                           // MOVE TO ORIGIN
+    8: begin                                        // FIT
+         if (page.pagewidth  > 1) and (pagewidth  > 1) and
+            (page.pageheight > 1) and (pageheight > 1) then
+         begin
+           if (pagewidth/page.pagewidth) < (pageheight/page.pageheight) then
+             page.scale(pagewidth/page.pagewidth)
+           else
+             page.scale(pageheight/page.pageheight);
+           //RE-FIT
+           page.movetoorigin;
+           page.move((pagewidth  - page.pagewidth )/2,
+                     (pageheight - page.pageheight)/2);
+         end;
+       end;
   end;
   page.updatepage;
   // start schedulertimer
@@ -652,7 +687,6 @@ begin
     clearbtn       .enabled := false;
     // drawing editing
     editingcb      .enabled := false;
-    editingedt     .enabled := false;
     editingbtn     .enabled := false;
     // page sizing
     pagesizecb     .enabled := false;
@@ -684,7 +718,6 @@ begin
     clearbtn       .enabled := value;
     // drawing editing
     editingcb      .enabled := value;
-    editingedt     .enabled := value;
     editingbtn     .enabled := value;
     // page sizing
     pagesizecb     .enabled := value;

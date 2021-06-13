@@ -61,7 +61,6 @@ object tmainform: tmainform
       Caption = 'Zoom:'
       Font.Style = [fsBold]
       Layout = tlCenter
-      ParentColor = False
       ParentFont = False
     end
     object zoomcb: TComboBox
@@ -163,7 +162,6 @@ object tmainform: tmainform
       Caption = 'Server port:'
       Layout = tlCenter
       ParentBidiMode = False
-      ParentColor = False
       ParentFont = False
     end
     object calibrationbvl: TDividerBevel
@@ -200,7 +198,6 @@ object tmainform: tmainform
       Caption = 'Step size [mm]:'
       Layout = tlCenter
       ParentBidiMode = False
-      ParentColor = False
       ParentFont = False
     end
     object xupbtn: TBitBtn
@@ -889,7 +886,6 @@ object tmainform: tmainform
       Caption = 'Operation:'
       Layout = tlCenter
       ParentBidiMode = False
-      ParentColor = False
       ParentFont = False
     end
     object editingcb: TComboBox
@@ -906,6 +902,7 @@ object tmainform: tmainform
       BorderSpacing.Right = 4
       Constraints.MaxWidth = 176
       Constraints.MinWidth = 176
+      DropDownCount = 12
       ItemHeight = 15
       ItemIndex = 0
       Items.Strings = (
@@ -917,6 +914,7 @@ object tmainform: tmainform
         'ROTATE'
         'MOVE TO CENTER'
         'MOVE TO ORIGIN'
+        'FIT'
       )
       OnChange = editingcbchange
       ParentBidiMode = False
@@ -941,7 +939,6 @@ object tmainform: tmainform
       Caption = 'Value:'
       Layout = tlCenter
       ParentBidiMode = False
-      ParentColor = False
       ParentFont = False
     end
     object editingedt: TFloatSpinEdit
@@ -1056,7 +1053,6 @@ object tmainform: tmainform
       Caption = 'Page format:'
       Layout = tlCenter
       ParentBidiMode = False
-      ParentColor = False
       ParentFont = False
     end
     object controlbvl: TDividerBevel
