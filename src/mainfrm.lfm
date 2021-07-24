@@ -7,7 +7,6 @@ object tmainform: tmainform
   Caption = 'XY-Plot'
   ClientHeight = 696
   ClientWidth = 920
-  Color = clWhite
   Constraints.MinHeight = 600
   Constraints.MinWidth = 920
   OnClose = FormClose
@@ -16,7 +15,7 @@ object tmainform: tmainform
   ParentBiDiMode = False
   Position = poDesktopCenter
   SessionProperties = 'addresscb.Text;portcb.Text'
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object screen: TBGRAVirtualScreen
     AnchorSideLeft.Control = controlpnl
     AnchorSideLeft.Side = asrBottom
@@ -919,7 +918,7 @@ object tmainform: tmainform
       OnChange = editingcbchange
       ParentBidiMode = False
       ParentFont = False
-      Style = csDropDownList
+      ReadOnly = True
       TabOrder = 8
       Text = 'SCALE'
     end
@@ -1032,7 +1031,7 @@ object tmainform: tmainform
       OnChange = pagesizebtnclick
       ParentBidiMode = False
       ParentFont = False
-      Style = csDropDownList
+      ReadOnly = True
       TabOrder = 11
       Text = 'A4 - Landscape'
     end

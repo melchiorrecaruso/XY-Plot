@@ -15,7 +15,7 @@ object taboutform: taboutform
   Constraints.MinHeight = 320
   Constraints.MinWidth = 400
   Position = poOwnerFormCenter
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object aboutlicenselb: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = aboutcopyrigthlb
@@ -223,7 +223,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Vertical Plotter Client '
+    Caption = 'XY Plotter Client '
     Layout = tlCenter
     ParentFont = False
   end
@@ -279,7 +279,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Build 20210613'
+    Caption = 'Build 20210724'
     Layout = tlCenter
     ParentFont = False
   end

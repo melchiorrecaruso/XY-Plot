@@ -13,7 +13,7 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <BuildModes Active="Debug">
+    <BuildModes Active="Release">
       <Item Name="Release" Default="True"/>
       <Item Name="Debug">
         <CompilerOptions>
@@ -175,8 +175,8 @@
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="8"/>
-        <TopLine Value="16"/>
-        <CursorPos X="43" Y="38"/>
+        <TopLine Value="417"/>
+        <CursorPos X="38" Y="350"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -221,9 +221,10 @@
         <ComponentName Value="taboutform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="39"/>
-        <CursorPos X="60" Y="61"/>
+        <CursorPos X="21" Y="57"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -238,7 +239,7 @@
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="41"/>
+        <TopLine Value="359"/>
         <CursorPos X="68" Y="48"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -405,10 +406,8 @@
         <ComponentName Value="tmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="523"/>
-        <CursorPos X="17" Y="551"/>
+        <CursorPos X="41" Y="906"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -452,8 +451,8 @@
       <Unit>
         <Filename Value="src/xypserial.pas"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="5"/>
-        <CursorPos X="8" Y="32"/>
+        <TopLine Value="100"/>
+        <CursorPos X="31" Y="106"/>
         <UsageCount Value="97"/>
         <Loaded Value="True"/>
       </Unit>
@@ -476,7 +475,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
         <TopLine Value="136"/>
-        <CursorPos X="31" Y="152"/>
+        <CursorPos X="45" Y="174"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -1106,30 +1105,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="287" Column="47" TopLine="270"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypserial.pas"/>
-        <Caret Line="34" Column="24" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="192" Column="23" TopLine="178"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="503" Column="8" TopLine="485"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="328" TopLine="311"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="326" Column="24" TopLine="311"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
         <Caret Line="47" Column="5" TopLine="28"/>
       </Position>
       <Position>
@@ -1223,6 +1198,30 @@
       <Position>
         <Filename Value="src/mainfrm.pas"/>
         <Caret Line="540" Column="59" TopLine="520"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyputils.pas"/>
+        <Caret Line="181" Column="32" TopLine="165"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyputils.pas"/>
+        <Caret Line="172" Column="16" TopLine="165"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyputils.pas"/>
+        <Caret Line="178" Column="21" TopLine="159"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyputils.pas"/>
+        <Caret Line="185" Column="26" TopLine="166"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyputils.pas"/>
+        <Caret Line="199" Column="9" TopLine="179"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="904" Column="64" TopLine="878"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
