@@ -1,7 +1,7 @@
 // XY-Plotter Server for Arduino Uno
 
 // Author: Melchiorre Caruso
-// Date:  16 May 2021
+// Date:  24 Jul 2021
 
 // Serial data format
 

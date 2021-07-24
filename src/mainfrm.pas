@@ -189,7 +189,7 @@ const
   {$ifdef ETHERNET}
   serialpacksize = 1024;
   {$else}
-  serialpacksize = 80;
+  serialpacksize = 64;
   {$endif}
 
 // SCREEN THREAD
