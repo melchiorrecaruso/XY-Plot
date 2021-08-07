@@ -195,7 +195,7 @@ object tmainform: tmainform
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Right = 6
-      Caption = 'Step size [mm]:'
+      Caption = 'Step [mm]:'
       Layout = tlCenter
       ParentBidiMode = False
       ParentFont = False
@@ -1048,7 +1048,7 @@ object tmainform: tmainform
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 6
       BorderSpacing.Right = 12
-      Caption = 'Page format:'
+      Caption = 'Format:'
       Layout = tlCenter
       ParentBidiMode = False
       ParentFont = False

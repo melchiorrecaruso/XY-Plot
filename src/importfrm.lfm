@@ -1,13 +1,13 @@
 object importform: Timportform
   Left = 577
-  Height = 305
+  Height = 463
   Top = 322
-  Width = 540
+  Width = 761
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Import ...'
-  ClientHeight = 305
-  ClientWidth = 540
+  ClientHeight = 463
+  ClientWidth = 761
   Color = clWindow
   DesignTimePPI = 144
   LCLVersion = '2.3.0.0'
@@ -15,16 +15,15 @@ object importform: Timportform
     AnchorSideLeft.Control = methodlb
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 164
+    Left = 104
     Height = 33
     Top = 15
-    Width = 361
-    Anchors = [akTop, akLeft, akRight]
+    Width = 350
     BorderSpacing.Left = 22
     BorderSpacing.Top = 15
     BorderSpacing.Right = 15
+    Constraints.MinWidth = 350
     ItemHeight = 25
     ItemIndex = 0
     Items.Strings = (
@@ -34,7 +33,7 @@ object importform: Timportform
       'Raster graphics - Color filler'
     )
     ParentFont = False
-    Style = csDropDownList
+    ReadOnly = True
     TabOrder = 0
     Text = 'Raster graphics - Square wave'
   end
@@ -46,9 +45,9 @@ object importform: Timportform
     Left = 15
     Height = 33
     Top = 63
-    Width = 199
+    Width = 142
     Anchors = [akTop, akLeft, akBottom]
-    Caption = 'Image pattern witdh (px):'
+    Caption = 'Pattern witdh (px):'
     Layout = tlCenter
     ParentFont = False
   end
@@ -89,10 +88,10 @@ object importform: Timportform
     Left = 15
     Height = 33
     Top = 15
-    Width = 127
+    Width = 67
     Anchors = [akTop, akLeft, akBottom]
     BorderSpacing.Left = 15
-    Caption = 'Import method:'
+    Caption = 'Method:'
     Layout = tlCenter
     ParentFont = False
   end
@@ -103,10 +102,10 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = methodcb
     AnchorSideRight.Side = asrBottom
-    Left = 229
+    Left = 172
     Height = 33
     Top = 63
-    Width = 296
+    Width = 282
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 15
@@ -124,10 +123,10 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = patternpxse
     AnchorSideRight.Side = asrBottom
-    Left = 229
+    Left = 172
     Height = 33
     Top = 111
-    Width = 296
+    Width = 282
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 15
@@ -144,10 +143,10 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = patternmmse
     AnchorSideRight.Side = asrBottom
-    Left = 229
+    Left = 172
     Height = 33
     Top = 159
-    Width = 296
+    Width = 282
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 15
@@ -160,6 +159,7 @@ object importform: Timportform
   end
   object okbtn: TBitBtn
     AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = dotsizese
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = dotsizese
     AnchorSideRight.Side = asrBottom
@@ -167,10 +167,11 @@ object importform: Timportform
     AnchorSideBottom.Side = asrBottom
     Left = 15
     Height = 48
-    Top = 242
-    Width = 510
-    Anchors = [akLeft, akRight, akBottom]
+    Top = 222
+    Width = 439
+    Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 15
+    BorderSpacing.Top = 30
     BorderSpacing.Bottom = 15
     Caption = '&OK'
     Default = True
