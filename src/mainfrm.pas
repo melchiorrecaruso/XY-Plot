@@ -240,10 +240,6 @@ begin
     y1 := y0+trunc(pageheight*zoom)-2;
     screenimage.fillrect(x0, y0, x1, y1, bgra(255, 255, 255), dmset);
 
-    screenimage.canvas.font.bold  := true;
-    screenimage.canvas.font.size  := 12;
-    screenimage.canvas.font.color := bgra(255, 0, 0);
-    screenimage.canvas.textout(5, 2, pageformat);
     // updtare preview ...
     x0 := 0;
     y0 := trunc(pageheight*zoom);
@@ -877,7 +873,7 @@ begin
   end;
 end;
 
-// seria streaming
+// serial streaming
 
 procedure tmainform.streamingstart;
 begin

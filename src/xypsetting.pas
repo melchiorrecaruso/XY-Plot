@@ -82,19 +82,9 @@ end;
 
 function getsettingfilename(global: boolean): string;
 begin
-  result := includetrailingbackslash(getappconfigdir(false)) + 'xyplot.ini';
-
-  if global and (not fileexists(result)) then
+  forcedirectories(getappconfigdir(global));
   begin
-    {$IFDEF MSWINDOWS}
-    result := extractfilepath(paramstr(0)) + 'xyplot.ini';
-    {$ELSE}
-    {$IFDEF UNIX}
-    result := '/opt/xyplot/xyplot.ini';
-    {$ELSE}
-    result := '';
-    {$ENDIF}
-    {$ENDIF}
+    result := includetrailingbackslash(getappconfigdir(false)) + 'xyplot.server';
   end;
 end;
 
