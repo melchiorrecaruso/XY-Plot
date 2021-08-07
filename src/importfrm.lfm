@@ -1,29 +1,31 @@
 object importform: Timportform
-  Left = 443
-  Height = 200
-  Top = 268
-  Width = 330
+  Left = 577
+  Height = 305
+  Top = 322
+  Width = 540
+  AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Import ...'
-  ClientHeight = 200
-  ClientWidth = 330
+  ClientHeight = 305
+  ClientWidth = 540
   Color = clWindow
-  LCLVersion = '2.1.0.0'
+  DesignTimePPI = 144
+  LCLVersion = '2.3.0.0'
   object methodcb: TComboBox
     AnchorSideLeft.Control = methodlb
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 109
-    Height = 23
-    Top = 10
-    Width = 211
+    Left = 164
+    Height = 33
+    Top = 15
+    Width = 361
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 15
-    BorderSpacing.Top = 10
-    BorderSpacing.Right = 10
-    ItemHeight = 15
+    BorderSpacing.Left = 22
+    BorderSpacing.Top = 15
+    BorderSpacing.Right = 15
+    ItemHeight = 25
     ItemIndex = 0
     Items.Strings = (
       'Raster graphics - Square wave'
@@ -41,14 +43,13 @@ object importform: Timportform
     AnchorSideTop.Control = patternpxse
     AnchorSideBottom.Control = patternpxse
     AnchorSideBottom.Side = asrBottom
-    Left = 10
-    Height = 23
-    Top = 43
-    Width = 134
+    Left = 15
+    Height = 33
+    Top = 63
+    Width = 199
     Anchors = [akTop, akLeft, akBottom]
     Caption = 'Image pattern witdh (px):'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object patternmmlb: TLabel
@@ -56,14 +57,13 @@ object importform: Timportform
     AnchorSideTop.Control = patternmmse
     AnchorSideBottom.Control = patternmmse
     AnchorSideBottom.Side = asrBottom
-    Left = 10
-    Height = 23
-    Top = 76
-    Width = 92
+    Left = 15
+    Height = 33
+    Top = 111
+    Width = 134
     Anchors = [akTop, akLeft, akBottom]
     Caption = 'Page width (mm)'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object dotsizelb: TLabel
@@ -71,14 +71,13 @@ object importform: Timportform
     AnchorSideTop.Control = dotsizese
     AnchorSideBottom.Control = dotsizese
     AnchorSideBottom.Side = asrBottom
-    Left = 10
-    Height = 23
-    Top = 109
-    Width = 77
+    Left = 15
+    Height = 33
+    Top = 159
+    Width = 115
     Anchors = [akTop, akLeft, akBottom]
     Caption = 'Dot size (mm):'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object methodlb: TLabel
@@ -87,15 +86,14 @@ object importform: Timportform
     AnchorSideRight.Control = methodcb
     AnchorSideBottom.Control = methodcb
     AnchorSideBottom.Side = asrBottom
-    Left = 10
-    Height = 23
-    Top = 10
-    Width = 84
+    Left = 15
+    Height = 33
+    Top = 15
+    Width = 127
     Anchors = [akTop, akLeft, akBottom]
-    BorderSpacing.Left = 10
+    BorderSpacing.Left = 15
     Caption = 'Import method:'
     Layout = tlCenter
-    ParentColor = False
     ParentFont = False
   end
   object patternpxse: TFloatSpinEdit
@@ -105,14 +103,14 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = methodcb
     AnchorSideRight.Side = asrBottom
-    Left = 150
-    Height = 23
-    Top = 43
-    Width = 170
+    Left = 229
+    Height = 33
+    Top = 63
+    Width = 296
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 6
-    BorderSpacing.Top = 10
+    BorderSpacing.Left = 15
+    BorderSpacing.Top = 15
     DecimalPlaces = 0
     MaxValue = 999999999
     MinValue = 1
@@ -126,13 +124,13 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = patternpxse
     AnchorSideRight.Side = asrBottom
-    Left = 150
-    Height = 23
-    Top = 76
-    Width = 170
+    Left = 229
+    Height = 33
+    Top = 111
+    Width = 296
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 15
     DecimalPlaces = 0
     MaxValue = 999999999
     MinValue = 5
@@ -146,13 +144,13 @@ object importform: Timportform
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = patternmmse
     AnchorSideRight.Side = asrBottom
-    Left = 150
-    Height = 23
-    Top = 109
-    Width = 170
+    Left = 229
+    Height = 33
+    Top = 159
+    Width = 296
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 15
     Increment = 0.1
     MaxValue = 999999999
     MinValue = 0.05
@@ -167,13 +165,13 @@ object importform: Timportform
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 10
-    Height = 32
-    Top = 158
-    Width = 310
+    Left = 15
+    Height = 48
+    Top = 242
+    Width = 510
     Anchors = [akLeft, akRight, akBottom]
-    BorderSpacing.Left = 10
-    BorderSpacing.Bottom = 10
+    BorderSpacing.Left = 15
+    BorderSpacing.Bottom = 15
     Caption = '&OK'
     Default = True
     ModalResult = 1

@@ -52,7 +52,7 @@ object tmainform: tmainform
       AnchorSideRight.Control = zoomcb
       AnchorSideBottom.Control = zoomcb
       AnchorSideBottom.Side = asrBottom
-      Left = 766
+      Left = 744
       Height = 33
       Top = 9
       Width = 54
@@ -69,10 +69,10 @@ object tmainform: tmainform
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = screen
       AnchorSideBottom.Side = asrBottom
-      Left = 829
+      Left = 807
       Height = 33
       Top = 9
-      Width = 98
+      Width = 120
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 9
       BorderSpacing.Right = 10
@@ -103,7 +103,7 @@ object tmainform: tmainform
       )
       OnSelect = changezoombtnclick
       ParentFont = False
-      Style = csDropDownList
+      ReadOnly = True
       TabOrder = 0
       Text = '100%'
     end

@@ -1,19 +1,15 @@
 object taboutform: taboutform
   Left = 825
-  Height = 480
+  Height = 636
   Top = 307
-  Width = 600
+  Width = 576
   AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'About ...'
-  ClientHeight = 480
-  ClientWidth = 600
+  ClientHeight = 636
+  ClientWidth = 576
   Color = clWindow
-  Constraints.MaxHeight = 480
-  Constraints.MaxWidth = 600
-  Constraints.MinHeight = 480
-  Constraints.MinWidth = 600
   DesignTimePPI = 144
   Position = poOwnerFormCenter
   LCLVersion = '2.3.0.0'
@@ -25,13 +21,14 @@ object taboutform: taboutform
     AnchorSideRight.Side = asrBottom
     Left = 60
     Height = 50
-    Top = 430
-    Width = 480
+    Top = 376
+    Width = 456
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 60
     BorderSpacing.Top = 9
     BorderSpacing.Right = 60
+    BorderSpacing.Bottom = 20
     Caption = 'This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.'
     Layout = tlCenter
     ParentFont = False
@@ -45,8 +42,8 @@ object taboutform: taboutform
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 25
-    Top = 248
-    Width = 600
+    Top = 194
+    Width = 576
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 26
@@ -61,11 +58,12 @@ object taboutform: taboutform
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 0
-    Height = 192
-    Top = 30
-    Width = 600
+    Height = 128
+    Top = 40
+    Width = 576
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 30
+    AutoSize = True
+    BorderSpacing.Top = 40
     Center = True
     Picture.Data = {
       1754506F727461626C654E6574776F726B47726170686963EA10000089504E47
@@ -219,8 +217,8 @@ object taboutform: taboutform
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 25
-    Top = 316
-    Width = 600
+    Top = 262
+    Width = 576
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 9
@@ -237,8 +235,8 @@ object taboutform: taboutform
     Cursor = crHandPoint
     Left = 0
     Height = 25
-    Top = 356
-    Width = 600
+    Top = 302
+    Width = 576
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 15
@@ -258,8 +256,8 @@ object taboutform: taboutform
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 25
-    Top = 396
-    Width = 600
+    Top = 342
+    Width = 576
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 15
@@ -275,12 +273,12 @@ object taboutform: taboutform
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 25
-    Top = 282
-    Width = 600
+    Top = 228
+    Width = 576
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 9
-    Caption = 'Build 202108097'
+    Caption = 'Build 20210807'
     Layout = tlCenter
     ParentFont = False
   end
