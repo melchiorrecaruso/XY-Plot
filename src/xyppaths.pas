@@ -44,6 +44,7 @@ type
     function firstpoint: txyppoint; virtual abstract;
     function lastpoint: txyppoint; virtual abstract;
     function length: double; virtual abstract;
+    function section: rawbytestring; virtual abstract;
   end;
 
   txypelementline = class(txypelement)
@@ -63,10 +64,11 @@ type
     function firstpoint: txyppoint; override;
     function lastpoint: txyppoint; override;
     function length: double; override;
+    function section: rawbytestring; override;
   end;
 
   txypelementcircle = class(txypelement)
-  private
+  public
     fcircle: txypcircle;
   public
     constructor create;
@@ -82,10 +84,11 @@ type
     function firstpoint: txyppoint; override;
     function lastpoint: txyppoint; override;
     function length: double; override;
+    function section: rawbytestring; override;
   end;
 
   txypelementcirclearc = class(txypelement)
-  private
+  public
     fcirclearc: txypcirclearc;
   public
     constructor create;
@@ -101,10 +104,11 @@ type
     function firstpoint: txyppoint; override;
     function lastpoint: txyppoint; override;
     function length: double; override;
+    function section: rawbytestring; override;
   end;
 
   txypelementpolygonal = class(txypelement)
-  private
+  public
     fpolygonal: txyppolygonal;
   public
     constructor create;
@@ -121,6 +125,7 @@ type
     function firstpoint: txyppoint; override;
     function lastpoint: txyppoint; override;
     function length: double; override;
+    function section: rawbytestring; override;
   end;
 
   txypelementpath = class(txypelement)
@@ -141,6 +146,7 @@ type
     function firstpoint: txyppoint; override;
     function lastpoint: txyppoint; override;
     function length: double; override;
+    function section: rawbytestring; override;
   end;
 
   txypelementlist = class
@@ -179,6 +185,8 @@ type
     function length: double;
     //
     procedure updatepage;
+    //
+    procedure savetosvg(const filename: string);
   public
     property count: longint read getcount;
     property items[index: longint]: txypelement read getitem;
@@ -275,6 +283,13 @@ begin
   result := xypmath.length(fline);
 end;
 
+function txypelementline.section: rawbytestring;
+const
+  c = '<line x1="%1.2f" y1="%1.2f" x2="%1.2f" y2="%1.2f" stroke="black" />' + lineending;
+begin
+  result := format(c, [fline.p0.x, fline.p0.y, fline.p1.x, fline.p1.y]);
+end;
+
 /// txypelementcircle
 
 constructor txypelementcircle.create;
@@ -344,6 +359,13 @@ end;
 function txypelementcircle.length: double;
 begin
   result := xypmath.length(fcircle);
+end;
+
+function txypelementcircle.section: rawbytestring;
+const
+  c = '<circle cx="%1.2f" cy="%1.2f" r="%1.2f" stroke="black" />' + lineending;
+begin
+  result := format(c, [fcircle.center.x, fcircle.center.y, fcircle.radius]);
 end;
 
 /// txypelementcirclearc
@@ -429,6 +451,23 @@ begin
   result := xypmath.length(fcirclearc);
 end;
 
+function txypelementcirclearc.section: rawbytestring;
+const
+  c = '<path d="M%1.2f %1.2f A%1.2f %1.2f %1.2f %1.2f %d %1.2f %1.2f' +
+      '"fill:none; stroke:black; stroke-width:1.5mm" />' + lineending;
+begin
+  result := format(c, [
+    firstpoint.x,
+    firstpoint.y,
+    fcirclearc.radius,
+    fcirclearc.radius,
+    0,
+    fcirclearc.endangle > fcirclearc.startangle,
+    0,
+    lastpoint.x,
+    lastpoint.y]);
+end;
+
 /// txypelementpolygonal
 
 constructor txypelementpolygonal.create;
@@ -511,6 +550,20 @@ end;
 function txypelementpolygonal.length: double;
 begin
   result := xypmath.length(fpolygonal);
+end;
+
+function txypelementpolygonal.section: rawbytestring;
+var
+  i: longint;
+begin
+  result := '<polygon points="';
+  for i := 0 to fpolygonal.count -1 do
+  begin
+    result := result + format('%1.2f,%1.2f ', [
+      fpolygonal.items[i].x,
+      fpolygonal.items[i].y]);
+  end;
+  result := result + '"style="fill:none; stroke:black; stroke-width:1.5mm" />' + lineending;
 end;
 
 /// txypelementpath
@@ -638,6 +691,17 @@ begin
   for i := 0 to flist.count -1 do
   begin
     result := result + txypelement(flist[i]).length;
+  end;
+end;
+
+function txypelementpath.section: rawbytestring;
+var
+  i: longint;
+begin
+  result := '';
+  for i := 0 to flist.count -1 do
+  begin
+    result := result + txypelement(flist[i]).section;
   end;
 end;
 
@@ -875,6 +939,24 @@ procedure txypelementlist.movetoorigin;
 begin
   updatepage;
   move(-fxmin, -fymin);
+end;
+
+procedure txypelementlist.savetosvg(const filename: string);
+var
+  i: longint;
+  strm: tstringlist;
+begin
+  strm := tstringlist.create;
+  strm.add('<?xml version="1.0" encoding="UTF-8" ?>');
+  strm.add('<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">');
+  strm.add(format('<svg width="%1.2f" height="%1.2f" xmlns="http://www.w3.org/2000/svg">', [pagewidth, pageheight]));
+  for i := 0 to flist.count -1 do
+  begin
+    strm.add(getitem(i).section);
+  end;
+  strm.add('</svg>');
+  strm.savetofile('pippo.svg');
+  strm.destroy;
 end;
 
 end.

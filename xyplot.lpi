@@ -81,7 +81,8 @@
       <Unit>
         <Filename Value="xyplot.pas"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="35" Y="27"/>
+        <TopLine Value="10"/>
+        <CursorPos Y="47"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -205,10 +206,11 @@
       <Unit>
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="840"/>
-        <CursorPos X="93" Y="41"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="696"/>
+        <CursorPos X="51" Y="703"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/aboutfrm.pas"/>
@@ -216,8 +218,10 @@
         <ComponentName Value="taboutform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="63" Y="19"/>
+        <TopLine Value="39"/>
+        <CursorPos X="21" Y="53"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -376,19 +380,19 @@
         <ComponentName Value="importform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="51" Y="38"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="22" Y="21"/>
+        <ComponentState Value="1"/>
         <UsageCount Value="173"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsketcher.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="376"/>
-        <CursorPos X="19" Y="409"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="371"/>
+        <CursorPos X="11" Y="73"/>
         <UsageCount Value="100"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/mainfrm.pas"/>
@@ -397,8 +401,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="233"/>
-        <CursorPos Y="242"/>
+        <TopLine Value="445"/>
+        <CursorPos X="9" Y="469"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -1087,107 +1091,130 @@
         <CursorPos X="8" Y="33"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="198"/>
+        <CursorPos X="3" Y="217"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="24">
+    <JumpHistory HistoryIndex="28">
       <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="410" Column="3" TopLine="379"/>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="454" Column="58" TopLine="438"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="459" Column="36" TopLine="438"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="104" Column="24" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="430" Column="3" TopLine="428"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="465" Column="19" TopLine="445"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="462" Column="48" TopLine="436"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="555" Column="8" TopLine="532"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="112" Column="15" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="149" Column="48" TopLine="129"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="406" Column="49" TopLine="395"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="413" Column="20" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="73" Column="13" TopLine="54"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="413" Column="11" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="702" Column="42" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="564" Column="76" TopLine="538"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="401" Column="56" TopLine="395"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsketcher.pas"/>
+        <Caret Line="421" Column="120" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="188" Column="30" TopLine="157"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="945" Column="22" TopLine="922"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="189" Column="21" TopLine="171"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="952" Column="104" TopLine="925"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="953" Column="23" TopLine="925"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="152" Column="3" TopLine="133"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="755" Column="33" TopLine="730"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="955" Column="24" TopLine="924"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="161" Column="14" TopLine="142"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="955" Column="24" TopLine="925"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="149" Column="21" TopLine="134"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="474" Column="14" TopLine="456"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="476" Column="5" TopLine="456"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="484" Column="12" TopLine="455"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="486" Column="3" TopLine="455"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="525" Column="12" TopLine="506"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="527" Column="3" TopLine="506"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="566" Column="5" TopLine="547"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="588" Column="5" TopLine="569"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="844" Column="5" TopLine="498"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="332" Column="70" TopLine="311"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="699" Column="53" TopLine="516"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="520" Column="10" TopLine="488"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="512" Column="30" TopLine="493"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="517" Column="29" TopLine="493"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="710" Column="38" TopLine="698"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="540" Column="59" TopLine="520"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="904" Column="64" TopLine="878"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="142" Column="21" TopLine="129"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="26" Column="11" TopLine="7"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="142" Column="13" TopLine="126"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="174" Column="11" TopLine="155"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="189" Column="11" TopLine="175"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="299" Column="11" TopLine="282"/>
-      </Position>
-      <Position>
-        <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="344" Column="11" TopLine="342"/>
+        <Caret Line="264" Column="5" TopLine="251"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
