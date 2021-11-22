@@ -955,7 +955,7 @@ begin
     strm.add(getitem(i).section);
   end;
   strm.add('</svg>');
-  strm.savetofile('pippo.svg');
+  strm.savetofile(filename);
   strm.destroy;
 end;
 
