@@ -881,10 +881,11 @@ begin
   startbtn.imageindex := 7;
   {$ifopt D+}
   printdbg('STREAMING', 'START');
-  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d]',
     [driver.xcount1*setting.pxratio,
      driver.ycount1*setting.pyratio,
-     driver.zcount1*setting.pzratio]));
+     driver.zcount1*setting.pzratio,
+     driver.rcount1]));
   {$endif}
   if stream.size > 0 then
   begin
@@ -917,10 +918,11 @@ begin
   streamtime1 := 0;
   stream.clear;
   {$ifopt D+}
-  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f]',
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d]',
     [driver.xcount1*setting.pxratio,
      driver.ycount1*setting.pyratio,
-     driver.zcount1*setting.pzratio]));
+     driver.zcount1*setting.pzratio,
+     driver.rcount1]));
   printdbg('STREAMING', 'STOP');
   {$endif}
   // ---
@@ -940,10 +942,12 @@ begin
     serialstream.send(buffer, count);
     driver.sync(buffer, count);
     {$ifopt D+}
-    printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] %u bytes',
+    printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d] %u bytes',
       [driver.xcount1*setting.pxratio,
        driver.ycount1*setting.pyratio,
-       driver.zcount1*setting.pzratio, count]));
+       driver.zcount1*setting.pzratio,
+       driver.rcount1,
+       count]));
     {$endif}
   end;
 end;
