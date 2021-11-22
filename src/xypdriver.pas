@@ -33,9 +33,11 @@ type
   private
     fsetting: txypsetting;
     fstream:  tstream;
+    frcount1: longint;
     fxcount1: longint;
     fycount1: longint;
     fzcount1: longint;
+    frcount2: longint;
     fxcount2: longint;
     fycount2: longint;
     fzcount2: longint;
@@ -43,6 +45,9 @@ type
   public
     constructor create(astream: tstream; asetting: txypsetting);
     destructor destroy; override;
+    {$ifopt D+}
+    procedure debug(const filename: string);
+    {$endif}
     procedure movex(cx: longint);
     procedure movey(cy: longint);
     procedure movez(cz: longint);
@@ -57,9 +62,11 @@ type
     procedure createramps;
     procedure destroyramps;
   published
+    property rcount1: longint read frcount1;
     property xcount1: longint read fxcount1;
     property ycount1: longint read fycount1;
     property zcount1: longint read fzcount1;
+    property rcount2: longint read frcount2;
     property xcount2: longint read fxcount2;
     property ycount2: longint read fycount2;
     property zcount2: longint read fzcount2;
@@ -70,8 +77,8 @@ type
 implementation
 
 const
-  incrbit = 0; // bit0 -> increase internal main-loop time
-  decrbit = 1; // bit1 -> decrease internal main-loop time
+  incrbit = 0; // bit0 -> decrease internal main-loop time
+  decrbit = 1; // bit1 -> increase internal main-loop time
   xstpbit = 2; // bit2 -> x-motor stp
   ystpbit = 3; // bit3 -> y-motor stp
   zstpbit = 4; // bit4 -> z-motor stp
@@ -127,9 +134,11 @@ begin
   inherited create;
   fsetting  := asetting;
   fstream   := astream;
+  frcount1  := 0;
   fxcount1  := 0;
   fycount1  := 0;
   fzcount1  := 0;
+  frcount2  := 0;
   fxcount2  := 0;
   fycount2  := 0;
   fzcount2  := 0;
@@ -142,9 +151,11 @@ end;
 
 procedure txypdriver.setorigin;
 begin
+  frcount1 := 0;
   fxcount1 := 0;
   fycount1 := 0;
   fzcount1 := 0;
+  frcount2 := 0;
   fxcount2 := 0;
   fycount2 := 0;
   fzcount2 := 0;
@@ -152,19 +163,25 @@ end;
 
 procedure txypdriver.setoriginx;
 begin
+  frcount1 := 0;
   fxcount1 := 0;
+  frcount2 := 0;
   fxcount2 := 0;
 end;
 
 procedure txypdriver.setoriginy;
 begin
+  frcount1 := 0;
   fycount1 := 0;
+  frcount2 := 0;
   fycount2 := 0;
 end;
 
 procedure txypdriver.setoriginz;
 begin
+  frcount1 := 0;
   fzcount1 := 0;
+  frcount2 := 0;
   fzcount2 := 0;
 end;
 
@@ -199,11 +216,15 @@ begin
       else
         dec(fzcount1);
     end;
+    //dr
+    if getbit(data[i], incrbit) = 1 then inc(frcount1);
+    if getbit(data[i], decrbit) = 1 then dec(frcount1);
   end;
 end;
 
 procedure txypdriver.sync;
 begin
+  frcount2 := frcount1;
   fxcount2 := fxcount1;
   fycount2 := fycount1;
   fzcount2 := fzcount1;
@@ -316,9 +337,9 @@ begin
       begin
         compute(p2, xcount, ycount);
         if distance(p1, p2) > 0.2 then
-          move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio))
+          move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio/10))
         else
-          move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio));
+          move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio/10));
         move(xcount, ycount, fzcount2);
         p1 := p2;
       end;
@@ -331,134 +352,189 @@ end;
 procedure txypdriver.createramps;
 const
   dstp  = 2;
-  maxdx = 4;
-  maxdy = 4;
-  maxdz = 4;
+  dmax  = 4;
 var
-  bufsize: longint;
-  buf: array of byte;
-   dx: array of longint;
-   dy: array of longint;
-   dz: array of longint;
-  i, j, k, r: longint;
+  bfsize: longint;
+  bf: array of byte;
+  dx: array of longint;
+  dy: array of longint;
+  dz: array of longint;
+  i, j, k: longint;
 begin
   {$ifopt D+}
   printdbg('DRIVER', 'CREATE RAMPS');
   {$endif}
-  bufsize := fstream.size;
-  if bufsize > 0 then
+  bfsize := fstream.size;
+  if bfsize > 0 then
   begin
-    setlength(dx, bufsize);
-    setlength(dy, bufsize);
-    setlength(dz, bufsize);
-    setlength(buf, bufsize);
+    setlength(bf, bfsize);
+    setlength(dx, bfsize);
+    setlength(dy, bfsize);
+    setlength(dz, bfsize);
     fstream.seek(0, sofrombeginning);
-    fstream.read(buf[0], bufsize);
+    fstream.read(bf[0], bfsize);
     // store data in dx, dy and dz arrays
-    for i := 0 to bufsize -1 do
+    for i := 0 to bfsize -1 do
     begin
       dx[i] := 0;
       dy[i] := 0;
       dz[i] := 0;
-      for j := max(i-dstp, 0) to min(i+dstp, bufsize-1) do
+      for j := max(i-dstp, 0) to min(i+dstp, bfsize-1) do
       begin
         //dx
-        if getbit(buf[j], xstpbit) = 1 then
+        if getbit(bf[j], xstpbit) = 1 then
         begin
-          if getbit(buf[j], xdirbit) = fsetting.pxdir then
+          if getbit(bf[j], xdirbit) = fsetting.pxdir then
             inc(dx[i])
           else
             dec(dx[i]);
         end;
         //dy
-        if getbit(buf[j], ystpbit) = 1 then
+        if getbit(bf[j], ystpbit) = 1 then
         begin
-          if getbit(buf[j], ydirbit) = fsetting.pydir then
+          if getbit(bf[j], ydirbit) = fsetting.pydir then
             inc(dy[i])
           else
             dec(dy[i]);
         end;
         //dz
-        if getbit(buf[j], zstpbit) = 1 then
+        if getbit(bf[j], zstpbit) = 1 then
         begin
-          if getbit(buf[j], zdirbit) = fsetting.pzdir then
+          if getbit(bf[j], zdirbit) = fsetting.pzdir then
             inc(dz[i])
           else
             dec(dz[i]);
         end;
       end;
     end;
-
-    // update stream
-    i := 0;
+    // update buffer stream
+    i := dmax;
     j := i + 1;
-    while (j < bufsize) do
+    while (j < bfsize) do
     begin
-      k := i;
-      while (abs(dx[j] - dx[k]) <= maxdx) and
-            (abs(dy[j] - dy[k]) <= maxdy) and
-            (abs(dz[j] - dz[k]) <= maxdz) do
-      begin
-        if j = bufsize -1 then break;
-        inc(j);
 
-        if (j - k) > (2*fsetting.rampkl) then
+      while (j < bfsize) and (abs(dx[j] - dx[i]) <= dmax) and
+                             (abs(dy[j] - dy[i]) <= dmax) and
+                             (abs(dz[j] - dz[i]) <= dmax) do inc(j);
+
+      for k := 0 to fsetting.rampkl -1 do
+        if (i + k) < (j - k) then
         begin
-          k := j - fsetting.rampkl;
+          setbit(bf[i + k - dmax], incrbit);
+          setbit(bf[j - k - dmax], decrbit);
         end;
-      end;
 
-      if j - i > 10 then
-      begin
-        r := min((j-i) div 2, fsetting.rampkl);
-        for k := (i) to (i+r-1) do
-          setbit(buf[k], incrbit);
-
-        for k := (j-r+1) to (j) do
-          setbit(buf[k], decrbit);
-      end;
       i := j + 1;
       j := i + 1;
     end;
     // overwrite stream
     fstream.seek(0, sofrombeginning);
-    fstream.write(buf[0], bufsize);
-    setlength(buf, 0);
+    fstream.write(bf[0], bfsize);
+    setlength(bf, 0);
     setlength(dx, 0);
     setlength(dy, 0);
     setlength(dz, 0);
   end;
-  fstream.seek(0, sofrombeginning);
 end;
 
 procedure txypdriver.destroyramps;
 var
-  bufsize: longint;
-  buf: array of byte;
+  bfsize: longint;
+  bf: array of byte;
   i: longint;
 begin
   {$ifopt D+}
   printdbg('DRIVER', 'DESTROY RAMPS');
   {$endif}
-  bufsize := fstream.size;
-  if bufsize > 0 then
+  bfsize := fstream.size;
+  if bfsize > 0 then
   begin
-    setlength(buf, bufsize);
+    setlength(bf, bfsize);
     fstream.seek(0, sofrombeginning);
-    fstream.read(buf[0], bufsize);
+    fstream.read(bf[0], bfsize);
     // clear ramps
-    for i := 0 to bufsize -1 do
+    for i := 0 to bfsize -1 do
     begin
-      clearbit(buf[i], incrbit);
-      clearbit(buf[i], decrbit);
+      clearbit(bf[i], incrbit);
+      clearbit(bf[i], decrbit);
     end;
     // overwrite stream
     fstream.seek(0, sofrombeginning);
-    fstream.write(buf[0], bufsize);
-    setlength(buf, 0);
+    fstream.write(bf[0], bfsize);
+    setlength(bf, 0);
+  end;
+end;
+
+{$ifopt D+}
+
+procedure txypdriver.debug(const filename: string);
+var
+  bits: byte;
+  x: int64 = 0;
+  y: int64 = 0;
+  s: int64 = 0;
+  t: int64 = 0;
+  elemlist: txypelementlist;
+  elempoly1: txypelementpolygonal;
+  elempoly2: txypelementpolygonal;
+  elempoly3: txypelementpolygonal;
+  point: txyppoint;
+  poly1: txyppolygonal;
+  poly2: txyppolygonal;
+  poly3: txyppolygonal;
+begin
+  poly1 := txyppolygonal.create;
+  poly2 := txyppolygonal.create;
+  poly3 := txyppolygonal.create;
+  fstream.seek(0, sofrombeginning);
+  while fstream.read(bits, sizeof(bits)) = sizeof(bits) do
+  begin
+    //x
+    if getbit(bits, xstpbit) = 1 then
+    begin
+      if getbit(bits, xdirbit) = fsetting.pxdir then
+        inc(x)
+      else
+        dec(x);
+    end;
+    //y
+    if getbit(bits, ystpbit) = 1 then
+    begin
+      if getbit(bits, ydirbit) = fsetting.pydir then
+        inc(y)
+      else
+        dec(y);
+      end;
+
+    point.x := t;
+    point.y := x;
+    poly1.add(point);
+    point.y := y;
+    poly2.add(point);
+    point.y := s;
+    poly3.add(point);
+
+    // speed
+    if getbit(bits, incrbit) = 1 then inc(s);
+    if getbit(bits, decrbit) = 1 then dec(s);
+
+    inc(t);
   end;
   fstream.seek(0, sofrombeginning);
+
+  elempoly1 := txypelementpolygonal.create(poly1);
+  elempoly2 := txypelementpolygonal.create(poly2);
+  elempoly3 := txypelementpolygonal.create(poly3);
+  elemlist := txypelementlist.create;
+  elemlist.add(elempoly1);
+  elemlist.add(elempoly2);
+  elemlist.add(elempoly3);
+  elemlist.updatepage;
+  elemlist.savetosvg(filename);
+  elemlist.destroy;
 end;
+
+{$endif}
 
 end.
 
