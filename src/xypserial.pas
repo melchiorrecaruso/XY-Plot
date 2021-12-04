@@ -54,11 +54,12 @@ type
     constructor create;
     destructor destroy; override;
     function connect(const port: string): boolean;
+    function connected: boolean;
+    procedure disconnect;
+    procedure clear;
+    function available: longint;
     function get (var buffer; count: longint): longint;
     function send(var buffer; count: longint): longint;
-    function connected: boolean;
-    procedure clear;
-    procedure disconnect;
   public
     property baudrate: longint       read fbaudrate write fbaudrate;
     property bits:     longint       read fbits     write fbits;
@@ -98,12 +99,11 @@ begin
   begin
     if fserial.connected then
     begin
-      if fserial.frxindex < fserial.frxcount then
+      if fserial.available > 0 then
       begin
         if assigned(fserial.fonreceive) then
           synchronize(fserial.fonreceive);
-      end else
-        fserial.fill;
+      end;
     end else
       sleep(5);
   end;
@@ -179,6 +179,12 @@ begin
   begin
     fondisconnect;
   end;
+end;
+
+function txypserialstream.available: longint;
+begin
+  if frxindex = frxcount then fill;
+  result := frxcount - frxindex;
 end;
 
 procedure txypserialstream.fill;
