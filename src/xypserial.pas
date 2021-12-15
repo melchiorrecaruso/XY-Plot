@@ -26,12 +26,11 @@ unit xypserial;
 interface
 
 uses
-  classes, dateutils, lnet, serial, sysutils,
+  classes, dateutils, lnet, lnetcomponents, serial, sysutils,
   {$IFDEF UNIX} baseunix, unix, {$ENDIF}
   {$IFDEF MSWINDOWS} registry, windows, {$ENDIF} xyputils;
 
 type
-  txypserialmonitor = class;
 
   txypserialstream = class
   private
@@ -39,10 +38,8 @@ type
     fbits: longint;
     fflags: tserialflags;
     fhandle: longint;
-    fmonitor: txypserialmonitor;
     fonconnect: tthreadmethod;
     fondisconnect: tthreadmethod;
-    fonreceive: tthreadmethod;
     fparity: tparitytype;
     frxindex: longint;
     frxcount: longint;
@@ -69,45 +66,18 @@ type
 
     property onconnect: tthreadmethod read fonconnect write fonconnect;
     property ondisconnect: tthreadmethod read fondisconnect write fondisconnect;
-    property onreceive: tthreadmethod read fonreceive write fonreceive;
-  end;
-
-  txypserialmonitor = class(tthread)
-  private
-    fserial: txypserialstream;
-  public
-    constructor create(aserial: txypserialstream);
-    procedure execute; override;
   end;
 
 function serialportnames: tstringlist;
 
+var
+  {$ifdef ETHERNET}
+  serialstream: tltcpcomponent   = nil;
+  {$else}
+  serialstream: txypserialstream = nil;
+  {$endif}
+
 implementation
-
-// txypserialmonitor
-
-constructor txypserialmonitor.create(aserial: txypserialstream);
-begin
-  fserial := aserial;
-  freeonterminate := false;
-  inherited create(true);
-end;
-
-procedure txypserialmonitor.execute;
-begin
-  while assigned(fserial) and (not terminated) do
-  begin
-    if fserial.connected then
-    begin
-      if fserial.available > 0 then
-      begin
-        if assigned(fserial.fonreceive) then
-          synchronize(fserial.fonreceive);
-      end;
-    end else
-      sleep(5);
-  end;
-end;
 
 // txypserialstream
 
@@ -118,22 +88,17 @@ begin
   fbaudrate := 115200;
   fflags := [];
   fhandle := 0;
-  fmonitor := txypserialmonitor.create(self);
   fparity := noneparity;
   frxindex := 0;
   frxcount:= 0;
   fonconnect := nil;
   fondisconnect := nil;
-  fonreceive := nil;
   fstopbits := 1;
   ftimeout := 5;
-  fmonitor.start;
 end;
 
 destructor txypserialstream.destroy;
 begin
-  fmonitor.terminate;
-  fmonitor.destroy;
   disconnect;
   inherited destroy;
 end;
@@ -264,4 +229,6 @@ end;
 {$ENDIF}
 
 end.
+
+
 
