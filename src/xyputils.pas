@@ -44,7 +44,8 @@ procedure printdbg(const s1, s2: string);
 function parseaddresses(const s: string): string;
 function parseport(const s: string): longint;
 
-function secondstostr(value: longint): string;
+function seconds2str(value: longint): string;
+function millis2str(value: longint): string;
 
 procedure sleepmicroseconds(microseconds: longword);
 
@@ -159,10 +160,15 @@ begin
   end;
 end;
 
-function secondstostr(value: longint): string;
+function seconds2str(value: longint): string;
 begin
   result := format(' %2.2u:%2.2u:%2.2u',
     [(value div 3600), ((value mod 3600) div 60), ((value mod 3600) mod 60)]);
+end;
+
+function millis2str(value: longint): string;
+begin
+  result := seconds2str(value div 1000);
 end;
 
 procedure printdbg(const s1, s2: string);
