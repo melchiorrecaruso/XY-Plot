@@ -46,7 +46,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 17
-    Caption = 'XY-Plotter 1.4'
+    Caption = 'XY-Plotter 1.6'
     Font.Style = [fsBold]
     Layout = tlCenter
     ParentFont = False
@@ -277,7 +277,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Build 20211114'
+    Caption = 'Build 20211215'
     Layout = tlCenter
     ParentFont = False
   end
