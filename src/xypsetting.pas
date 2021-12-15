@@ -44,6 +44,7 @@ type
     fpzdown: double;
     fpzup: double;
     // ramps
+    frampkb: longint;
     frampkl: longint;
  public
     constructor create;
@@ -60,6 +61,7 @@ type
     property pzdown: double read fpzdown write fpzdown;
     property pzup: double read fpzup write fpzup;
 
+    property rampkb: longint read frampkb write frampkb;
     property rampkl: longint read frampkl write frampkl;
 
     property pageheight: double read fpageheight write fpageheight;
@@ -127,6 +129,7 @@ begin
     fpzdown     := ini.readfloat  ('Z-AXIS', 'DOWN',  0);
     fpzup       := ini.readfloat  ('Z-AXIS', 'UP',    0);
 
+    frampkb     := ini.readinteger('RAMP',  'KB',     0);
     frampkl     := ini.readinteger('RAMP',  'KL',     0);
     {$ifopt D+}
     printdbg('SETTING', format('PAGE.MAXHEIGHT   %12.5f mm', [fpageheight]));
@@ -141,6 +144,7 @@ begin
     printdbg('SETTING', format('Z.DOWN           %12.5f mm', [fpzdown]));
     printdbg('SETTING', format('Z.UP             %12.5f mm', [fpzup]));
 
+    printdbg('SETTING', format('RAMP.KB          %12.5u', [frampkb]));
     printdbg('SETTING', format('RAMP.KL          %12.5u', [frampkl]));
     {$endif}
     ini.destroy;
@@ -167,6 +171,7 @@ begin
   ini.writefloat  ('Z-AXIS', 'DOWN',  fpzdown);
   ini.writefloat  ('Z-AXIS', 'UP',    fpzup);
 
+  ini.writeinteger('RAMP', 'KB',      frampkb);
   ini.writeinteger('RAMP', 'KL',      frampkl);
   ini.destroy;
 end;
