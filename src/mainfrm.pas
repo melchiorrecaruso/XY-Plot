@@ -29,10 +29,10 @@ interface
 
 uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
-  lnet, lnetcomponents, bgrapath, buttons, classes, comctrls, controls, dialogs,
-  extctrls, forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage,
-  extdlgs, dividerbevel, spinex, xypdriver, xypfiller, xypoptimizer, xyppaths,
-  xypserial, xypsetting, xypsketcher;
+  bgrapath, buttons, classes, comctrls, controls, dateutils, dialogs, extctrls,
+  forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
+  dividerbevel, spinex, xypdriver, xypfiller, xypoptimizer, xyppaths, xypserial,
+  xypsetting, xypsketcher;
 
 type
 
@@ -40,7 +40,6 @@ type
 
   tmainform = class(tform)
     aboutbtn: tbitbtn;
-    progresstimer: tidletimer;
     sethomebtn: tbitbtn;
     connectbtn: tbitbtn;
     portcb: tcombobox;
@@ -84,7 +83,6 @@ type
     procedure formcreate (sender: tobject);
     procedure formdestroy(sender: tobject);
     procedure formclose(sender: tobject; var closeaction: tcloseaction);
-    procedure progresstick(Sender: TObject);
     procedure propstoragerestoreproperties(sender: tobject);
     // CONNECTION
     procedure portcbgetitems(sender: tobject);
@@ -130,15 +128,6 @@ type
     screenimage: tbgrabitmap;
     schedulerlist: tstringlist;
     scheduling: boolean;
-    stream: tmemorystream;
-    streaming1: boolean;
-    streamposition1: int64;
-    streamposition2: int64;
-    streamsize1: int64;
-    streamtime1: int64;
-    procedure streamingstart;
-    procedure streamingstop;
-    procedure streamingrun(count: longint);
     {$ifdef ETHERNET}
     procedure streamingonconnect(asocket: tlsocket);
     procedure streamingondisconnect(asocket: tlsocket);
@@ -146,8 +135,11 @@ type
     {$else}
     procedure streamingonconnect;
     procedure streamingondisconnect;
-    procedure streamingonreceive;
     {$endif}
+    procedure streamingonstart;
+    procedure streamingonstop;
+    procedure streamingontick;
+    // ---
     procedure onscreenthreadstart;
     procedure onscreenthreadstop;
     procedure lockinternal(value: boolean);
@@ -168,15 +160,10 @@ type
   end;
 
 var
-  driver:       txypdriver       = nil;
-  mainform:     tmainform;
-  screenthread: tscreenthread    = nil;
-  {$ifdef ETHERNET}
-  serialstream: tltcpcomponent   = nil;
-  {$else}
-  serialstream: txypserialstream = nil;
-  {$endif}
-  setting:      txypsetting;
+  mainform: tmainform;
+  screenthread: tscreenthread = nil;
+  setting: txypsetting;
+  stream: tmemorystream;
 
 implementation
 
@@ -184,13 +171,6 @@ implementation
 
 uses
   aboutfrm, importfrm, math, sysutils, xypdxfreader, xypsvgreader, xyputils;
-
-const
-  {$ifdef ETHERNET}
-  serialpacksize = 1024;
-  {$else}
-  serialpacksize = 64;
-  {$endif}
 
 // SCREEN THREAD
 
@@ -272,15 +252,23 @@ end;
 procedure tmainform.formcreate(sender: tobject);
 begin
   defaultformatsettings.decimalseparator := '.';
-  // properties storage
+  // initialize properties storage
   propstorage.filename := getclientsettingfilename(false);
-  // load setting
+  // create serial stream
+  {$ifdef ETHERNET}
+  serialstream := tltcpcomponent.create(nil);
+  {$else}
+  serialstream := txypserialstream.create;
+  {$endif}
+  serialstream.onconnect    := @streamingonconnect;
+  serialstream.ondisconnect := @streamingondisconnect;
+  // create setting loader
   setting := txypsetting.create;
   setting.load(getsettingfilename(true));
-  // driver stream
+  // create memory stream
   stream := tmemorystream.create;
-  // init driver-engine
-  driver := txypdriver.create(stream, setting);
+  // create driver
+  driver := txypdriver.create(setting, stream);
   {$ifopt D+}
   driverdebug(driver);
   {$endif}
@@ -291,15 +279,6 @@ begin
   // create sheduler list
   schedulerlist := tstringlist.create;
   schedulertimer.enabled := false;
-  // create monitor stream
-  {$ifdef ETHERNET}
-  serialstream := tltcpcomponent.create(nil);
-  {$else}
-  serialstream := txypserialstream.create;
-  {$endif}
-  serialstream.onconnect    := @streamingonconnect;
-  serialstream.ondisconnect := @streamingondisconnect;
-  serialstream.onreceive    := @streamingonreceive;
 end;
 
 procedure tmainform.formdestroy(sender: tobject);
@@ -309,10 +288,10 @@ begin
   driver.destroy;
   page.destroy;
   propstorage.save;
-  schedulerlist.destroy;
-  screenimage.destroy;
   serialstream.destroy;
   setting.destroy;
+  schedulerlist.destroy;
+  screenimage.destroy;
   stream.destroy;
 end;
 
@@ -587,12 +566,17 @@ end;
 
 procedure tmainform.startmiclick(sender: tobject);
 begin
-  if streaming1 then
+  if assigned(driverstreamer) then
   begin
-    streamingstop;
+    driverstreamer.terminate;
   end else
   begin
-    schedulerlist.add('driver.start');
+    if stream.size = 0 then
+      schedulerlist.add('driver.start')
+    else
+    begin
+      schedulerlist.add('driver.restart');
+    end;
     schedulertimer.enabled := true;
   end;
 end;
@@ -665,7 +649,7 @@ end;
 
 procedure tmainform.lockinternal(value: boolean);
 begin
-  if streaming1 then
+  if assigned(driverstreamer) then
   begin
     // connection
     portcb         .enabled := false;
@@ -697,6 +681,7 @@ begin
     // screen
     screen         .enabled := false;
   end else
+  if stream.size = 0 then
   begin
     // connection
     portcb         .enabled := value and (serialstream.connected = false);
@@ -727,6 +712,11 @@ begin
     zoomcb         .enabled := value;
     // screen
     screen         .enabled := value;
+  end else
+  begin
+    // control
+    startbtn       .enabled := true and (serialstream.connected);
+    homebtn        .enabled := true and (serialstream.connected);
   end;
   editingcbchange(nil);
   application.processmessages;
@@ -745,40 +735,15 @@ begin
   scheduling := false;
 end;
 
-// PROGRESS MONITOR
-
-procedure tmainform.progresstick(sender: tobject);
-var
-  remainingtime: string;
-begin
-  if streaming1 then
-  begin
-    inc(streamtime1);
-    // calculate remaining time
-    try
-      remainingtime := secondstostr((streamsize1 - streamposition1)
-        div (streamposition1 div streamtime1));
-    except
-      remainingtime := '---';
-    end;
-    caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec | Remaining time %s',
-      [((100*streamposition1) div streamsize1), (streamposition2), remainingtime]);
-    // reset speed
-    streamposition2 := 0;
-  end;
-end;
-
 // SCHEDULER TIMER
 
 procedure tmainform.schedulerstart(sender: tobject);
 begin
   lockinternal(false);
-  progresstimer.enabled := true;
 end;
 
 procedure tmainform.schedulerstop(sender: tobject);
 begin
-  progresstimer.enabled := false;
   lockinternal(true);
 end;
 
@@ -811,39 +776,53 @@ begin
     begin
       {$ifopt D+} printdbg('DRIVER', 'START'); {$endif}
       scheduling := true;
-      stream.clear;
+      driver.clearstream;
       driver.sync;
       driver.move(page, pagewidth, pageheight);
       driver.movez(trunc(setting.pzup/setting.pzratio));
       driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
       driver.movez(0);
-      driver.createramps;
-      streamingstart;
+      driverstreamer := txypdriverstreamer.create(stream);
+      driverstreamer.onstart := @streamingonstart;
+      driverstreamer.onstop  := @streamingonstop;
+      driverstreamer.ontick  := @streamingontick;
+      driverstreamer.start;
+    end else
+    if ('driver.restart' = schedulerlist[0]) then
+    begin
+      {$ifopt D+} printdbg('DRIVER', 'RESTART'); {$endif}
+      scheduling := true;
+      driverstreamer := txypdriverstreamer.create(stream);
+      driverstreamer.onstart := @streamingonstart;
+      driverstreamer.onstop  := @streamingonstop;
+      driverstreamer.ontick  := @streamingontick;
+      driverstreamer.start;
     end else
     if ('driver.setorigin' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'SET ORIGIN'); {$endif}
-      //scheduling := true;
-      //stream.clear;
       driver.setorigin;
     end else
     if ('driver.movetoorigin' = schedulerlist[0]) then
     begin
       {$ifopt D+} printdbg('DRIVER', 'MOVE TO ORIGIN'); {$endif}
       scheduling := true;
-      stream.clear;
+      driver.clearstream;
       driver.sync;
       driver.movez(trunc(setting.pzup/setting.pzratio));
       driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
       driver.movez(0);
-      driver.createramps;
-      streamingstart;
+      driverstreamer := txypdriverstreamer.create(stream);
+      driverstreamer.onstart := @streamingonstart;
+      driverstreamer.onstop  := @streamingonstop;
+      driverstreamer.ontick  := @streamingontick;
+      driverstreamer.start;
     end else
     if pos('driver.move', schedulerlist[0]) = 1 then
     begin
       {$ifopt D+} printdbg('DRIVER', 'MOVE'); {$endif}
       scheduling := true;
-      stream.clear;
+      driver.clearstream;
       driver.sync;
       if (schedulerlist[0] = 'driver.movex+') then
         driver.movex(driver.xcount2 + round(stepnumberedt.value/setting.pxratio));
@@ -862,8 +841,12 @@ begin
 
       if (schedulerlist[0] = 'driver.movez-') then
         driver.movez(driver.zcount2 - round(stepnumberedt.value/setting.pzratio));
-      driver.createramps;
-      streamingstart;
+
+      driverstreamer := txypdriverstreamer.create(stream);
+      driverstreamer.onstart := @streamingonstart;
+      driverstreamer.onstop  := @streamingonstop;
+      driverstreamer.ontick  := @streamingontick;
+      driverstreamer.start;
     end;
 
     schedulerlist.delete(0);
@@ -875,7 +858,7 @@ end;
 
 // serial streaming
 
-procedure tmainform.streamingstart;
+procedure tmainform.streamingonstart;
 begin
   startbtn.caption := 'Stop';
   startbtn.imageindex := 7;
@@ -887,36 +870,19 @@ begin
      driver.zcount1*setting.pzratio,
      driver.rcount1]));
   {$endif}
-  if stream.size > 0 then
-  begin
-    streaming1 := true;
-    streamposition1 := 0;
-    streamposition2 := 0;
-    streamsize1 := stream.size;
-    streamtime1 := 0;
-    stream.seek(0, sofrombeginning);
-    lockinternal(false);
-    // start streaming
-    streamingrun(serialpacksize);
-  end else
-    streamingstop;
+  lockinternal(false);
 end;
 
-procedure tmainform.streamingstop;
+procedure tmainform.streamingonstop;
 begin
   caption := 'XY-Plot';
   {$ifopt D+}
-  if streamposition1 <> streamsize1 then
+  if driver.rcount1 <> 1 then
   begin
     printdbg('STREAMING', 'ERROR');
   end;
   {$endif}
-  streaming1 := false;
-  streamposition1 := 0;
-  streamposition2 := 0;
-  streamsize1 := 0;
-  streamtime1 := 0;
-  stream.clear;
+  driverstreamer := nil;
   {$ifopt D+}
   printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d]',
     [driver.xcount1*setting.pxratio,
@@ -925,30 +891,29 @@ begin
      driver.rcount1]));
   printdbg('STREAMING', 'STOP');
   {$endif}
-  // ---
   startbtn.caption := 'Start';
   startbtn.imageindex := 6;
   scheduling := false;
   lockinternal(true);
 end;
 
-procedure tmainform.streamingrun(count: longint);
+procedure tmainform.streamingontick;
 var
-  buffer: array[0..$FFFF] of byte;
+  ratio: int64;
 begin
-  count := stream.read(buffer, count);
-  if count > 0 then
-  begin
-    serialstream.send(buffer, count);
-    driver.sync(buffer, count);
-    {$ifopt D+}
-    printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d] %u bytes',
-      [driver.xcount1*setting.pxratio,
-       driver.ycount1*setting.pyratio,
-       driver.zcount1*setting.pzratio,
-       driver.rcount1,
-       count]));
-    {$endif}
+  {$ifopt D+}
+  printdbg('DRIVER', format('SYNC [X%10.2f] [Y%10.2f] [Z%10.2f] [R%4d]',
+    [driver.xcount1*setting.pxratio,
+     driver.ycount1*setting.pyratio,
+     driver.zcount1*setting.pzratio,
+     driver.rcount1]));
+  {$endif}
+  try
+    ratio := (100 * driverstreamer.position) div driverstreamer.size;
+    caption := format('XY-Plot | Progress %u%% | Serial Speed %u kB/sec | Remaining time %s',
+      [ratio, driverstreamer.serialspeed, millis2str(driverstreamer.remainingmillis)]);
+  except
+    caption := ('XY-Plot | Progress ---% | Serial Speed ---kB/sec | Remaining time ---s');
   end;
 end;
 
@@ -976,27 +941,6 @@ begin
   {$endif}
   connectbtn.caption := 'Connect';
   lockinternal(true);
-end;
-
-{$ifdef ETHERNET}
-procedure tmainform.streamingonreceive(asocket: tlsocket);
-{$else}
-procedure tmainform.streamingonreceive;
-{$endif}
-var
-  count: byte;
-begin
-  while serialstream.get(count, sizeof(count)) = sizeof(count) do
-  begin
-    inc(streamposition1, count);
-    inc(streamposition2, count);
-    if streamposition1 < streamsize1 then
-    begin
-      if streaming1 then
-        streamingrun(count);
-    end else
-      streamingstop;
-  end;
 end;
 
 end.

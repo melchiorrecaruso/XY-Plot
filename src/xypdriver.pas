@@ -26,25 +26,28 @@ unit xypdriver;
 interface
 
 uses
-  classes, math, sysutils, xypmath, xyppaths, xypsetting, xyputils;
+  classes, math, sysutils, xypmath, xyppaths, xypserial, xypsetting, xyputils;
 
 type
   txypdriver = class
   private
+    fmicroseconds: int64;
+    fstream: tmemorystream;
     fsetting: txypsetting;
-    fstream:  tstream;
-    frcount1: longint;
-    fxcount1: longint;
-    fycount1: longint;
-    fzcount1: longint;
-    frcount2: longint;
-    fxcount2: longint;
-    fycount2: longint;
-    fzcount2: longint;
+    frcount1: longint; // current rcount value
+    fxcount1: longint; // current xcount value
+    fycount1: longint; // current ycount value
+    fzcount1: longint; // current zcount value
+    frcount2: longint; // next    rcount value
+    fxcount2: longint; // next    xcount value
+    fycount2: longint; // next    ycount value
+    fzcount2: longint; // next    zcount value
     procedure compute(const p: txyppoint; var cx, cy: longint);
+    procedure createramps;
   public
-    constructor create(astream: tstream; asetting: txypsetting);
+    constructor create(asetting: txypsetting; astream: tmemorystream);
     destructor destroy; override;
+    procedure clearstream;
     {$ifopt D+}
     procedure debug(const filename: string);
     {$endif}
@@ -59,8 +62,6 @@ type
     procedure setorigin;
     procedure sync(var buffer; count: longint);
     procedure sync;
-    procedure createramps;
-    procedure destroyramps;
   published
     property rcount1: longint read frcount1;
     property xcount1: longint read fxcount1;
@@ -72,9 +73,42 @@ type
     property zcount2: longint read fzcount2;
   end;
 
+  txypdriverstreamer = class(tthread)
+  private
+    fonstart: tthreadmethod;
+    fonstop:  tthreadmethod;
+    fontick:  tthreadmethod;
+    fposition: int64;
+    fremainingmillis: int64;
+    fserialspeed: longint;
+    fsize: int64;
+    fstream: tmemorystream;
+    procedure startstreaming(count: longint);
+    procedure stopstreaming;
+  public
+    constructor create(astream: tmemorystream);
+    destructor destroy; override;
+    procedure execute; override;
+  public
+    property onstart: tthreadmethod write fonstart;
+    property onstop:  tthreadmethod write fonstop;
+    property ontick:  tthreadmethod write fontick;
+    property position: int64 read fposition;
+    property remainingmillis: int64 read fremainingmillis;
+    property serialspeed: longint read fserialspeed;
+    property size: int64 read fsize;
+  end;
+
   procedure driverdebug(adriver: txypdriver);
 
+var
+  driver:         txypdriver         = nil;
+  driverstreamer: txypdriverstreamer = nil;
+
 implementation
+
+uses
+  dateutils;
 
 const
   incrbit = 0; // bit0 -> decrease internal main-loop time
@@ -129,16 +163,16 @@ end;
 
 // txypdriverengine
 
-constructor txypdriver.create(astream: tstream; asetting: txypsetting);
+constructor txypdriver.create(asetting: txypsetting; astream: tmemorystream);
 begin
   inherited create;
   fsetting  := asetting;
   fstream   := astream;
-  frcount1  := 0;
+  frcount1  := 1;
   fxcount1  := 0;
   fycount1  := 0;
   fzcount1  := 0;
-  frcount2  := 0;
+  frcount2  := 1;
   fxcount2  := 0;
   fycount2  := 0;
   fzcount2  := 0;
@@ -149,13 +183,18 @@ begin
   inherited destroy;
 end;
 
+procedure txypdriver.clearstream;
+begin
+  fstream.clear;
+end;
+
 procedure txypdriver.setorigin;
 begin
-  frcount1 := 0;
+  frcount1 := 1;
   fxcount1 := 0;
   fycount1 := 0;
   fzcount1 := 0;
-  frcount2 := 0;
+  frcount2 := 1;
   fxcount2 := 0;
   fycount2 := 0;
   fzcount2 := 0;
@@ -163,7 +202,7 @@ end;
 
 procedure txypdriver.setoriginx;
 begin
-  frcount1 := 0;
+  frcount1 := 1;
   fxcount1 := 0;
   frcount2 := 0;
   fxcount2 := 0;
@@ -171,7 +210,7 @@ end;
 
 procedure txypdriver.setoriginy;
 begin
-  frcount1 := 0;
+  frcount1 := 1;
   fycount1 := 0;
   frcount2 := 0;
   fycount2 := 0;
@@ -179,7 +218,7 @@ end;
 
 procedure txypdriver.setoriginz;
 begin
-  frcount1 := 0;
+  frcount1 := 1;
   fzcount1 := 0;
   frcount2 := 0;
   fzcount2 := 0;
@@ -337,9 +376,9 @@ begin
       begin
         compute(p2, xcount, ycount);
         if distance(p1, p2) > 0.2 then
-          move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio/10))
+          move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio))
         else
-          move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio/10));
+          move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio));
         move(xcount, ycount, fzcount2);
         p1 := p2;
       end;
@@ -354,17 +393,17 @@ const
   dstp  = 2;
   dmax  = 4;
 var
-  bfsize: longint;
-  bf: array of byte;
-  dx: array of longint;
-  dy: array of longint;
-  dz: array of longint;
   i, j, k: longint;
+  bfsize: longint;
+  bf: array of byte = nil;
+  dx: array of shortint = nil;
+  dy: array of shortint = nil;
+  dz: array of shortint = nil;
 begin
-  {$ifopt D+}
-  printdbg('DRIVER', 'CREATE RAMPS');
-  {$endif}
+  {$ifopt D+} printdbg('DRIVER', 'CREATE RAMPS'); {$endif}
+
   bfsize := fstream.size;
+  // store data into dx, dy and dz arrays
   if bfsize > 0 then
   begin
     setlength(bf, bfsize);
@@ -373,13 +412,15 @@ begin
     setlength(dz, bfsize);
     fstream.seek(0, sofrombeginning);
     fstream.read(bf[0], bfsize);
-    // store data in dx, dy and dz arrays
     for i := 0 to bfsize -1 do
     begin
       dx[i] := 0;
       dy[i] := 0;
       dz[i] := 0;
-      for j := max(i-dstp, 0) to min(i+dstp, bfsize-1) do
+      clearbit(bf[i], incrbit);
+      clearbit(bf[i], decrbit);
+
+      for j := max(i - dstp, 0) to min(i + dstp, bfsize -1) do
       begin
         //dx
         if getbit(bf[j], xstpbit) = 1 then
@@ -407,7 +448,7 @@ begin
         end;
       end;
     end;
-    // update buffer stream
+    // create ramps
     i := dmax;
     j := i + 1;
     while (j < bfsize) do
@@ -427,41 +468,26 @@ begin
       i := j + 1;
       j := i + 1;
     end;
-    // overwrite stream
+    // estimate microseconds
+    i := 0;
+    j := 1;
+    fmicroseconds := 0;
+    while i < bfsize do
+    begin
+      if getbit(bf[i], incrbit) = 1 then inc(j);
+      if getbit(bf[i], decrbit) = 1 then dec(j);
+
+      inc(fmicroseconds, round(fsetting.rampkb*(sqrt(j + 1) - sqrt(j))));
+      inc(i);
+    end;
+    // store data into the stream
     fstream.seek(0, sofrombeginning);
     fstream.write(bf[0], bfsize);
+    fstream.seek(0, sofrombeginning);
     setlength(bf, 0);
     setlength(dx, 0);
     setlength(dy, 0);
     setlength(dz, 0);
-  end;
-end;
-
-procedure txypdriver.destroyramps;
-var
-  bfsize: longint;
-  bf: array of byte;
-  i: longint;
-begin
-  {$ifopt D+}
-  printdbg('DRIVER', 'DESTROY RAMPS');
-  {$endif}
-  bfsize := fstream.size;
-  if bfsize > 0 then
-  begin
-    setlength(bf, bfsize);
-    fstream.seek(0, sofrombeginning);
-    fstream.read(bf[0], bfsize);
-    // clear ramps
-    for i := 0 to bfsize -1 do
-    begin
-      clearbit(bf[i], incrbit);
-      clearbit(bf[i], decrbit);
-    end;
-    // overwrite stream
-    fstream.seek(0, sofrombeginning);
-    fstream.write(bf[0], bfsize);
-    setlength(bf, 0);
   end;
 end;
 
@@ -536,5 +562,136 @@ end;
 
 {$endif}
 
-end.
+// txypdriverstreamer
 
+constructor txypdriverstreamer.create(astream: tmemorystream);
+begin
+  fonstart  := nil;
+  fonstop   := nil;
+  fontick   := nil;
+  fposition := 0;
+  fsize     := astream.size;
+  fstream   := astream;
+  freeonterminate := true;
+  inherited create(true);
+end;
+
+destructor txypdriverstreamer.destroy;
+begin
+  fonstart := nil;
+  fonstop  := nil;
+  fontick  := nil;
+  fstream  := nil;
+  inherited destroy;
+end;
+
+procedure txypdriverstreamer.startstreaming(count: longint);
+var
+  buffer: array[0..$FFFF] of byte;
+begin
+
+  fserialspeed := 0;
+  fremainingmillis := driver.fmicroseconds div 1000;
+  if serialstream.connected then
+  begin
+    serialstream.clear;
+    count := fstream.read(buffer, count);
+    if count > 0 then
+    begin
+      serialstream.send(buffer, count);
+      driver.sync(buffer, count);
+      inc(fposition, count);
+    end;
+  end;
+end;
+
+procedure txypdriverstreamer.stopstreaming;
+var
+  buffer: array[0..$FFFF] of byte;  
+  count: int64;
+  data: tmemorystream;
+begin
+  if terminated then
+  begin
+    data := tmemorystream.create;
+    count := fstream.read(buffer, 4096);
+    while count > 0 do
+    begin
+      data.write(buffer, count);
+      count := fstream.read(buffer, 4096);
+    end;
+    fstream.clear;
+    fstream.copyfrom(data, 0);
+    data.destroy;
+  end else
+    fstream.clear;
+end;
+
+procedure txypdriverstreamer.execute;
+var
+ buffer: array[0..$FFFF] of byte;
+ count: byte;
+ i: longint;
+ lastposition: int64;
+ time1: tdatetime;
+ time2: tdatetime;
+ time4: int64;
+begin
+  // create ramps
+  driver.createramps;
+  // start data streaming
+  time1 := now;
+  if assigned(fonstart) then
+    synchronize(fonstart);
+  {$ifdef ETHERNET}
+  startstreaming(1024);
+  {$else}
+  startstreaming(62);
+  {$endif}
+  lastposition := 0;
+  while serialstream.connected do
+  begin
+    if serialstream.get(count, sizeof(count)) = sizeof(count) then
+    begin
+      // stopping machine process
+      if terminated then
+      begin
+        count := fstream.read(buffer, min(count, driver.rcount1 - 1));
+        for i := 0 to count -1 do
+        begin
+          clearbit(buffer[i], incrbit);
+          setbit  (buffer[i], decrbit);
+        end;
+      end else
+      begin
+        count := fstream.read(buffer, count);
+      end;
+      //
+      if count > 0 then
+      begin
+        serialstream.send(buffer, count);
+        driver.sync(buffer, count);
+        inc(fposition, count);
+      end else
+        break;
+    end;
+    // tick
+    time2 := now;
+    time4 := millisecondsbetween(time2, time1);
+    if time4 > 999 then
+    begin
+      fremainingmillis := max(0, fremainingmillis - time4);
+      fserialspeed     := fposition - lastposition;
+      if assigned(fontick) then
+        queue(fontick);
+
+      lastposition := fposition;
+      time1 := time2;
+    end;
+  end;
+  stopstreaming;
+  if assigned(fonstop) then
+    synchronize(fonstop);
+end;
+
+end.

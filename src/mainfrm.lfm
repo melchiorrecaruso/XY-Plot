@@ -1865,9 +1865,4 @@ object tmainform: tmainform
     Left = 352
     Top = 352
   end
-  object progresstimer: TIdleTimer
-    OnTimer = progresstick
-    Left = 440
-    Top = 352
-  end
 end
