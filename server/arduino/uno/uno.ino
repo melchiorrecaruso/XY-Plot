@@ -1,7 +1,7 @@
 // XY-Plotter Server for Arduino Uno
 
 // Author: Melchiorre Caruso
-// Date:  24 Jul 2021
+// Date:  15 Dec 2021
 
 // Serial data format
 
@@ -25,19 +25,13 @@ uint32_t LoopStart = micros();
 uint32_t LoopNow   = 0;
 uint32_t LoopDelay = 440;
 
-#define  RampLen 250
-uint16_t Ramps[RampLen];
 uint32_t RampKB = 40000;
-uint16_t RampIndex = 0;
+uint16_t RampIndex = 1;
 
 void setup() {
   // init serial
   Serial.begin(115200); 
   while (Serial.available() > 0) { Serial.read(); } 
-  // init ramps
-  for (uint16_t i = 0; i < RampLen; i++) { 
-    Ramps[i] = round(RampKB*(sqrt(i+2)-sqrt(i+1)));
-  }
   // disable stepper motors
   DDRB |= B00000001; 
   PORTB |= B00000001; 
@@ -57,13 +51,9 @@ void loop() {
     // SET HIGH X-STEP, Y-STEP and Z-STEP PIN
     PORTD = (PORTD & B11100011) | (Bits & B00011100);
                    
-    if (Bits & B00000001) {        
-      if (RampIndex < RampLen-1) { RampIndex++; }    
-    }     
-    if (Bits & B00000010) {        
-      if (RampIndex > 0) { RampIndex--; } 
-    }
-    
+    if (Bits & B00000001) { RampIndex++; }     
+    if (Bits & B00000010) { RampIndex--; }        
+ 
     if (BufferIndex < BufferSize) {
       Bits = Buffer[BufferIndex];
       BufferIndex++;             
@@ -71,7 +61,7 @@ void loop() {
       Bits = 0; 
     }    
     LoopStart = LoopNow;
-    LoopDelay = Ramps[RampIndex];   
+    LoopDelay = round(RampKB * (sqrt(RampIndex + 1)-sqrt(RampIndex)));  
   }  
 
   if (BufferIndex == BufferSize) {         
@@ -80,6 +70,6 @@ void loop() {
     if (BufferSize > 0) {                                 
       Serial.readBytes(Buffer, BufferSize);
       Serial.write(BufferSize);   
-    } else { RampIndex = 0; }          
+    }         
   }
 }
