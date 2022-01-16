@@ -29,6 +29,9 @@ interface
 uses
   classes, fgl, sysutils, math;
 
+const
+  gap = 0.005;
+
 type
   pxyppoint = ^txyppoint;
   txyppoint = packed record
@@ -116,11 +119,14 @@ procedure interpolate(const polygonal: txyppolygonal; var path: txyppolygonal; v
 
 function distance(const p0, p1: txyppoint): double;
 
+var
+  origin: txyppoint;
+
 implementation
 
 class operator txyppoint.= (a, b: txyppoint): boolean;
 begin
-  result := (a.x = b.x) and (a.y = b.y);
+  result := (abs(a.x - b.x) < gap) and (abs(a.y - b.y) < gap);
 end;
 
 // MOVE
@@ -470,6 +476,12 @@ end;
 function distance(const p0, p1: txyppoint): double; inline;
 begin
   result := sqrt(sqr(p1.x - p0.x) + sqr(p1.y - p0.y));
+end;
+
+initialization
+begin
+  origin.x := 0;
+  origin.y := 0;
 end;
 
 end.
