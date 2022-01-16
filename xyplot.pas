@@ -1,7 +1,7 @@
 {
   Description: XY-Plot application.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -24,8 +24,8 @@ program xyplot;
 {$mode objfpc}
 
 uses
- {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, lnetvisual,
- lnetbase, forms, aboutfrm, importfrm, mainfrm, xyputils;
+  {$ifdef unix} cthreads, {$endif} interfaces, lazcontrols, lnetvisual,
+  lnetbase, forms, aboutfrm, importfrm, mainfrm, xyputils;
 
 {$R *.res}
 
@@ -34,8 +34,8 @@ begin
   printdbg('XY-PLOT', 'DEBUG');
   {$endif}
   requirederivedformresource := true;
-  application.scaled :=true;
-  application.title :='XY-Plot';
+  application.scaled := true;
+  application.title := 'XY-Plot';
   application.initialize;
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);
