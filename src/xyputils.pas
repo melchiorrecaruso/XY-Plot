@@ -33,6 +33,10 @@ type
   tdoublelist  = specialize tfpglist<double>;
   tsinglelist  = specialize tfpglist<single>;
 
+type
+  tintegervector = array of longint;
+  tintegermatrix = array of array of longint;
+
 function  crc8(var buffer; count: longint): byte;
 procedure clearbit(var value: byte; index: longint);
 procedure setbit(var value: byte; index: longint);
