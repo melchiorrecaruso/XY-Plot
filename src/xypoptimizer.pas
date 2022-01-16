@@ -1,7 +1,7 @@
 {
   Description: XY-Plot path optimizer.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ type
     function getnextsubpath(const p: txyppoint): longint;
     function isaloop(item: txypelement): boolean;
     procedure clear;
-    procedure debug(var inkdist, traveldist: double; var raises: longint);
   public
     constructor create(path: txypelementlist);
     destructor destroy; override;
@@ -48,11 +47,34 @@ type
     property cleanup: double read fcleanup write fcleanup;
   end;
 
+  procedure debug(path: txypelementlist; var inkdist, traveldist: double; var raises: longint);
 
 implementation
 
-const
-  gap = 0.02;
+procedure debug(path: txypelementlist; var inkdist, traveldist: double; var raises: longint);
+var
+  i: longint;
+  p: txyppoint;
+  elem: txypelement;
+begin
+  p := origin;
+  for i := 0 to path.count -1 do
+  begin
+    elem := path.items[i];
+    if p <> elem.firstpoint then
+    begin
+      inc(raises);
+      traveldist := traveldist + distance(p, elem.firstpoint);
+    end;
+    inkdist := inkdist + elem.length;
+    p := elem.lastpoint;
+  end;
+  if p <> origin then
+  begin
+    inc(raises);
+    traveldist := traveldist + distance(p, origin);
+  end;
+end;
 
 // txyppathoptimizer
 
@@ -85,56 +107,34 @@ end;
 function txyppathoptimizer.getfirst(const p: txyppoint): longint;
 var
   i: longint;
-  j: longint;
-  di: double;
-  dj: double = gap;
 begin
   result := -1;
   for i := 0 to fpath.count -1 do
-  begin
-    di := distance(p, fpath.items[i].firstpoint);
-    if di < dj then
+    if fpath.items[i].firstpoint = p then
     begin
-       j :=  i;
-      dj := di;
+      result := i;
+      exit;
     end
-  end;
-
-  if dj < gap then
-  begin
-    result := j;
-  end;
 end;
 
 function txyppathoptimizer.getlast(const p: txyppoint): longint;
 var
   i: longint;
-  j: longint;
-  di: double;
-  dj: double = gap;
 begin
   result := -1;
   for i := 0 to fpath.count -1 do
-  begin
-    di := distance(p, fpath.items[i].lastpoint);
-    if di < dj then
+    if fpath.items[i].lastpoint = p then
     begin
-       j :=  i;
-      dj := di;
+      result :=  i;
+      exit;
     end
-  end;
-
-  if dj < gap then
-  begin
-    result := j;
-  end;
 end;
 
 function txyppathoptimizer.getnext(const p: txyppoint): longint;
 var
      i: longint;
-  len1: double = $FFFFFFF;
-  len2: double = $FFFFFFF;
+  len1: double = maxint;
+  len2: double = maxint;
   elem: txypelement;
 begin
   result := -1;
@@ -162,7 +162,7 @@ end;
 
 function txyppathoptimizer.isaloop(item: txypelement): boolean;
 begin
-  result := distance(item.firstpoint, item.lastpoint) < gap;
+  result := item.firstpoint = item.lastpoint;
 end;
 
 function txyppathoptimizer.getnextsubpath(const p: txyppoint): longint;
@@ -212,7 +212,7 @@ begin
   a0 := 0;
   b0 := 0;
   c0 := 0;
-  debug(a0, b0, c0);
+  debug(fpath, a0, b0, c0);
   {$endif}
   last.x := 0;
   last.y := 0;
@@ -279,32 +279,11 @@ begin
   a1 := 0;
   b1 := 0;
   c1 := 0;
-  debug(a1, b1, c1);
+  debug(fpath, a1, b1, c1);
   printdbg('OPTIMIZER', format('INK DISTANCE     %12.2f mm (%12.2f mm)', [a1, a0]));
   printdbg('OPTIMIZER', format('TRAVEL DISTANCE  %12.2f mm (%12.2f mm)', [b1, b0]));
   printdbg('OPTIMIZER', format('PEN RAISES       %12.0u    (%12.0u   )', [c1, c0]));
   {$endif}
-end;
-
-procedure txyppathoptimizer.debug(var inkdist, traveldist: double; var raises: longint);
-var
-  i: longint;
-  p: txyppoint;
-  elem: txypelement;
-begin
-  p.x := 0;
-  p.y := 0;
-  for i := 0 to fpath.count -1 do
-  begin
-    elem := fpath.items[i];
-    if distance(p, elem.firstpoint) >= 0.2 then
-    begin
-      traveldist := traveldist + distance(p, elem.firstpoint);
-      inc(raises);
-    end;
-    inkdist := inkdist + elem.length;
-    p := elem.lastpoint;
-  end;
 end;
 
 end.
