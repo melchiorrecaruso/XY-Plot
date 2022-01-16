@@ -1,7 +1,7 @@
 {
   Description: XY-Plot element classes.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -53,6 +53,7 @@ type
   public
     constructor create;
     constructor create(const aline: txypline);
+    constructor create(const p0, p1: txyppoint);
     procedure invert; override;
     procedure move(dx, dy: double); override;
     procedure rotate(angle: double); override;
@@ -131,10 +132,13 @@ type
   txypelementpath = class(txypelement)
   private
     flist: tfplist;
+    function getcount: longint;
+    function getitem(index: longint): txypelement;
   public
     constructor create;
     destructor destroy; override;
     procedure add(element: txypelement);
+    procedure insert(index: longint; element: txypelement);
     procedure invert; override;
     procedure move(dx, dy: double); override;
     procedure rotate(angle: double); override;
@@ -147,6 +151,9 @@ type
     function lastpoint: txyppoint; override;
     function length: double; override;
     function section: rawbytestring; override;
+  public
+    property count: longint read getcount;
+    property items[index: longint]: txypelement read getitem; default;
   end;
 
   txypelementlist = class
@@ -171,6 +178,8 @@ type
     procedure clear;
     function extract(index: longint): txypelement;
     procedure insert(index: longint; element: txypelement);
+    function indexof(const firstpoint, lastpoint: txyppoint): longint;
+    procedure split(index: longint);
     //
     procedure invert;
     procedure mirrorx;
@@ -189,7 +198,7 @@ type
     procedure savetosvg(const filename: string);
   public
     property count: longint read getcount;
-    property items[index: longint]: txypelement read getitem;
+    property items[index: longint]: txypelement read getitem; default;
     property pagebottom: double read getpagebottom;
     property pageleft: double read getpageleft;
     property pageheight: double read getpageheight;
@@ -225,6 +234,13 @@ constructor txypelementline.create(const aline: txypline);
 begin
   inherited create;
   fline := aline;
+end;
+
+constructor txypelementline.create(const p0, p1: txyppoint);
+begin
+  inherited create;
+  fline.p0 := p0;
+  fline.p1 := p1;
 end;
 
 procedure txypelementline.invert;
@@ -591,6 +607,11 @@ begin
   flist.add(element);
 end;
 
+procedure txypelementpath.insert(index: longint; element: txypelement);
+begin
+  flist.insert(index, element);
+end;
+
 procedure txypelementpath.invert;
 var
   i, cnt: longint;
@@ -705,6 +726,16 @@ begin
   end;
 end;
 
+function txypelementpath.getcount: longint;
+begin
+  result := flist.count;
+end;
+
+function txypelementpath.getitem(index: longint): txypelement;
+begin
+  result := txypelement(flist[index]);
+end;
+
 /// tvpelementslist
 
 constructor txypelementlist.create;
@@ -747,44 +778,77 @@ begin
   flist.add(element);
 end;
 
-function txypelementlist.getcount: longint;
-begin
-  result := flist.count;
-end;
-
-function txypelementlist.getitem(index: longint): txypelement;
-begin
-  result := txypelement(flist[index]);
-end;
-
-function txypelementlist.getpagebottom: double;
-begin
-  updatepage;
-  result := fymin;
-end;
-
-function txypelementlist.getpageleft: double;
-begin
-  updatepage;
-  result := fxmin;
-end;
-
-function txypelementlist.getpageheight: double;
-begin
-  updatepage;
-  result := fymax-fymin;
-end;
-
-function txypelementlist.getpagewidth: double;
-begin
-  updatepage;
-  result := fxmax-fxmin;
-end;
-
 procedure txypelementlist.insert(index: longint; element: txypelement);
 begin
   fisneededupdatepage := true;
   flist.insert(index, element);
+end;
+
+function txypelementlist.indexof(const firstpoint, lastpoint: txyppoint): longint;
+var
+  i: longint;
+  elem: txypelement;
+begin
+  result := -1;
+  for i := 0 to flist.count -1 do
+  begin
+    elem := txypelement(flist[i]);
+    if (elem.firstpoint = firstpoint) and
+       (elem.lastpoint  = lastpoint ) then
+    begin
+      result := i;
+      exit;
+    end;
+  end;
+end;
+
+procedure txypelementlist.split(index: longint);
+var
+  elem: txypelement;
+  newelem: txypelement;
+  newpoint: txyppoint;
+  newarc: txypcirclearc;
+  newarcswap: double;
+begin
+  fisneededupdatepage := true;
+  elem := txypelement(flist[index]);
+  if (elem is txypelementline) then
+  begin
+    newpoint.x := (elem.firstpoint.x + elem.lastpoint.x) / 2;
+    newpoint.y := (elem.firstpoint.y + elem.lastpoint.y) / 2;
+
+    newelem := txypelementline.create;
+    txypelementline(newelem).fline.p0 := newpoint;
+    txypelementline(newelem).fline.p1 := elem.lastpoint;
+    txypelementline(elem).fline.p1 := newpoint;
+  end else
+    if (elem is txypelementcircle) then
+    begin
+      newarc.center := txypelementcircle(elem).fcircle.center;
+      newarc.radius := txypelementcircle(elem).fcircle.radius;
+      newarc.startangle := 0;
+      newarc.endangle   := pi;
+      flist.add(txypelementcirclearc.create(newarc));
+
+      newarc.startangle := pi;
+      newarc.endangle   := pi * 2;
+      flist.add(txypelementcirclearc.create(newarc));
+
+      delete(index);
+    end else
+      if (elem is txypelementcirclearc) then
+      begin
+        newarc            := txypelementcirclearc(elem).fcirclearc;
+        newarcswap        := newarc.endangle - newarc.startangle;
+        newarc.endangle   := newarc.startangle + newarcswap / 2;
+        flist.add(txypelementcirclearc.create(newarc));
+
+        newarc.startangle := newarc.endangle;
+        newarc.endangle   := newarc.startangle + newarcswap / 2;
+        flist.add(txypelementcirclearc.create(newarc));
+
+        delete(index);
+      end;
 end;
 
 function txypelementlist.extract(index: longint): txypelement;
@@ -957,6 +1021,40 @@ begin
   strm.add('</svg>');
   strm.savetofile(filename);
   strm.destroy;
+end;
+
+function txypelementlist.getpagebottom: double;
+begin
+  updatepage;
+  result := fymin;
+end;
+
+function txypelementlist.getpageleft: double;
+begin
+  updatepage;
+  result := fxmin;
+end;
+
+function txypelementlist.getpageheight: double;
+begin
+  updatepage;
+  result := fymax-fymin;
+end;
+
+function txypelementlist.getpagewidth: double;
+begin
+  updatepage;
+  result := fxmax-fxmin;
+end;
+
+function txypelementlist.getcount: longint;
+begin
+  result := flist.count;
+end;
+
+function txypelementlist.getitem(index: longint): txypelement;
+begin
+  result := txypelement(flist[index]);
 end;
 
 end.
