@@ -1,7 +1,7 @@
 {
   Description: XY-Plot utils unit.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -29,13 +29,31 @@ uses
   fgl, classes, sysutils;
 
 type
-  tintegerlist = specialize tfpglist<integer>;
-  tdoublelist  = specialize tfpglist<double>;
-  tsinglelist  = specialize tfpglist<single>;
+  tlistlongint = class(specialize tfpglist<longint>)
+  public
+    procedure sort; overload;
+  end;
+
+  tlistsingle = class(specialize tfpglist<single>)
+  public
+    procedure sort; overload;
+  end;
+
+  tlistdouble = class(specialize tfpglist<double>)
+  public
+    procedure sort; overload;
+  end;
 
 type
-  tintegervector = array of longint;
-  tintegermatrix = array of array of longint;
+  tbooleanvector = array of boolean;
+  tlongintvector = array of longint;
+  tsinglevector  = array of single;
+  tdoublevector  = array of double;
+
+  tbooleanmatrix = array of array of boolean;
+  tlongintmatrix = array of array of longint;
+  tsinglematrix  = array of array of single;
+  tdoublematrix  = array of array of double;
 
 function  crc8(var buffer; count: longint): byte;
 procedure clearbit(var value: byte; index: longint);
@@ -178,6 +196,57 @@ end;
 procedure printdbg(const s1, s2: string);
 begin
   writeln(format('%0:10s::%s', [s1, s2]));
+end;
+
+// tlistlongint
+
+function comparelongint(const item1, item2: longint): longint;
+begin
+  if item1 > item2 then
+    result := 1
+  else if item1 < item2 then
+    result := -1
+  else
+    result := 0;
+end;
+
+procedure tlistlongint.sort;
+begin
+  inherited sort(@comparelongint);
+end;
+
+// tlistsingle
+
+function comparesingle(const item1, item2: single): longint;
+begin
+  if item1 > item2 then
+    result := 1
+  else if item1 < item2 then
+    result := -1
+  else
+    result := 0;
+end;
+
+procedure tlistsingle.sort;
+begin
+  inherited sort(@comparesingle);
+end;
+
+// tlistdouble
+
+function comparedouble(const item1, item2: double): longint;
+begin
+  if item1 > item2 then
+    result := 1
+  else if item1 < item2 then
+    result := -1
+  else
+    result := 0;
+end;
+
+procedure tlistdouble.sort;
+begin
+  inherited sort(@comparedouble);
 end;
 
 end.
