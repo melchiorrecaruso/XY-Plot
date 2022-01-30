@@ -1,7 +1,7 @@
 {
   Description: XY-Plot math unit.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -30,7 +30,7 @@ uses
   classes, fgl, sysutils, math;
 
 const
-  gap = 0.005;
+  gap = 0.01;
 
 type
   pxyppoint = ^txyppoint;
