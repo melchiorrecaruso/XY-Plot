@@ -27,7 +27,7 @@ interface
 
 uses
   bgrabitmap, bgrabitmaptypes, classes, graphics,
-  sysutils, xypmath, xyppaths, xypoptimizer;
+  sysutils, xypmath, xyppaths, xyppathoptimizer;
 
 type
   txypfiller = class
