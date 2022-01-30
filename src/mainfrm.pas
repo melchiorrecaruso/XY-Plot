@@ -1,7 +1,7 @@
 {
-  Description: XY-Plot main form.
+  Description: XY-Plot main form class.
 
-  Copyright (C) 2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -31,8 +31,8 @@ uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
   bgrapath, buttons, classes, comctrls, controls, dateutils, dialogs, extctrls,
   forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
-  dividerbevel, spinex, xypdriver, xypfiller, xypoptimizer, xyppaths, xypserial,
-  xypsetting, xypsketcher;
+  dividerbevel, spinex, xypdriver, xypfiller, xyppaths, xyppathoptimizer,
+  xypserial, xypsetting, xypsketcher;
 
 type
 
@@ -210,14 +210,14 @@ begin
 
     x0 := 0;
     y0 := 0;
-    x1 := x0+trunc(pagewidth *zoom);
-    y1 := y0+trunc(pageheight*zoom);
+    x1 := x0 + trunc(pagewidth *zoom);
+    y1 := y0 + trunc(pageheight*zoom);
     screenimage.fillrect(x0, y0, x1, y1, bgra(255,   0,   0), dmset);
 
     x0 := 1;
     y0 := 1;
-    x1 := x0+trunc(pagewidth *zoom)-2;
-    y1 := y0+trunc(pageheight*zoom)-2;
+    x1 := x0 + trunc(pagewidth *zoom)-2;
+    y1 := y0 + trunc(pageheight*zoom)-2;
     screenimage.fillrect(x0, y0, x1, y1, bgra(255, 255, 255), dmset);
 
     // updtare preview ...
