@@ -1,5 +1,5 @@
 {
-  Description: XY-Plot element classes.
+  Description: XY-Plot path element classes.
 
   Copyright (C) 2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
 
@@ -178,7 +178,8 @@ type
     procedure clear;
     function extract(index: longint): txypelement;
     procedure insert(index: longint; element: txypelement);
-    function indexof(const firstpoint, lastpoint: txyppoint): longint;
+    function indexof(const firstpoint, lastpoint: txyppoint): longint; overload;
+    function indexof(const point: txyppoint): longint; overload;
     procedure split(index: longint);
     //
     procedure invert;
@@ -795,6 +796,24 @@ begin
     elem := txypelement(flist[i]);
     if (elem.firstpoint = firstpoint) and
        (elem.lastpoint  = lastpoint ) then
+    begin
+      result := i;
+      exit;
+    end;
+  end;
+end;
+
+function txypelementlist.indexof(const point: txyppoint): longint;
+var
+  i: longint;
+  elem: txypelement;
+begin
+  result := -1;
+  for i := 0 to flist.count -1 do
+  begin
+    elem := txypelement(flist[i]);
+    if (elem.firstpoint = point) or
+       (elem.lastpoint  = point) then
     begin
       result := i;
       exit;
