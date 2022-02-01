@@ -181,10 +181,11 @@
       <Unit>
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="951"/>
-        <CursorPos X="40" Y="964"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="823"/>
+        <CursorPos X="26" Y="843"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/aboutfrm.pas"/>
@@ -192,6 +193,7 @@
         <ComponentName Value="taboutform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="13"/>
         <CursorPos X="17" Y="23"/>
@@ -208,7 +210,7 @@
       <Unit>
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="107"/>
         <CursorPos X="12" Y="110"/>
         <UsageCount Value="200"/>
@@ -388,7 +390,7 @@
       <Unit>
         <Filename Value="src/xyputils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="179"/>
         <CursorPos X="15" Y="184"/>
         <UsageCount Value="200"/>
@@ -529,11 +531,9 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <TopLine Value="483"/>
         <CursorPos X="25" Y="63"/>
-        <FoldState Value=" T3j60^6"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit>
@@ -823,7 +823,7 @@
         <Filename Value="src/xypsimulatedannealing.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="174"/>
+        <TopLine Value="165"/>
         <CursorPos X="51" Y="191"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -901,10 +901,6 @@
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="209" Column="19" TopLine="194"/>
-      </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
         <Caret Line="206" Column="7" TopLine="187"/>
@@ -1020,6 +1016,10 @@
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
         <Caret Line="65" Column="22" TopLine="43"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xyppaths.pas"/>
+        <Caret Line="183" Column="20" TopLine="173"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>

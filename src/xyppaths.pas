@@ -840,6 +840,7 @@ begin
     txypelementline(newelem).fline.p0 := newpoint;
     txypelementline(newelem).fline.p1 := elem.lastpoint;
     txypelementline(elem).fline.p1 := newpoint;
+    flist.add(newelem);
   end else
     if (elem is txypelementcircle) then
     begin
