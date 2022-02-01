@@ -67,9 +67,7 @@ begin
            result := 1
         else
           if p1.y < p2.y then
-            result := -1
-          else
-            writeln('ERROR-KKK');
+            result := -1;
 end;
 
 constructor txypnodelist.create;

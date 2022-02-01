@@ -1004,6 +1004,7 @@ begin
         path.clear;
       end;
       path.destroy;
+
     end else
     begin
       fxmin := 0;
@@ -1011,11 +1012,11 @@ begin
       fymin := 0;
       fymax := 0;
     end;
+    {$ifopt D+}
+    printdbg('IMAGE', format('WIDTH              %10.2f mm', [abs(fxmax-fxmin)]));
+    printdbg('IMAGE', format('HEIGHT             %10.2f mm', [abs(fymax-fymin)]));
+    {$endif}
   end;
-  {$ifopt D+}
-  printdbg('IMAGE', format('WIDTH              %10.2f mm', [abs(fxmax-fxmin)]));
-  printdbg('IMAGE', format('HEIGHT             %10.2f mm', [abs(fymax-fymin)]));
-  {$endif}
 end;
 
 procedure txypelementlist.movetoorigin;

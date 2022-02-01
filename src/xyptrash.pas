@@ -26,7 +26,7 @@ unit xyptrash;
 interface
 
 uses
-  xypmath, xypnodes, xypoptimizer, xyppaths;
+  dateutils, sysutils, xypmath, xypnodes, xyppathoptimizer, xyppaths, xyputils;
 
 type
   // txyppathpreoptimizer_trash
@@ -194,8 +194,8 @@ procedure txyppathsaoptimizer_trash.execute;
 var
   i, j: longint;
   solution: txypsasolution_trash;
-  preopt0: txyppathsaoptimizer_trash;
-  preopt1: txyppathoptimizer;
+  preopt0: txyppathpreoptimizer_trash;
+  preopt1: txyppathsaoptimizer_trash;
   opt: tsimulatedannealing_trash;
 
   p1, p2: txyppoint;
@@ -301,16 +301,16 @@ constructor tsimulatedannealing_trash.create;
 begin
   inherited create;
   randomize;
-  ftemperature := 50;     // set initial temp
+  ftemperature := 100;     // set initial temp
   fcoolingrate := 0.001; // cooling rate
 end;
 
-destructor tsimulatedannealing2.destroy;
+destructor tsimulatedannealing_trash.destroy;
 begin
   inherited destroy;
 end;
 
-function tsimulatedannealing2.acceptanceprobability(energy, neighbourenergy: longint; temperature: double): double;
+function tsimulatedannealing_trash.acceptanceprobability(energy, neighbourenergy: longint; temperature: double): double;
 begin
   // if the new solution is better, accept it
   if (neighbourenergy < energy) then
@@ -320,12 +320,12 @@ begin
     result := exp((energy - neighbourenergy) / temperature);
 end;
 
-procedure tsimulatedannealing2.copysolution(source: tsa2solution; var dest: tsa2solution);
+procedure tsimulatedannealing_trash.copysolution(source: txypsasolution_trash; var dest: txypsasolution_trash);
 begin
   system.move(source[0], dest[0], system.length(source)*sizeof(source[0]));
 end;
 
-function tsimulatedannealing2.getdistance(solution: tsa2solution): longint;
+function tsimulatedannealing_trash.getdistance(solution: txypsasolution_trash): longint;
 var
   i: longint;
   p: txyppoint;
@@ -352,7 +352,7 @@ begin
   result := trunc(res);
 end;
 
-procedure tsimulatedannealing2.createsolution(var neighboursolution: tsa2solution);
+procedure tsimulatedannealing_trash.createsolution(var neighboursolution: txypsasolution_trash);
 var
   city1: txyppoint;
   city2: txyppoint;
@@ -364,7 +364,7 @@ var
   cityindex4: longint;
 begin
 
-  if random < 0.5 then
+  if random > 0.5 then
   begin
     repeat
       cityindex1 := random(system.length(neighboursolution));
@@ -400,12 +400,12 @@ begin
 
 end;
 
-procedure tsimulatedannealing2.execute(var bestsolution: tsa2solution);
+procedure tsimulatedannealing_trash.execute(var bestsolution: txypsasolution_trash);
 var
   currentenergy: longint;
-  currentsolution: tsa2solution;
+  currentsolution: txypsasolution_trash;
   neighbourenergy: longint;
-  neighboursolution: tsa2solution;
+  neighboursolution: txypsasolution_trash;
   starttime: tdatetime;
 begin
   // initialize intial solution

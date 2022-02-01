@@ -49,8 +49,8 @@ type
     fgraph: tbooleanmatrix;
     fnodes: txypnodelist;
     fpath: txypelementlist;
-    procedure hierholzer(source: longint);
-    procedure dijktra(source, dest: longint);
+    procedure hierholzer(source: longint); inline;
+    procedure dijktra(source, dest: longint); inline;
     procedure make_graph_eulerian;
     procedure make_circuit(source: longint);
     procedure clear;
@@ -60,13 +60,11 @@ type
     procedure execute(start: txyppoint);
   end;
 
-  // txyppathoptimizer2
+  // txypecpathoptimizer
 
-  txyppathoptimizer2 = class
+  txypecpathoptimizer = class
   private
     fpath: txypelementlist;
-    fsubpaths: array of txypelementlist;
-    function nearpoint(const point: txyppoint; elements: txypelementlist): txyppoint;
   public
     constructor create(path: txypelementlist);
     destructor destroy; override;
@@ -202,8 +200,8 @@ procedure txypgraphoptimizer.dijktra(source, dest: longint);
 var
   i, j: longint;
   m: double;
-  v: tbooleanvector;
   d: tsinglevector;
+  v: tbooleanvector;
   p: tlongintvector;
 begin
   setlength(v, system.length(fgraph));
@@ -261,29 +259,19 @@ var
   next_v: longint;
 begin
   curr_path := tlistlongint.create;
-  // Maintain a stack to keep vertices
-  // We can start from any vertex
   curr_path.add(source);
-  // list to store final circuit
   while curr_path.count > 0 do
   begin
     curr_v := curr_path[curr_path.count -1];
-    // If there's remaining edge in adjacency list
-    // of the current vertex
     if fadj[curr_v].count > 0 then
     begin
-      // Find and remove the next vertex that is
-      // adjacent to the current vertex
       next_v := fadj[curr_v][0];
       fadj[curr_v].delete(0);
       fadj[next_v].delete(fadj[next_v].indexof(curr_v));
-      // Push the new vertex to the stack
+
       curr_path.add(next_v);
     end else
-    // back-track to find remaining circuit
     begin
-      // Remove the current vertex and
-      // put it in the circuit
       fcircuit.add(curr_v);
       curr_path.delete(curr_path.count -1);
     end;
@@ -403,7 +391,7 @@ procedure txypgraphoptimizer.make_circuit(source: longint);
 var
   i, j, k, m: longint;
   newpath: txypelementlist;
-  point: txyppoint;
+  elem: txypelement;
 begin
   {$ifopt D+} printdbg('ECP-OPT', 'Create graph adjacency list ...'); {$endif}
   setlength(fadj, fnodes.count);
@@ -448,22 +436,14 @@ begin
     end;
   end;
 
-  for i := 0 to fpath.count -1 do
-  begin
-    point := fpath[i].firstpoint;
-    writeln('ERROR-4');
-    writeln('[',point.x:0:2,', ', point.y:0:2,']');
-
-    point := fpath[i].lastpoint;
-    writeln('[',point.x:0:2,', ', point.y:0:2,']');
-  end;
   fpath.clear;
-
   while newpath.count > 0 do
   begin
     if newpath[0] is txypelementhiddenline then
-      newpath.extract(0)
-    else
+    begin
+      elem := newpath.extract(0);
+      elem.destroy;
+    end else
       fpath.add(newpath.extract(0));
   end;
   newpath.destroy;
@@ -471,7 +451,9 @@ end;
 
 procedure txypgraphoptimizer.execute(start: txyppoint);
 var
-  i: longint;
+  i, j: longint;
+  dist1: single;
+  dist2: single;
   preopt: txyppathpresaoptimizer;
 begin
   preopt := txyppathpresaoptimizer.create(fpath);
@@ -479,84 +461,46 @@ begin
   preopt.destroy;
 
   make_graph_eulerian;
-  i := fnodes.indexof(start);
-  if i <> -1 then
+  j := 0;
+  dist1 := distance(origin, fnodes[0]);
+  for i := 1 to fnodes.count -1 do
   begin
-    make_circuit(i);
+    dist2 := distance(origin, fnodes[i]);
+    if dist2 < dist1 then
+    begin
+      dist1 := dist2;
+      j := i;
+    end;
   end;
+ make_circuit(j);
 end;
 
-// txyppathoptimizer2
+// txypecpathoptimizer
 
-constructor txyppathoptimizer2.create(path: txypelementlist);
+constructor txypecpathoptimizer.create(path: txypelementlist);
 begin
   inherited create;
   fpath := path;
 end;
 
-destructor txyppathoptimizer2.destroy;
+destructor txypecpathoptimizer.destroy;
 begin
   inherited destroy;
 end;
 
-function txyppathoptimizer2.nearpoint(const point: txyppoint; elements: txypelementlist): txyppoint;
+procedure txypecpathoptimizer.execute;
 var
-  i: longint;
-  dist1: single;
-  dist2: single;
-begin
-  dist1 := maxint;
-  for i := 0 to elements.count -1 do
-  begin
-    dist2 := distance(point, elements[i].firstpoint);
-    if dist2 < dist1 then
-    begin
-      dist1  := dist2;
-      result := elements[i].firstpoint;
-    end;
-
-    dist2 := distance(point, elements[i].lastpoint);
-    if dist2 < dist1 then
-    begin
-      dist1  := dist2;
-      result := elements[i].lastpoint;
-    end;
-  end;
-end;
-
-procedure txyppathoptimizer2.execute;
-var
-  i, j, k: longint;
-
+  i, j: longint;
   a0, a1: double;
   b0, b1: double;
   c0, c1: longint;
-
-  midpoint: txyppoint;
+  count: longint;
   newpaths: tlist;
-  opt: tsimulatedannealing4tsp;
+  opt1: txyppathoptimizer;
   opt2: txypgraphoptimizer;
-  solution: tsimulatedannealingsolution = nil;
   subpath: txypelementlist;
+
 begin
-  writeln('k-Chinese Postman Problem Solver');
-  {$ifopt D+}
-  a0 := 0;
-  b0 := 0;
-  c0 := 0;
-  debug(fpath, a0, b0, c0);
-  {$endif}
-  {$ifopt D+} printdbg('ECP-OPT', 'Calculate graphs mid-point'); {$endif}
-  midpoint.x := 0;
-  midpoint.y := 0;
-  for i := 0 to fpath.count -1 do
-  begin
-    midpoint.x := midpoint.x + fpath[i].firstpoint.x + fpath[i].lastpoint.x;
-    midpoint.y := midpoint.y + fpath[i].firstpoint.y + fpath[i].lastpoint.y;
-  end;
-  midpoint.x := midpoint.x / (fpath.count *2);
-  midpoint.y := midpoint.y / (fpath.count *2);
-  {$ifopt D+} printdbg('ECP-OPT', 'Create subpaths ...'); {$endif}
   newpaths := tlist.create;
   while fpath.count > 0 do
   begin
@@ -582,58 +526,46 @@ begin
       inc(i);
     end;
   end;
-  {$ifopt D+} printdbg('ECP-OPT', 'Subgraphs are = ' + inttostr(newpaths.count)); {$endif}
 
-
-  {$ifopt D+} printdbg('ECP-OPT', 'Find walk on subpaths'); {$endif}
-  setlength(solution, newpaths.count);
-  for i := 0 to high(solution) do
-  begin
-    solution[i] := nearpoint(midpoint, txypelementlist(newpaths[i]));
-  end;
-  {$ifopt D+} printdbg('ECP-OPT', 'Optimize walk on subpaths'); {$endif}
-  opt := tsimulatedannealing4tsp.create;
-  opt.initialtemperature := 100;
-  opt.coolingrate := 0.001;
-  opt.executiontime := 10;
-  opt.execute(solution);
-  opt.destroy;
-  {$ifopt D+} printdbg('ECP-OPT', 'Create circuit...'); {$endif}
-  for i := 0 to high(solution) do
-  begin
-    {$ifopt D+} printdbg('ECP-OPT', '------------------------------'); {$endif}
-    for j := 0 to newpaths.count -1 do
-    begin
-      subpath := txypelementlist(newpaths[j]);
-
-      k := subpath.indexof(solution[i]);
-      if k <> -1 then
-      begin
-        opt2 := txypgraphoptimizer.create(subpath);
-        opt2.execute(solution[i]);
-        opt2.destroy;
-        while subpath.count > 0 do
-        begin
-          fpath.add(subpath.extract(0));
-        end;
-        break;
-      end;
-    end;
-  end;
-  //
-  setlength(solution, 0);
+  count := newpaths.count;
+  {$ifopt D+} printdbg('ECP-OPT', 'Subpath count = ' + inttostr(count)); {$endif}
   for i := 0 to newpaths.count -1 do
-    txypelementlist(newpaths[i]).destroy;
+  begin
+    subpath := txypelementlist(newpaths[i]);
+    while subpath.count > 0 do
+    begin
+      fpath.add(subpath.extract(0));
+    end;
+    subpath.destroy;
+  end;
   newpaths.destroy;
-  {$ifopt D+}
-  a1 := 0;
-  b1 := 0;
-  c1 := 0;
-  debug(fpath, a1, b1, c1);
-  printdbg('OPTIMIZER', format('INK DISTANCE     %12.2f mm (%12.2f mm)', [a1, a0]));
-  printdbg('OPTIMIZER', format('TRAVEL DISTANCE  %12.2f mm (%12.2f mm)', [b1, b0]));
-  printdbg('OPTIMIZER', format('PEN RAISES       %12.0u    (%12.0u   )', [c1, c0]));
-  {$endif}
+
+  if count = 1 then
+  begin
+    {$ifopt D+}
+    a0 := 0;
+    b0 := 0;
+    c0 := 0;
+    debug(fpath, a0, b0, c0);
+    {$endif}
+    opt2 := txypgraphoptimizer.create(fpath);
+    opt2.execute(origin);
+    opt2.destroy;
+    {$ifopt D+}
+    a1 := 0;
+    b1 := 0;
+    c1 := 0;
+    debug(fpath, a1, b1, c1);
+    printdbg('OPTIMIZER', format('INK DISTANCE     %12.2f mm (%12.2f mm)', [a1, a0]));
+    printdbg('OPTIMIZER', format('TRAVEL DISTANCE  %12.2f mm (%12.2f mm)', [b1, b0]));
+    printdbg('OPTIMIZER', format('PEN RAISES       %12.0u    (%12.0u   )', [c1, c0]));
+    {$endif}
+  end else
+  begin
+    opt1 := txyppathoptimizer.create(fpath);
+    opt1.execute;
+    opt1.destroy;
+  end;
 end;
 
 end.

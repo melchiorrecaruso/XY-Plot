@@ -147,8 +147,9 @@
       <Unit>
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <CursorPos X="21" Y="4"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="540"/>
+        <CursorPos X="74" Y="553"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -180,10 +181,10 @@
       <Unit>
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
-        <CursorPos X="48" Y="5"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="951"/>
+        <CursorPos X="40" Y="964"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/aboutfrm.pas"/>
@@ -191,9 +192,9 @@
         <ComponentName Value="taboutform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="11"/>
-        <CursorPos X="93" Y="13"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="13"/>
+        <CursorPos X="17" Y="23"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -208,7 +209,8 @@
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="9"/>
-        <CursorPos X="21" Y="4"/>
+        <TopLine Value="107"/>
+        <CursorPos X="12" Y="110"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -300,8 +302,8 @@
         <Filename Value="src/xypsvgreader.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="76"/>
-        <CursorPos X="47" Y="71"/>
+        <TopLine Value="99"/>
+        <CursorPos X="3" Y="42"/>
         <UsageCount Value="200"/>
       </Unit>
       <Unit>
@@ -340,7 +342,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="13" Y="6"/>
+        <TopLine Value="378"/>
+        <CursorPos X="33" Y="416"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -385,8 +388,9 @@
       <Unit>
         <Filename Value="src/xyputils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
-        <CursorPos X="5" Y="5"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="179"/>
+        <CursorPos X="15" Y="184"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -473,8 +477,8 @@
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/geometrytypes.inc"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="3" Y="19"/>
-        <UsageCount Value="4"/>
+        <CursorPos X="3" Y="17"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.0.4/source/rtl/objpas/fgl.pp"/>
@@ -485,9 +489,10 @@
       </Unit>
       <Unit>
         <Filename Value="src/xyppathoptimizer.pas"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="44" Y="2"/>
-        <UsageCount Value="95"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="31"/>
+        <CursorPos X="13" Y="50"/>
+        <UsageCount Value="99"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -524,8 +529,11 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypecpathoptimizer.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <CursorPos X="35" Y="5"/>
+        <TopLine Value="483"/>
+        <CursorPos X="25" Y="63"/>
+        <FoldState Value=" T3j60^6"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit>
@@ -571,9 +579,9 @@
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgraclasses.pas"/>
         <UnitName Value="BGRAClasses"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="34"/>
-        <CursorPos X="3" Y="52"/>
-        <UsageCount Value="4"/>
+        <TopLine Value="40"/>
+        <CursorPos X="3" Y="53"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/types.pp"/>
@@ -587,7 +595,7 @@
         <Filename Value="src/xypdxfreader.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="663"/>
+        <TopLine Value="693"/>
         <CursorPos X="46" Y="1083"/>
         <UsageCount Value="207"/>
       </Unit>
@@ -800,10 +808,9 @@
       </Unit>
       <Unit>
         <Filename Value="src/xypgeneticalgorithm.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="2"/>
         <UsageCount Value="100"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/inc/objpash.inc"/>
@@ -816,15 +823,17 @@
         <Filename Value="src/xypsimulatedannealing.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="7"/>
-        <CursorPos X="59" Y="2"/>
+        <TopLine Value="174"/>
+        <CursorPos X="51" Y="191"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypnodes.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
-        <CursorPos X="36" Y="2"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="50"/>
+        <CursorPos X="9" Y="68"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -870,131 +879,147 @@
         <Filename Value="src/xyptrash.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="416"/>
-        <CursorPos X="48" Y="239"/>
-        <UsageCount Value="98"/>
+        <TopLine Value="283"/>
+        <CursorPos X="21" Y="301"/>
+        <UsageCount Value="109"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/types.pp"/>
+        <UnitName Value="Types"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="597"/>
+        <CursorPos X="15" Y="620"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/math.pp"/>
+        <UnitName Value="Math"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="262"/>
+        <CursorPos X="19" Y="281"/>
+        <UsageCount Value="10"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="525" Column="18" TopLine="508"/>
+        <Caret Line="209" Column="19" TopLine="194"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="524" Column="16" TopLine="508"/>
+        <Caret Line="206" Column="7" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="515" Column="31" TopLine="505"/>
+        <Caret Line="205" Column="9" TopLine="186"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="523" Column="22" TopLine="500"/>
+        <Caret Line="207" Column="45" TopLine="182"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="511" Column="46" TopLine="492"/>
+        <Caret Line="201" Column="37" TopLine="185"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="563" Column="35" TopLine="542"/>
+        <Caret Line="207" Column="67" TopLine="188"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="512" Column="24" TopLine="491"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xyppaths.pas"/>
-        <Caret Line="182" Column="21" TopLine="168"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xyppaths.pas"/>
-        <Caret Line="829" Column="27" TopLine="788"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xyppaths.pas"/>
-        <Caret Line="824" TopLine="806"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xyppaths.pas"/>
-        <Caret Line="182" Column="65" TopLine="165"/>
+        <Caret Line="220" Column="28" TopLine="198"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="64" Column="42" TopLine="48"/>
+        <Caret Line="217" Column="22" TopLine="198"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="506" Column="10" TopLine="487"/>
+        <Caret Line="207" Column="38" TopLine="198"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="69" Column="73" TopLine="50"/>
+        <Caret Line="232" Column="14" TopLine="199"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="502" Column="103" TopLine="483"/>
+        <Caret Line="225" Column="44" TopLine="206"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="522" Column="28" TopLine="492"/>
+        <Caret Line="237" Column="7" TopLine="217"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="505" Column="16" TopLine="487"/>
+        <Caret Line="204" Column="16" TopLine="198"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="508" Column="8" TopLine="489"/>
+        <Caret Line="206" Column="7" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="521" Column="12" TopLine="493"/>
+        <Caret Line="205" Column="9" TopLine="185"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="519" Column="21" TopLine="500"/>
+        <Caret Line="364" Column="55" TopLine="210"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="537" Column="8" TopLine="518"/>
+        <Caret Line="250" Column="12" TopLine="222"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="601" Column="26" TopLine="573"/>
+        <Caret Line="218" Column="4" TopLine="199"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="598" Column="17" TopLine="586"/>
+        <Caret Line="46" Column="10" TopLine="33"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="616" Column="22" TopLine="589"/>
+        <Caret Line="201" Column="16" TopLine="65"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="616" Column="9" TopLine="592"/>
+        <Caret Line="259" Column="13" TopLine="230"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="620" Column="9" TopLine="594"/>
+        <Caret Line="206" Column="4" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="611" Column="22" TopLine="592"/>
+        <Caret Line="207" Column="4" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="622" Column="3" TopLine="594"/>
+        <Caret Line="205" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="227" Column="39" TopLine="186"/>
+        <Caret Line="416" Column="31" TopLine="390"/>
       </Position>
       <Position>
         <Filename Value="src/mainfrm.pas"/>
-        <Caret Line="29" Column="32" TopLine="24"/>
+        <Caret Line="34" Column="62" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypecpathoptimizer.pas"/>
+        <Caret Line="374" Column="39"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypnodes.pas"/>
+        <Caret Line="68" Column="9" TopLine="50"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypsimulatedannealing.pas"/>
+        <Caret Line="191" Column="51" TopLine="174"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypecpathoptimizer.pas"/>
+        <Caret Line="65" Column="22" TopLine="43"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>

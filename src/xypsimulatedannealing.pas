@@ -189,7 +189,6 @@ begin
     if currentenergy < bestenergy then
     begin
       copysolution(currentsolution, bestsolution);
-      writeln('CurrentSolution = ', currentenergy:0:2);
       starttime := now;
     end;
     // cool system

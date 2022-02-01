@@ -57,7 +57,7 @@ begin
         line.p0.y := points[i    ].y;
         line.p1.x := points[i + 1].x;
         line.p1.y := points[i + 1].y;
-        if xypmath.length(line) > 0 then
+        if points[i] <> points[i + 1] then
         begin
           elements.add(txypelementline.create(line));
         end;
@@ -108,9 +108,7 @@ begin
       end;
   end else
   begin
-    {$ifopt D+}
-    writeln(format('      LOAD::SKIP %s', [element.classname]));
-    {$endif}
+    {$ifopt D+} writeln(format('      LOAD::SKIP %s', [element.classname])); {$endif}
   end;
   bmp.destroy;
 end;
@@ -120,11 +118,9 @@ var
   i: longint;
   svg: tbgrasvg;
 begin
-  {$ifopt D+}
-  writeln(format('      LOAD::FILE %s', [afilename]));
-  {$endif}
-  svg := tbgrasvg.create(afilename);
+  {$ifopt D+} writeln(format('      LOAD::FILE %s', [afilename])); {$endif}
 
+  svg := tbgrasvg.create(afilename);
   for i := 0 to svg.content.elementcount -1 do
   if svg.content.issvgelement[i] then
   begin

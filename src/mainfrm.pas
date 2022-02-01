@@ -31,7 +31,7 @@ uses
   bgrabitmap, bgrasvg, bgrabitmaptypes, bgragradientscanner, bgravirtualscreen,
   bgrapath, buttons, classes, comctrls, controls, dateutils, dialogs, extctrls,
   forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
-  dividerbevel, spinex, xypdriver, xypfiller, xyppaths, xyppathoptimizer,
+  dividerbevel, spinex, xypdriver, xypfiller, xyppaths, xypecpathoptimizer,
   xypserial, xypsetting, xypsketcher;
 
 type
@@ -394,7 +394,7 @@ procedure tmainform.importbtnclick(sender: tobject);
 var
   bit: tbgrabitmap;
   filler: txypfiller;
-  opt: txyppathoptimizer;
+  opt: txypecpathoptimizer;
   sk:  txypsketcher;
 begin
   if opendialog.execute then
@@ -405,7 +405,7 @@ begin
     begin
       svg2paths(opendialog.filename, page);
       // optimize
-      opt := txyppathoptimizer.create(page);
+      opt := txypecpathoptimizer.create(page);
       opt.execute;
       opt.destroy;
     end else
@@ -413,7 +413,7 @@ begin
     begin
       dxf2paths(opendialog.filename, page);
       // optimize
-      opt := txyppathoptimizer.create(page);
+      opt := txypecpathoptimizer.create(page);
       opt.execute;
       opt.destroy;
     end else

@@ -29,9 +29,6 @@ interface
 uses
   classes, fgl, sysutils, math;
 
-const
-  gap = 0.01;
-
 type
   pxyppoint = ^txyppoint;
   txyppoint = packed record
@@ -126,7 +123,7 @@ implementation
 
 class operator txyppoint.= (a, b: txyppoint): boolean;
 begin
-  result := (abs(a.x - b.x) < gap) and (abs(a.y - b.y) < gap);
+  result := samevalue(a.x, b.x, 0.2) and samevalue(a.y, b.y, 0.2);
 end;
 
 // MOVE
