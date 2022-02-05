@@ -3,7 +3,7 @@
 A plotter is a printer designed for printing vector graphics. Instead of printing individual dots on the paper, plotters draw continuous lines. 
 This makes plotters ideal for printing architectural blueprints, engineering designs, and other CAD drawings. 
 
-![Machine](./images/machine.png)
+![Machine](./images/Machine.png)
 
 ## **XY-Plot hardware requirements**
 
@@ -32,13 +32,13 @@ Prints parts, assembly Y linear actuator and pen holder.
 
 ## XY-Plot software requirements
 
-For compiling vPlot-Client use:  
+For compiling XY-Plot Client use:  
 
 >- [Lazarus IDE and FreePascal compiler](https://www.lazarus-ide.org/index.php?page=downloads)
 
 >- [BGRA Controls Library](https://bgrabitmap.github.io/)
 
-For loading server sketch on arduino board use:
+For loading server sketch on Arduino board use:
 
 >- [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
@@ -68,7 +68,7 @@ Then
 - Connect 12V power supply to CNC schield;
 - Open and use XY-Plot client to control Server
 
-![Box](./images/Box.PNG)
+![Box](./images/Box.png)
 
 ## LICENSE
 [GNU General Public License v3.0](LICENSE)
