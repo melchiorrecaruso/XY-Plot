@@ -1,7 +1,7 @@
 object taboutform: taboutform
-  Left = 825
+  Left = 512
   Height = 424
-  Top = 307
+  Top = 188
   Width = 384
   AutoSize = True
   BorderIcons = [biSystemMenu]
@@ -260,7 +260,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 10
-    Caption = 'Copyright 2021 Melchiorre Caruso'
+    Caption = 'Copyright (c) 2022 Melchiorre Caruso'
     Layout = tlCenter
     ParentFont = False
   end
@@ -277,7 +277,7 @@ object taboutform: taboutform
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 6
-    Caption = 'Build 20220202'
+    Caption = 'Build 20220205'
     Layout = tlCenter
     ParentFont = False
   end

@@ -1,0 +1,12 @@
+GrabCAD Models
+
+Some models downloaded from:
+
+https://grabcad.com/library/gx12-4-pin-connector-male-1
+https://grabcad.com/library/2-position-screw-down-terminal-block-to-female-dc-power-adapter-1
+https://grabcad.com/library/lolin-nodemcu-esp8266-development-board-v3-1
+https://grabcad.com/library/arduino-uno-cnc-shield-v3-1-1
+https://grabcad.com/library/fan-40x40x10-with-nut-holes-1
+https://grabcad.com/library/arduino-uno-r3-8
+
+---

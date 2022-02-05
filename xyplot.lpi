@@ -195,8 +195,8 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="13"/>
-        <CursorPos X="17" Y="23"/>
+        <TopLine Value="7"/>
+        <CursorPos X="59" Y="16"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -211,8 +211,8 @@
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="10"/>
-        <TopLine Value="107"/>
-        <CursorPos X="12" Y="110"/>
+        <TopLine Value="77"/>
+        <CursorPos X="20" Y="109"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -344,8 +344,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="378"/>
-        <CursorPos X="33" Y="416"/>
+        <TopLine Value="15"/>
+        <CursorPos X="93" Y="28"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -899,16 +899,14 @@
         <CursorPos X="19" Y="281"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="../lazarus/lcl/dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="206" Column="7" TopLine="187"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypecpathoptimizer.pas"/>
-        <Caret Line="205" Column="9" TopLine="186"/>
-      </Position>
       <Position>
         <Filename Value="src/xypecpathoptimizer.pas"/>
         <Caret Line="207" Column="45" TopLine="182"/>
@@ -1020,6 +1018,14 @@
       <Position>
         <Filename Value="src/xyppaths.pas"/>
         <Caret Line="183" Column="20" TopLine="173"/>
+      </Position>
+      <Position>
+        <Filename Value="src/aboutfrm.pas"/>
+        <Caret Line="16" Column="59" TopLine="7"/>
+      </Position>
+      <Position>
+        <Filename Value="src/mainfrm.pas"/>
+        <Caret Line="416" Column="33" TopLine="10"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
