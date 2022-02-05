@@ -1,9 +1,9 @@
 # **XY-Plot**
 
-A plotter is a printer designed for printing vector graphics. Instead of printing individual dots on the paper, plotters draw continuous lines. 
+A plotter is a printer designed for printing vector graphics. Instead of printing individual dots on the paper, plotters draw continuous lines.
 This makes plotters ideal for printing architectural blueprints, engineering designs, and other CAD drawings. 
 
-![Machine](./images/Machine.png)
+<img src="./images/Machine.png" alt="drawing" width="600"/>
 
 ## **XY-Plot hardware requirements**
 
@@ -23,12 +23,12 @@ The main components are:
 ### **X Linear Actuator**
 Prints parts and assembly X linear actuator.
 
-![Machine](./images/X-Axis.png)
+<img src="./images/X-Axis.png" alt="drawing" width="400"/>
 
 ### **Y Linear Actuator & Pen Holder**
 Prints parts, assembly Y linear actuator and pen holder.
 
-![Machine](./images/Y-Axis.png)
+<img src="./images/Y-Axis.png" alt="drawing" width="400"/>
 
 ## XY-Plot software requirements
 
@@ -52,7 +52,7 @@ Set the Vref current on DRV8825 stepper drivers. See the guide
 
 Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pololu drivers we can obtain up to 3200 steps for rotation which allows for much more precision. For doing that add four jumpers on green pins. 
 
-![Microsteps](./images/Jumpers.png)
+<img src="./images/Jumpers.png" alt="drawing" width="400"/>
 
 Then
 - Mount the stepper drivers on CNC schield board;
@@ -61,14 +61,14 @@ Then
 - Connect Y motor to red pins;
 - Connect Z motor to yellow pins.
 
-![Wiring](./images/Drivers.png)
+<img src="./images/Drivers.png" alt="drawing" width="400"/>
 
 - Mount CNC Shield on arduino board;
 - Connect Arduino board to PC by usb port and load server sketch.
 - Connect 12V power supply to CNC schield;
 - Open and use XY-Plot client to control Server
 
-![Box](./images/Box.png)
+<img src="./images/Box.png" alt="drawing" width="400"/>
 
 ## LICENSE
 [GNU General Public License v3.0](LICENSE)
