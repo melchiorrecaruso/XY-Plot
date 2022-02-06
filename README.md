@@ -9,17 +9,17 @@ This makes plotters ideal for printing architectural blueprints, engineering des
 
 The main components are:
 
->-  1x Arduino Uno R3 board or Mega 2560 R3
->-  1x CNC Shield V3 expansion board
->-  4x DRV8825 stepper motor driver
->-  4x Stepper motor Nema-17 (min torque 40 Ncm)
->-  3x Timing belt pulley GT2 20T 5mmn bore
->- 12x Smooth idler pulley with bearings GT2 20T 5mm bore
->- 10m GT2 timming belt
->-  1x 12V/5A power supplier
->-  1x 3D-Printer for printing all hardware parts
->-  40x40 beams, carriages. See [OpenBuilds parts store](https://openbuildspartstore.com/)
->-  Washers, bolts and nuts
+>-  1x Arduino Uno R3 board or Mega 2560 R3;
+>-  1x CNC Shield V3 expansion board;
+>-  4x DRV8825 stepper motor driver;
+>-  4x Stepper motor Nema-17 (min torque 40 Ncm);
+>-  3x Timing belt pulley GT2 20T 5mmn bore;
+>- 12x Smooth idler pulley with bearings GT2 20T 5mm bore;
+>- 10m GT2 timming belt;
+>-  1x 12V/5A power supplier;
+>-  1x 3D-Printer for printing all hardware parts;
+>-  40x40 beams, carriages. See [OpenBuilds parts store](https://openbuildspartstore.com/);
+>-  Washers, bolts and nuts.
 
 ### **X Linear Actuator**
 Prints parts and assembly two X axis linear actuator.
@@ -65,9 +65,9 @@ Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pol
 
 <img src="./images/Jumpers.png" alt="drawing" width="400"/>
 
-Then
+**Then**
 - Mount the stepper drivers on CNC schield board;
-- Apply two jumpers on green pins for clonig X axis
+- Apply two jumpers on green pins for clonig X axis;
 - Connect X motors to the blue pins;
 - Connect Y motor to red pins;
 - Connect Z motor to yellow pins.
@@ -75,8 +75,8 @@ Then
 <img src="./images/Drivers.png" alt="drawing" width="400"/>
 
 - Mount CNC Shield on arduino board;
-- Connect Arduino board to PC by usb port and load server sketch.
-- Connect 12V power supply to CNC schield;
+- Connect Arduino board to PC by usb port;
+- Connect 12V power supply to CNC schield.
 
 ## **Starting**
 
