@@ -80,7 +80,7 @@ Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pol
 
 ## **Starting**
 
-Open XY-Plot client, for connecting and controlling Plotter.
+Open XY-Plot client for connecting and controlling Plotter.
 
 <img src="./images/Client.png" alt="drawing" width="400"/>
 
