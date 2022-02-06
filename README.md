@@ -74,6 +74,7 @@ Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pol
 
 <img src="./images/Drivers.png" alt="drawing" width="400"/>
 
+**Then**
 - Mount CNC Shield on arduino board;
 - Connect Arduino board to PC by usb port;
 - Connect 12V power supply to CNC schield.
