@@ -53,13 +53,13 @@ lazbuild --build-mode=Debug xyplot.lpi
 
 For building and loading server sketch on Arduino board use [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 
-### **Before assembling**
+## **Before assembling**
 
 Set the Vref current on DRV8825 stepper drivers. See the guide
 
 >- [How to control a stepper motor with DRV8825](https://www.makerguides.com/drv8825-stepper-motor-driver-arduino-tutorial/)
 
-### **Connecting to Arduino**
+## **Connecting to Arduino**
 
 Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pololu drivers we can obtain up to 3200 steps for rotation which allows for much more precision. For doing that add four jumpers on green pins. 
 
