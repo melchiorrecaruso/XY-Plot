@@ -77,9 +77,16 @@ Then
 - Mount CNC Shield on arduino board;
 - Connect Arduino board to PC by usb port and load server sketch.
 - Connect 12V power supply to CNC schield;
-- Open and use XY-Plot client to control Server
 
-## **Boards case**
+## **Starting**
+
+Open XY-Plot client, for connecting and controlling Plotter.
+
+<img src="./images/Client.png" alt="drawing" width="400"/>
+
+## **Boards Box**
+
+Below a boards box example.
 
 <img src="./images/Box.png" alt="drawing" width="400"/>
 
