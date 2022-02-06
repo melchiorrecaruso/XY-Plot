@@ -70,22 +70,26 @@ type
 
 
 function getclientsettingfilename(global: boolean): string;
-function getsettingfilename(global: boolean): string;
+function getserversettingfilename(global: boolean): string;
 
 implementation
 
 function getclientsettingfilename(global: boolean): string;
 begin
-  forcedirectories(getappconfigdir(global));
+  result := extractfilepath(paramstr(0)) + 'xyplot.client';
+  if fileexists(result) = false then
   begin
+    forcedirectories(getappconfigdir(global));
     result := includetrailingbackslash(getappconfigdir(global)) + 'xyplot.client';
   end;
 end;
 
-function getsettingfilename(global: boolean): string;
+function getserversettingfilename(global: boolean): string;
 begin
-  forcedirectories(getappconfigdir(global));
+  result := extractfilepath(paramstr(0)) + 'xyplot.server';
+  if fileexists(result) = false then
   begin
+    forcedirectories(getappconfigdir(global));
     result := includetrailingbackslash(getappconfigdir(false)) + 'xyplot.server';
   end;
 end;

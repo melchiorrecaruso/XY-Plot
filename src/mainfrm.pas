@@ -264,7 +264,7 @@ begin
   serialstream.ondisconnect := @streamingondisconnect;
   // create setting loader
   setting := txypsetting.create;
-  setting.load(getsettingfilename(true));
+  setting.load(getserversettingfilename(true));
   // create memory stream
   stream := tmemorystream.create;
   // create driver

@@ -11,44 +11,55 @@ The main components are:
 
 >-  1x Arduino Uno R3 board or Mega 2560 R3
 >-  1x CNC Shield V3 expansion board
->-  4x DRV8825 stepper motor driver 
->-  4x Stepper motor Nema-17 (min torque 40 Ncm) 
+>-  4x DRV8825 stepper motor driver
+>-  4x Stepper motor Nema-17 (min torque 40 Ncm)
 >-  3x Timing belt pulley GT2 20T 5mmn bore
 >- 12x Smooth idler pulley with bearings GT2 20T 5mm bore
->- 10m GT2 timming belt 
->-  1x 12V/5A power supplier 
+>- 10m GT2 timming belt
+>-  1x 12V/5A power supplier
 >-  1x 3D-Printer for printing all hardware parts
+>-  40x40 beams, carriages. See [OpenBuilds parts store](https://openbuildspartstore.com/)
 >-  Washers, bolts and nuts
 
 ### **X Linear Actuator**
-Prints parts and assembly X linear actuator.
+Prints parts and assembly two X axis linear actuator.
 
 <img src="./images/X-Axis.png" alt="drawing" width="400"/>
 
 ### **Y Linear Actuator & Pen Holder**
-Prints parts, assembly Y linear actuator and pen holder.
+Prints parts, assembly one Y axis linear actuator and pen holder.
 
 <img src="./images/Y-Axis.png" alt="drawing" width="400"/>
 
-## XY-Plot software requirements
+## **XY-Plot software requirements**
 
-For compiling XY-Plot Client use:  
+For compiling XY-Plot Client use [Lazarus IDE and FreePascal compiler](https://www.lazarus-ide.org/index.php?page=downloads).
 
->- [Lazarus IDE and FreePascal compiler](https://www.lazarus-ide.org/index.php?page=downloads)
+**Libraries**:
 
 >- [BGRA Controls Library](https://bgrabitmap.github.io/)
+>- [LNet Library](https://lnet.wordpress.com/)
 
-For loading server sketch on Arduino board use:
+Use integrated [Online Package Manager](https://wiki.freepascal.org/Online_Package_Manager ) for installing all libraries.
 
->- [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+**Build Client**:
 
-## Before assembling
+```console
+lazbuild --build-mode=Release xyplot.lpi
+lazbuild --build-mode=Debug xyplot.lpi
+```
+
+**Build Server**:
+
+For building and loading server sketch on Arduino board use [Arduino IDE](https://www.arduino.cc/en/Main/Software).
+
+### **Before assembling**
 
 Set the Vref current on DRV8825 stepper drivers. See the guide
 
 >- [How to control a stepper motor with DRV8825](https://www.makerguides.com/drv8825-stepper-motor-driver-arduino-tutorial/)
 
-## **Connecting to Arduino**
+### **Connecting to Arduino**
 
 Nema 17 motors have 200 steps for rotation but by enabling microsteps on the Pololu drivers we can obtain up to 3200 steps for rotation which allows for much more precision. For doing that add four jumpers on green pins. 
 
@@ -68,7 +79,9 @@ Then
 - Connect 12V power supply to CNC schield;
 - Open and use XY-Plot client to control Server
 
+## **Boards case**
+
 <img src="./images/Box.png" alt="drawing" width="400"/>
 
-## LICENSE
+## **LICENSE**
 [GNU General Public License v3.0](LICENSE)
