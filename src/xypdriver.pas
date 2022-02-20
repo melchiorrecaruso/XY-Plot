@@ -371,8 +371,8 @@ begin
     for j := 0 to poly.count -1 do
     begin
       p2 := poly[j];
-      if (trunc(p2.x) <= pagewidth ) or
-         (trunc(p2.y) <= pageheight) then
+      if ((trunc(p2.x) >= 0) and (trunc(p2.x) <= pagewidth )) and
+         ((trunc(p2.y) >= 0) and (trunc(p2.y) <= pageheight)) then
       begin
         compute(p2, xcount, ycount);
         if distance(p1, p2) > 0.2 then
