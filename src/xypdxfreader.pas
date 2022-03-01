@@ -3,7 +3,7 @@
 
   This unit derives from LAZARUS/FREEPASCAL dxfvectorialreader unit.
 
-  Copyright (C) 2018-2021 Melchiorre Caruso <melchiorrecaruso@gmail.com>
+  Copyright (C) 2018-2022 Melchiorre Caruso <melchiorrecaruso@gmail.com>
   Copyright (C) 1993-2017 Felipe Monteiro de Carvalho
 
   This source is free software; you can redistribute it and/or modify it under
@@ -29,26 +29,9 @@ unit xypdxfreader;
 interface
 
 uses
-  classes, fpimage, math, sysutils, xypdriver, xypmath, xyppaths;
+  classes, fpimage, math, sysutils, xypmath, xyppaths;
 
 type
-  tpolylineelement = record
-    x: double;
-    y: double;
-    color: tfpcolor;
-  end;
-
-  tsplineelement = record
-    x: double;
-    y: double;
-    knotvalue: integer;
-  end;
-
-  tlwpolylineelement = record
-    x: double;
-    y: double;
-  end;
-
   { tdxftokens }
 
   tdxftokens = class(tfplist)
@@ -88,15 +71,12 @@ type
 
   tvdxfreader = class
   private
-    fpointseparator: tformatsettings;
     // header data
     angbase: double;
     angdir:  double;
-    insbase, extmin, extmax, limmin, limmax: pxyppoint;
+    insbase, extmin, extmax, limmin, limmax: txyppoint;
     // for building the polyline objects which is composed of multiple records
-    isreadingpolyline: boolean;
-    isreadingattrib: boolean;
-    polyline: array of tpolylineelement;
+    polyline: txyppolygonal;
     //
     procedure readheader(atokens: tdxftokens; elements: txypelementlist);
     procedure readtables(atokens: tdxftokens; elements: txypelementlist);
@@ -110,8 +90,12 @@ type
     procedure readentities_circlearc(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_circle(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_ellipse(atokens: tdxftokens; elements: txypelementlist);
+    procedure readentities_lwpolyline(atokens: tdxftokens; elements: txypelementlist);
+    procedure readentities_polyline(atokens: tdxftokens; elements: txypelementlist);
+    procedure readentities_vertex(atokens: tdxftokens; elements: txypelementlist);
+    procedure readentities_seqend(atokens: tdxftokens; elements: txypelementlist);
     procedure internalreadentities(atokenstr: string; atokens: tdxftokens; elements: txypelementlist);
-   public
+  public
     { general reading methods }
     tokenizer: tdxftokenizer;
     constructor create;
@@ -196,7 +180,7 @@ end;
 
 destructor tdxftoken.destroy;
 begin
-  childs.free;
+  childs.destroy;
   inherited destroy;
 end;
 
@@ -210,7 +194,8 @@ end;
 
 destructor tdxftokenizer.destroy;
 begin
-  tokens.free;
+  tokens.clear;
+  tokens.destroy;
   inherited destroy;
 end;
 
@@ -241,7 +226,7 @@ begin
     // now read and process the section name
     strsectiongroupcode := astrings.strings[i];
     intsectiongroupcode := strtoint(trim(strsectiongroupcode));
-    strsectionname      := astrings.strings[i+1];
+    strsectionname      := astrings.strings[i + 1];
 
     newtoken            := tdxftoken.create;
     newtoken.groupcode  := intsectiongroupcode;
@@ -257,7 +242,7 @@ begin
       end else
       if (strsectionname = 'EOF') then
       begin
-        freeandnil(newtoken);
+        newtoken.destroy;
         exit;
       end else
       // comments can be in the beginning of the file and start with 999
@@ -265,8 +250,11 @@ begin
       begin
       // nothing to be done, let it add the token
       end else
+      begin
         raise exception.create(format(
           'tdxftokenizer.readfromstrings: expected section, but got: %s', [strsectionname]));
+      end;
+
     end else
     // processing the section name
     if parserstate = 1 then
@@ -290,8 +278,11 @@ begin
         parserstate      := 3;
         sectiontokenbase := curtokenbase;
       end else
+      begin
         raise exception.create(format(
           'tdxftokenizer.readfromstrings: invalid section name: %s', [strsectionname]));
+      end;
+
     end else
     // reading a generic section
     if parserstate = 2 then
@@ -351,7 +342,7 @@ end;
 function tdxftokenizer.istables_subsection(astr: string): boolean;
 begin
   result :=
-    (astr = 'TABLE') or
+    (astr = 'TABLE')or
     (astr = 'LAYER');
 end;
 
@@ -408,31 +399,29 @@ var
       i, j: integer;
   curtoken: tdxftoken;
   curfield: pxyppoint;
-  S: string;
 begin
   i := 0;
   while i < atokens.count do
   begin
     curtoken := tdxftoken(atokens.items[i]);
-
-    s:= curtoken.strvalue;
-
     if curtoken.strvalue = '$ANGBASE' then
     begin
-      curtoken := tdxftoken(atokens.items[i+1]);
-      angbase  := strtofloat(curtoken.strvalue, fpointseparator);
+      curtoken := tdxftoken(atokens.items[i + 1]);
+      angbase  := strtofloat(curtoken.strvalue);
       inc(i);
     end else
     if curtoken.strvalue = '$ANGDIR' then
     begin
-      curtoken := tdxftoken(atokens.items[i+1]);
+      curtoken := tdxftoken(atokens.items[i + 1]);
       angdir   := strtoint(curtoken.strvalue);
       inc(i);
     end else
     // this indicates the size of the document
     if (curtoken.strvalue = '$INSBASE') or
-       (curtoken.strvalue = '$EXTMIN' ) or (curtoken.strvalue = '$EXTMAX') or
-       (curtoken.strvalue = '$LIMMIN' ) or (curtoken.strvalue = '$LIMMAX') then
+       (curtoken.strvalue = '$EXTMIN' ) or
+       (curtoken.strvalue = '$EXTMAX' ) or
+       (curtoken.strvalue = '$LIMMIN' ) or
+       (curtoken.strvalue = '$LIMMAX' ) then
     begin
       if (curtoken.strvalue = '$INSBASE') then curfield := @INSBASE else
       if (curtoken.strvalue = '$EXTMIN' ) then curfield := @EXTMIN  else
@@ -444,28 +433,28 @@ begin
       // are the values of the size of the document
       for j := 0 to 1 do
       begin
-        curtoken := tdxftoken(atokens.items[i+1]);
+        curtoken := tdxftoken(atokens.items[i + 1]);
         case curtoken.groupcode of
         10:
         begin;
-          curfield^.x := strtofloat(curtoken.strvalue, fpointseparator);
+          curfield^.x := strtofloat(trim(curtoken.strvalue));
           inc(i);
         end;
         20:
         begin
-          curfield^.y := strtofloat(curtoken.strvalue, fpointseparator);
+          curfield^.y := strtofloat(trim(curtoken.strvalue));
           inc(i);
         end;
         end;
       end;
-    end else
 
+    end else
     if curtoken.strvalue = '$DWGCODEPAGE' then
     begin
       //if we are forcing an encoding, don't use the value from the header
       //if adoc.forcedencodingonread = '' then
       //begin
-      curtoken := tdxftoken(atokens.items[i+1]);
+      curtoken := tdxftoken(atokens.items[i + 1]);
         //if curtoken.strvalue = 'ANSI_1252' then
         //  encoding := 'CP1252';
       //end;
@@ -495,7 +484,7 @@ procedure tvdxfreader.readtables_table(atokens: tdxftokens; elements: txypelemen
 var
   curtoken: tdxftoken;
   i: integer;
-  //block data
+  //table data
   lname: string;
   posx, posy, posz: double;
 begin
@@ -506,7 +495,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
        2: lname := curtoken.strvalue;
@@ -536,7 +525,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
        2: lname := curtoken.strvalue;
@@ -582,7 +571,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
        2: lname := curtoken.strvalue;
@@ -607,7 +596,7 @@ var
   i: integer;
   curtoken: tdxftoken;
 begin
-  isreadingpolyline := false;
+  freeandnil(polyline);
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -620,8 +609,8 @@ procedure tvdxfreader.readentities_line(atokens: tdxftokens; elements: txypeleme
 var
   curtoken: tdxftoken;
   i: integer;
-  // lline
-  lline:  txypline;
+  // line data
+  lline: txypline;
 begin
   // initial values
   lline.p0.x := 0.0;
@@ -638,7 +627,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 11, 21, 31, 62] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
     // 8: llayer     := curtoken.strvalue;
@@ -658,7 +647,7 @@ procedure tvdxfreader.readentities_circlearc(atokens: tdxftokens; elements: txyp
 var
   curtoken: tdxftoken;
   i: integer;
-  // circlearc
+  // circlearc data
   larc: txypcirclearc;
 begin
   larc.center.x   := 0.0;
@@ -675,7 +664,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 40, 50, 51, 62] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
     // 8: llayer          := curtoken.strvalue;
@@ -701,7 +690,7 @@ procedure tvdxfreader.readentities_circle(atokens: tdxftokens; elements: txypele
 var
   curtoken: tdxftoken;
   i: integer;
-  // circle
+  // circle data
   lcircle: txypcircle;
 begin
   lcircle.center.x := 0.0;
@@ -716,7 +705,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 40] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
     // 8: llayer           := curtoken.strvalue;
@@ -753,7 +742,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 11, 21, 31, 40, 41, 42] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
     (*
     case curtoken.groupcode of
        8: llayer                  := curtoken.strvalue;
@@ -793,18 +782,15 @@ end;
 220, 230 DXF: Y and Z values of extrusion direction (optional)
 }
 
-(*
-function tvdxfreader.readentities_lwpolyline(atokens: tdxftokens;
-  apaths: tvppaths; aonlycreate: boolean = false): tpath;
+procedure tvdxfreader.readentities_lwpolyline(atokens: tdxftokens; elements: txypelementlist);
 var
   curtoken: tdxftoken;
-  i, curpoint: integer;
-  // line
-  lwpolyline: array of tlwpolylineelement;
+  i: integer;
+  point: txyppoint;
   lwflags: integer = 0;
 begin
-  curpoint := -1;
-  result   := nil;
+  // create new polyline
+  polyline := txyppolygonal.create;
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -813,7 +799,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 11, 21, 31, 70] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     // loads the coordinates
     // with position fixing for documents with negative coordinates
@@ -821,45 +807,29 @@ begin
       10:
       begin
         // starting a new point
-        inc(curpoint);
-        setlength(lwpolyline, curpoint+1);
-
-        lwpolyline[curpoint].x := curtoken.floatvalue - doc_offset.x;
+        polyline.add(point);
+        point.x := curtoken.floatvalue;
       end;
-      20: lwpolyline[curpoint].y := curtoken.floatvalue - doc_offset.y;
+      20:
+      begin
+        point.y := curtoken.floatvalue;
+        polyline[polyline.count -1] := point;
+      end;
       70: lwflags := round(curtoken.floatvalue);
     end;
   end;
 
-  // in case of a flag="closed" then we need to close the line
+  // in case of a flag = "closed" then we need to close the line
   if lwflags = 1 then
   begin
-    inc(curpoint);
-    setlength(lwpolyline, curpoint+1);
-    lwpolyline[curpoint].x := lwpolyline[0].x;
-    lwpolyline[curpoint].y := lwpolyline[0].y;
+    polyline.add(polyline[0]);
   end;
-
-  // And now write it
-  if curPoint >= 0 then // otherwise the polyline is empty of points
-  begin
-    //AData.StartPath(LWPolyline[0].X, LWPolyline[0].Y);
-    {$ifdef FPVECTORIALDEBUG_LWPOLYLINE}
-    Write(Format('LWPOLYLINE ID=%d %f,%f', [AData.PathCount-1, LWPolyline[0].X, LWPolyline[0].Y]));
-    {$endif}
-    for i := 1 to curPoint do
-    begin
-      //AData.AddLineToPath(LWPolyline[i].X, LWPolyline[i].Y);
-      {$ifdef FPVECTORIALDEBUG_LWPOLYLINE}
-       Write(Format(' %f,%f', [LWPolyline[i].X, LWPolyline[i].Y]));
-      {$endif}
-    end;
-    {$ifdef FPVECTORIALDEBUG_LWPOLYLINE}
-     WriteLn('');
-    {$endif}
-    //Result := AData.EndPath(AOnlyCreate);
-  end;
+  // write the polyline to the document
+  elements.add(txypelementpolygonal.create(polyline));
+  polyline := nil;
 end;
+
+(*
 
 {.$define FPVECTORIALDEBUG_SPLINE}
 function tvdxfreader.readentities_spline(atokens: tdxftokens;
@@ -880,7 +850,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 11, 21, 31] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), pointseparator);
 
     // loads the coordinates
     // with position fixing for documents with negative coordinates
@@ -920,85 +890,57 @@ end;
 
 *)
 
-(*
-procedure tvdxfreader.readentities_polyline(atokens: tdxftokens; apaths: tvppaths);
+procedure tvdxfreader.readentities_polyline(atokens: tdxftokens; elements: txypelementlist);
 begin
-  setlength(polyline, 0);
+  // create new polyline
+  polyline := txyppolygonal.create;
 end;
 
-*)
-
-
-(*
-procedure tvdxfreader.readentities_vertex(atokens: tdxftokens; apaths: tvppaths);
+procedure tvdxfreader.readentities_vertex(atokens: tdxftokens; elements: txypelementlist);
 var
   curtoken: tdxftoken;
-  i, curpoint: integer;
+  i: integer;
+  point: txyppoint;
 begin
-  if not isreadingpolyline then raise exception.create('[tvdxfvectorialreader.readentities_vertex] unexpected record: vertex before a polyline');
-
-  curpoint := length(polyline);
-  setlength(polyline, curpoint+1);
-  polyline[curpoint].x := 0;
-  polyline[curpoint].y := 0;
-  polyline[curpoint].color := colblack;
-
-  for i := 0 to atokens.count - 1 do
+  if assigned(polyline) then
   begin
-    // now read and process the item name
-    curtoken := tdxftoken(atokens.items[i]);
+    point.x := 0;
+    point.y := 0;
+    polyline.add(point);
 
-    // avoid an exception by previously checking if the conversion can be made
-    if curtoken.groupcode in [10, 20, 30, 62] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+    for i := 0 to atokens.count - 1 do
+    begin
+      // now read and process the item name
+      curtoken := tdxftoken(atokens.items[i]);
 
-    // loads the coordinates
-    // with position fixing for documents with negative coordinates
-    case curtoken.groupcode of
-      10: polyline[curpoint].x     := curtoken.floatvalue - doc_offset.x;
-      20: polyline[curpoint].y     := curtoken.floatvalue - doc_offset.y;
-      62: polyline[curpoint].color := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
+      // avoid an exception by previously checking if the conversion can be made
+      if curtoken.groupcode in [10, 20, 30, 62] then
+        curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
+
+      // loads the coordinates
+      // with position fixing for documents with negative coordinates
+      case curtoken.groupcode of
+        10: point.x := curtoken.floatvalue;
+        20: point.y := curtoken.floatvalue;
+      //62: polyline[curpoint].color := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
+      end;
+      polyline[polyline.count -1] := point;
     end;
   end;
 end;
 
-*)
 
+procedure tvdxfreader.readentities_seqend(atokens: tdxftokens; elements: txypelementlist);
+begin
+  if assigned(polyline) then
+  begin
+    // write the polyline to the document
+    elements.add(txypelementpolygonal.create(polyline));
+    polyline := nil;
+  end;
+end;
 
 (*
-function tvdxfreader.readentities_seqend(atokens: tdxftokens;
-  apaths: tvppaths; aonlycreate: boolean = false): tpath;
-var
-  i: Integer;
-begin
-  Result := nil;
-  if (not IsReadingPolyline) and (not IsReadingAttrib) then
-    raise Exception.Create('[TvDXFVectorialReader.ReadENTITIES_SEQEND] Unexpected record: SEQEND before a POLYLINE or ATTRIB');
-
-  if IsReadingPolyline then
-  begin
-    // Write the Polyline to the document
-    if Length(Polyline) >= 0 then // otherwise the polyline is empty of points
-    begin
-      //AData.StartPath(Polyline[0].X, Polyline[0].Y);
-      {$ifdef FPVECTORIALDEBUG_POLYLINE}
-       Write(Format('POLYLINE %f,%f', [Polyline[0].X, Polyline[0].Y]));
-      {$endif}
-      for i := 1 to Length(Polyline)-1 do
-      begin
-        //AData.AddLineToPath(Polyline[i].X, Polyline[i].Y, Polyline[i].Color);
-        {$ifdef FPVECTORIALDEBUG_POLYLINE}
-         Write(Format(' %f,%f', [Polyline[i].X, Polyline[i].Y]));
-        {$endif}
-      end;
-      {$ifdef FPVECTORIALDEBUG_POLYLINE}
-       WriteLn('');
-      {$endif}
-      //Result := AData.EndPath(AOnlyCreate);
-    end;
-  end;
-end;
-
 function tvdxfreader.readentities_mtext(atokens: tdxftokens;
   apaths: tvppaths; aonlycreate: boolean = false): tvtext;
 var
@@ -1018,7 +960,7 @@ begin
     // Avoid an exception by previously checking if the conversion can be made
     if CurToken.GroupCode in [10, 20, 30, 40] then
     begin
-      CurToken.FloatValue :=  StrToFloat(Trim(CurToken.StrValue), FPointSeparator);
+      CurToken.FloatValue :=  StrToFloat(Trim(CurToken.StrValue), PointSeparator);
     end;
 
     case CurToken.GroupCode of
@@ -1060,7 +1002,7 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 11, 21, 31, 62] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), pointseparator);
 
     // loads the coordinates
     // with position fixing for documents with negative coordinates
@@ -1124,13 +1066,13 @@ begin
 
     // avoid an exception by previously checking if the conversion can be made
     if curtoken.groupcode in [10, 20, 30, 40] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), fpointseparator);
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue), pointseparator);
 
     case curtoken.groupcode of
       10: circlecenterx := curtoken.floatvalue;
       20: circlecentery := curtoken.floatvalue;
       30: circlecenterz := curtoken.floatvalue;
-//      40: circleradius := curtoken.floatvalue;
+      40: circleradius := curtoken.floatvalue;
     end;
   end;
 
@@ -1146,26 +1088,29 @@ end;
 procedure tvdxfreader.internalreadentities(atokenstr: string; atokens: tdxftokens; elements: txypelementlist);
 begin
   case atokenstr of
-    'ARC':     readentities_circlearc (atokens, elements);
-    'CIRCLE':  readentities_circle    (atokens, elements);
-    'ELLIPSE': readentities_ellipse   (atokens, elements);
-    'LINE':    readentities_line      (atokens, elements);
+    'ARC':        readentities_circlearc (atokens, elements);
+    'CIRCLE':     readentities_circle    (atokens, elements);
+    'ELLIPSE':    readentities_ellipse   (atokens, elements);
+    'LINE':       readentities_line      (atokens, elements);
+    'LWPOLYLINE': readentities_lwpolyline(atokens, elements);
+    'POLYLINE':   readentities_polyline  (atokens, elements);
+    'VERTEX':     readentities_vertex    (atokens, elements);
+    'SEQEND':     readentities_seqend    (atokens, elements);
   end;
 end;
 
 constructor tvdxfreader.create;
 begin
   inherited create;
-  tokenizer       := tdxftokenizer.create;
-  fpointseparator := defaultformatsettings;
-  fpointseparator.decimalseparator  := '.';
+  tokenizer := tdxftokenizer.create;
+  defaultformatsettings.decimalseparator  := '.';
   // disable the thousand separator
-  fpointseparator.thousandseparator := '#';
+  defaultformatsettings.thousandseparator := '#';
 end;
 
 destructor tvdxfreader.destroy;
 begin
-  tokenizer.free;
+  tokenizer.destroy;
   inherited destroy;
 end;
 
@@ -1176,8 +1121,10 @@ var
   curtokenfirstchild: tdxftoken;
 begin
   // default header data
-  //angbase := 0.0; // starts pointing to the right / east
-  //angdir  := 0;   // counter-clock wise
+  // starts pointing to the right / east
+  angbase := 0.0;
+  // counter-clock wise
+  angdir  := 0;
 
   tokenizer.readfromstrings(astrings);
   for i := 0 to tokenizer.tokens.count - 1 do
@@ -1187,9 +1134,9 @@ begin
        (curtoken.childs.count = 0  ) then continue;
     curtokenfirstchild := tdxftoken(curtoken.childs.items[0]);
 
-  //if curtokenfirstchild.strvalue = 'HEADER'   then readheader  (curtoken.childs, apaths) else
-  //if curtokenfirstchild.strvalue = 'TABLES'   then readtables  (curtoken.childs, apaths) else
-  //if curtokenfirstchild.strvalue = 'BLOCKS'   then readblocks  (curtoken.childs, apaths) else
+    if curtokenfirstchild.strvalue = 'HEADER'   then readheader  (curtoken.childs, elements) else
+    if curtokenfirstchild.strvalue = 'TABLES'   then readtables  (curtoken.childs, elements) else
+    if curtokenfirstchild.strvalue = 'BLOCKS'   then readblocks  (curtoken.childs, elements) else
     if curtokenfirstchild.strvalue = 'ENTITIES' then readentities(curtoken.childs, elements);
   end;
 end;
