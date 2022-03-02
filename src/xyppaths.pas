@@ -26,10 +26,13 @@ unit xyppaths;
 interface
 
 uses
-  bgrapath, classes, graphics, sysutils, xypmath, xyputils;
+  bgrapath, classes, fpimage, graphics, sysutils, xypmath, xyputils;
 
 type
   txypelement = class(tobject)
+  private
+    fcolor: tfpcolor;
+    flayer: string;
   public
     constructor create;
     destructor destroy; override;
@@ -45,6 +48,9 @@ type
     function lastpoint: txyppoint; virtual abstract;
     function length: double; virtual abstract;
     function section: rawbytestring; virtual abstract;
+  public
+    property color: tfpcolor read fcolor write fcolor;
+    property layer: string read flayer write flayer;
   end;
 
   txypelementline = class(txypelement)
@@ -113,7 +119,7 @@ type
     fpolygonal: txyppolygonal;
   public
     constructor create;
-    constructor create(apolygonal: txyppolygonal);
+    constructor create(const apolygonal: txyppolygonal);
     destructor destroy; override;
     procedure invert; override;
     procedure move(dx, dy: double); override;
@@ -217,6 +223,8 @@ uses
 constructor txypelement.create;
 begin
   inherited create;
+  fcolor := colblack;
+  flayer := '';
 end;
 
 destructor txypelement.destroy;
@@ -493,7 +501,7 @@ begin
   fpolygonal := txyppolygonal.create;
 end;
 
-constructor txypelementpolygonal.create(apolygonal: txyppolygonal);
+constructor txypelementpolygonal.create(const apolygonal: txyppolygonal);
 begin
   inherited create;
   fpolygonal := apolygonal;
