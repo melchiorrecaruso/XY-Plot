@@ -29,7 +29,7 @@ unit xypdxfreader;
 interface
 
 uses
-  classes, fpimage, math, sysutils, xypmath, xyppaths;
+  classes, fpimage, graphics, math, sysutils, xypmath, xyppaths;
 
 type
   { tdxftokens }
@@ -77,11 +77,13 @@ type
     insbase, extmin, extmax, limmin, limmax: txyppoint;
     // for building the polyline objects which is composed of multiple records
     polyline: txyppolygonal;
+    polylinecolor: tfpcolor;
+    polylineflags: integer;
+    polylinelayer: string;
     //
     procedure readheader(atokens: tdxftokens; elements: txypelementlist);
     procedure readtables(atokens: tdxftokens; elements: txypelementlist);
     procedure readtables_table(atokens: tdxftokens; elements: txypelementlist);
-    procedure readtables_layer(atokens: tdxftokens; elements: txypelementlist);
     procedure readblocks(atokens: tdxftokens; elements: txypelementlist);
     procedure readblocks_block(atokens: tdxftokens; elements: txypelementlist);
     procedure readblocks_endblk(atokens: tdxftokens; elements: txypelementlist);
@@ -95,6 +97,8 @@ type
     procedure readentities_vertex(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_seqend(atokens: tdxftokens; elements: txypelementlist);
     procedure internalreadentities(atokenstr: string; atokens: tdxftokens; elements: txypelementlist);
+    //
+    function dxfcolorindextofpcolor(acolorindex: integer): tfpcolor;
   public
     { general reading methods }
     tokenizer: tdxftokenizer;
@@ -342,8 +346,7 @@ end;
 function tdxftokenizer.istables_subsection(astr: string): boolean;
 begin
   result :=
-    (astr = 'TABLE')or
-    (astr = 'LAYER');
+    (astr = 'TABLE') ;
 end;
 
 function tdxftokenizer.isblocks_subsection(astr: string): boolean;
@@ -392,11 +395,11 @@ begin
     (astr = 'XLINE');
 end;
 
-{ tvdxfvectorialreader }
+{ tvdxfreader }
 
 procedure tvdxfreader.readheader(atokens: tdxftokens; elements: txypelementlist);
 var
-      i, j: integer;
+  i, j: integer;
   curtoken: tdxftoken;
   curfield: pxyppoint;
 begin
@@ -473,7 +476,6 @@ begin
   begin
     curtoken := tdxftoken(atokens.items[i]);
     if curtoken.strvalue = 'TABLE' then readtables_table(curtoken.childs, elements) else
-    if curtoken.strvalue = 'LAYER' then readtables_layer(curtoken.childs, elements) else
     begin
       // ...
     end;
@@ -482,11 +484,13 @@ end;
 
 procedure tvdxfreader.readtables_table(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
+  curtoken: tdxftoken;
   //table data
-  lname: string;
-  posx, posy, posz: double;
+  tablename: string;
+  tableposx: double;
+  tableposy: double;
+  tableposz: double;
 begin
   for i := 0 to atokens.count - 1 do
   begin
@@ -498,43 +502,13 @@ begin
       curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
-       2: lname := curtoken.strvalue;
-      10:  posx := curtoken.floatvalue;
-      20:  posy := curtoken.floatvalue;
-      30:  posz := curtoken.floatvalue;
+       2: tablename := curtoken.strvalue;
+      10: tableposx := curtoken.floatvalue;
+      20: tableposy := curtoken.floatvalue;
+      30: tableposz := curtoken.floatvalue;
        0:
       begin
         //...
-      end;
-    end;
-  end;
-end;
-
-procedure tvdxfreader.readtables_layer(atokens: tdxftokens; elements: txypelementlist);
-var
-  curtoken: tdxftoken;
-  i: integer;
-  //layer data
-  lname: string;
-  posx, posy, posz: double;
-begin
-  for i := 0 to atokens.count - 1 do
-  begin
-    // now read and process the item name
-    curtoken := tdxftoken(atokens.items[i]);
-
-    // avoid an exception by previously checking if the conversion can be made
-    if curtoken.groupcode in [10, 20, 30] then
-      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
-
-    case curtoken.groupcode of
-       2: lname := curtoken.strvalue;
-      10:  posx := curtoken.floatvalue;
-      20:  posy := curtoken.floatvalue;
-      30:  posz := curtoken.floatvalue;
-       0:
-      begin
-        // ...
       end;
     end;
   end;
@@ -558,11 +532,13 @@ end;
 
 procedure tvdxfreader.readblocks_block(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
+  curtoken: tdxftoken;
   //block data
-  lname: string;
-  posx, posy, posz: double;
+  blockname: string;
+  blockposx: double;
+  blockposy: double;
+  blockposz: double;
 begin
   for i := 0 to atokens.count - 1 do
   begin
@@ -574,10 +550,10 @@ begin
       curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
-       2: lname := curtoken.strvalue;
-      10:  posx := curtoken.floatvalue;
-      20:  posy := curtoken.floatvalue;
-      30:  posz := curtoken.floatvalue;
+       2: blockname := curtoken.strvalue;
+      10: blockposx := curtoken.floatvalue;
+      20: blockposy := curtoken.floatvalue;
+      30: blockposz := curtoken.floatvalue;
        0:
       begin
         //...
@@ -607,18 +583,23 @@ end;
 
 procedure tvdxfreader.readentities_line(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
+  curtoken: tdxftoken;
   // line data
-  lline: txypline;
+  line: txypline;
+  linecolor: tfpcolor;
+  linelayer: string;
+  element: txypelementline;
 begin
   // initial values
-  lline.p0.x := 0.0;
-  lline.p0.y := 0.0;
-  //lline.p0.z := true;
-  lline.p1.x := 0.0;
-  lline.p1.y := 0.0;
-  //lline.p1.z := true;
+  line.p0.x  := 0.0;
+  line.p0.y  := 0.0;
+//line.p0.z  := 0.0;
+  line.p1.x  := 0.0;
+  line.p1.y  := 0.0;
+//line.p1.z  := 0.0;
+  linecolor  := colblack;
+  linelayer  := '';
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -630,32 +611,43 @@ begin
       curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
-    // 8: llayer     := curtoken.strvalue;
-      10: lline.p0.x := curtoken.floatvalue;
-      20: lline.p0.y := curtoken.floatvalue;
-    //30: lline.p0.z := curtoken.floatvalue;
-      11: lline.p1.x := curtoken.floatvalue;
-      21: lline.p1.y := curtoken.floatvalue;
-    //31: lline.p1.z := curtoken.floatvalue;
-    //62: lcolor     := curtoken.floatvalue;
+       8: linelayer := curtoken.strvalue;
+      10: line.p0.x := curtoken.floatvalue;
+      20: line.p0.y := curtoken.floatvalue;
+    //30: line.p0.z := curtoken.floatvalue;
+      11: line.p1.x := curtoken.floatvalue;
+      21: line.p1.y := curtoken.floatvalue;
+    //31: line.p1.z := curtoken.floatvalue;
+      62: linecolor := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
     end;
   end;
-  elements.add(txypelementline.create(lline));
+
+  // write the line to the document
+  element := txypelementline.create(line);
+  element.color := linecolor;
+  element.layer := linelayer;
+  elements.add(element);
 end;
 
 procedure tvdxfreader.readentities_circlearc(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
+  curtoken: tdxftoken;
   // circlearc data
-  larc: txypcirclearc;
+  arc: txypcirclearc;
+  arccolor: tfpcolor;
+  arclayer: string;
+  element: txypelementcirclearc;
 begin
-  larc.center.x   := 0.0;
-  larc.center.y   := 0.0;
-//larc.center.z   := 0.0;
-  larc.radius     := 0.0;
-  larc.startangle := 0.0;
-  larc.endangle   := 0.0;
+  // initial values
+  arc.center.x   := 0.0;
+  arc.center.y   := 0.0;
+//arc.center.z   := 0.0;
+  arc.radius     := 0.0;
+  arc.startangle := 0.0;
+  arc.endangle   := 0.0;
+  arccolor       := colblack;
+  arclayer       := '';
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -667,36 +659,46 @@ begin
       curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
-    // 8: llayer          := curtoken.strvalue;
-      10: larc.center.x   := curtoken.floatvalue;
-      20: larc.center.y   := curtoken.floatvalue;
-    //30: larc.center.z   := curtoken.floatvalue;
-      40: larc.radius     := curtoken.floatvalue;
-      50: larc.startangle := degtorad(curtoken.floatvalue);
-      51: larc.endangle   := degtorad(curtoken.floatvalue);
-    //62: lcolor          := curtoken.floatvalue;
+       8: arclayer       := curtoken.strvalue;
+      10: arc.center.x   := curtoken.floatvalue;
+      20: arc.center.y   := curtoken.floatvalue;
+    //30: arc.center.z   := curtoken.floatvalue;
+      40: arc.radius     := curtoken.floatvalue;
+      50: arc.startangle := degtorad(curtoken.floatvalue);
+      51: arc.endangle   := degtorad(curtoken.floatvalue);
+      62: arccolor       := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
     end;
   end;
 
   // in dxf the endangle is always greater then the startangle.
   // if it isn't then sum 360 to it to make sure we don't get wrong results
-  if larc.endangle < larc.startangle then
-    larc.endangle := larc.endangle + degtorad(360);
+  if arc.endangle < arc.startangle then
+    arc.endangle := arc.endangle + degtorad(360);
 
-  elements.add(txypelementcirclearc.create(larc));
+  // write the circlearc to the document
+  element := txypelementcirclearc.create(arc);
+  element.color := arccolor;
+  element.layer := arclayer;
+  elements.add(element);
 end;
 
 procedure tvdxfreader.readentities_circle(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
+  curtoken: tdxftoken;
   // circle data
-  lcircle: txypcircle;
+  circle: txypcircle;
+  circlecolor: tfpcolor;
+  circlelayer: string;
+  element: txypelementcircle;
 begin
-  lcircle.center.x := 0.0;
-  lcircle.center.y := 0.0;
-//lcircle.center.z := 0.0;
-  lcircle.radius   := 0.0;
+  // initial values
+  circle.center.x := 0.0;
+  circle.center.y := 0.0;
+//circle.center.z := 0.0;
+  circle.radius   := 0.0;
+  circlecolor     := colblack;
+  circlelayer     := '';
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -704,19 +706,24 @@ begin
     curtoken := tdxftoken(atokens.items[i]);
 
     // avoid an exception by previously checking if the conversion can be made
-    if curtoken.groupcode in [10, 20, 30, 40] then
+    if curtoken.groupcode in [10, 20, 30, 40, 62] then
       curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
 
     case curtoken.groupcode of
-    // 8: llayer           := curtoken.strvalue;
-      10: lcircle.center.x := curtoken.floatvalue;
-      20: lcircle.center.y := curtoken.floatvalue;
-    //30: lcircle.center.z := curtoken.floatvalue;
-      40: lcircle.radius   := curtoken.floatvalue;
+       8: circlelayer     := curtoken.strvalue;
+      10: circle.center.x := curtoken.floatvalue;
+      20: circle.center.y := curtoken.floatvalue;
+    //30: circle.center.z := curtoken.floatvalue;
+      40: circle.radius   := curtoken.floatvalue;
+      62: circlecolor     := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
     end;
   end;
 
-  elements.add(txypelementcircle.create(lcircle));
+  // write the circle to the document
+  element := txypelementcircle.create(circle);
+  element.color := circlecolor;
+  element.layer := circlelayer;
+  elements.add(element);
 end;
 
 procedure tvdxfreader.readentities_ellipse(atokens: tdxftokens; elements: txypelementlist);
@@ -762,7 +769,7 @@ begin
   //elements.add(lellipse);
 end;
 
-{.$define FPVECTORIALDEBUG_LWPOLYLINE}
+{LWPOLYLINE}
 {
 100 Subclass marker (AcDbPolyline)
 90  Number of vertices
@@ -784,13 +791,17 @@ end;
 
 procedure tvdxfreader.readentities_lwpolyline(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
-  point: txyppoint;
-  lwflags: integer = 0;
+  curtoken: tdxftoken;
+  // lwpolyline data
+  vertex: txyppoint;
+  element: txypelementpolygonal;
 begin
   // create new polyline
-  polyline := txyppolygonal.create;
+  polyline      := txyppolygonal.create;
+  polylinecolor := colblack;
+  polylineflags := 0;
+  polylinelayer := '';
 
   for i := 0 to atokens.count - 1 do
   begin
@@ -804,34 +815,38 @@ begin
     // loads the coordinates
     // with position fixing for documents with negative coordinates
     case curtoken.groupcode of
+       8: polylinelayer := curtoken.strvalue;
       10:
       begin
-        // starting a new point
-        polyline.add(point);
-        point.x := curtoken.floatvalue;
+        // starting a new vertex
+        polyline.add(vertex);
+        vertex.x := curtoken.floatvalue;
       end;
       20:
       begin
-        point.y := curtoken.floatvalue;
-        polyline[polyline.count -1] := point;
+        vertex.y := curtoken.floatvalue;
+        polyline[polyline.count -1] := vertex;
       end;
-      70: lwflags := round(curtoken.floatvalue);
+      70: polylineflags := round(curtoken.floatvalue);
+    //62:
     end;
   end;
 
   // in case of a flag = "closed" then we need to close the line
-  if lwflags = 1 then
-  begin
+  if polylineflags = 1 then
     polyline.add(polyline[0]);
-  end;
+
   // write the polyline to the document
-  elements.add(txypelementpolygonal.create(polyline));
+  element := txypelementpolygonal.create(polyline);
+  element.color := polylinecolor;
+  element.layer := polylinelayer;
+  elements.add(element);
   polyline := nil;
 end;
 
 (*
 
-{.$define FPVECTORIALDEBUG_SPLINE}
+{SPLINE}
 function tvdxfreader.readentities_spline(atokens: tdxftokens;
   apaths: tvppaths; aonlycreate: boolean = false): tpath;
 var
@@ -891,6 +906,9 @@ end;
 *)
 
 procedure tvdxfreader.readentities_polyline(atokens: tdxftokens; elements: txypelementlist);
+var
+  i: integer;
+  curtoken: tdxftoken;
 begin
   // create new polyline
   polyline := txyppolygonal.create;
@@ -898,15 +916,15 @@ end;
 
 procedure tvdxfreader.readentities_vertex(atokens: tdxftokens; elements: txypelementlist);
 var
-  curtoken: tdxftoken;
   i: integer;
-  point: txyppoint;
+  curtoken: tdxftoken;
+  vertex: txyppoint;
 begin
   if assigned(polyline) then
   begin
-    point.x := 0;
-    point.y := 0;
-    polyline.add(point);
+    vertex.x := 0;
+    vertex.y := 0;
+    polyline.add(vertex);
 
     for i := 0 to atokens.count - 1 do
     begin
@@ -920,17 +938,21 @@ begin
       // loads the coordinates
       // with position fixing for documents with negative coordinates
       case curtoken.groupcode of
-        10: point.x := curtoken.floatvalue;
-        20: point.y := curtoken.floatvalue;
-      //62: polyline[curpoint].color := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
+         8: polylinelayer := curtoken.strvalue;
+        10: vertex.x      := curtoken.floatvalue;
+        20: vertex.y      := curtoken.floatvalue;
+        62: polylinecolor := dxfcolorindextofpcolor(trunc(curtoken.floatvalue));
       end;
-      polyline[polyline.count -1] := point;
+      polyline[polyline.count -1] := vertex;
     end;
   end;
 end;
 
 
 procedure tvdxfreader.readentities_seqend(atokens: tdxftokens; elements: txypelementlist);
+var
+  i: integer;
+  curtoken: tdxftoken;
 begin
   if assigned(polyline) then
   begin
@@ -1097,6 +1119,15 @@ begin
     'VERTEX':     readentities_vertex    (atokens, elements);
     'SEQEND':     readentities_seqend    (atokens, elements);
   end;
+end;
+
+function tvdxfreader.dxfcolorindextofpcolor(acolorindex: integer): tfpcolor;
+begin
+  if (acolorindex >= 0) and (acolorindex <= 255) then
+    result := AUTOCAD_COLOR_PALETTE[acolorindex]
+  else
+    raise exception.create(
+      format('[tvdxfvectorialreader.dxfcolorindextofpvcolor] invalid dxf color index: %d', [acolorindex]));
 end;
 
 constructor tvdxfreader.create;
