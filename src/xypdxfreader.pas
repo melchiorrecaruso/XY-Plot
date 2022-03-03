@@ -1203,11 +1203,10 @@ end;
 
 function tvdxfreader.dxfcolorindextofpcolor(acolorindex: integer): tfpcolor;
 begin
-  if (acolorindex >= 0) and (acolorindex <= 255) then
+  if (acolorindex >= 0) and (acolorindex <= 15) then
     result := AUTOCAD_COLOR_PALETTE[acolorindex]
   else
-    raise exception.create(
-      format('[tvdxfvectorialreader.dxfcolorindextofpvcolor] invalid dxf color index: %d', [acolorindex]));
+    result := colblack;
 end;
 
 constructor tvdxfreader.create;
