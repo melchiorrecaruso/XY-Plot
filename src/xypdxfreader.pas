@@ -88,6 +88,7 @@ type
     procedure readblocks_block(atokens: tdxftokens; elements: txypelementlist);
     procedure readblocks_endblk(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities(atokens: tdxftokens; elements: txypelementlist);
+    procedure readentities_3dface(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_line(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_circlearc(atokens: tdxftokens; elements: txypelementlist);
     procedure readentities_circle(atokens: tdxftokens; elements: txypelementlist);
@@ -579,6 +580,84 @@ begin
     curtoken := tdxftoken(atokens.items[i]);
     internalreadentities(curtoken.strvalue, curtoken.childs, elements);
   end;
+end;
+
+procedure tvdxfreader.readentities_3dface(atokens: tdxftokens; elements: txypelementlist);
+var
+  i: integer;
+  curtoken: tdxftoken;
+  // 3dface data
+  polygon: array of txyppoint;
+  element: txypelementpolygonal;
+begin
+  polyline      := txyppolygonal.create;
+  polylinecolor := colblack;
+  polylineflags := 0;
+  polylinelayer := '';
+
+  setlength(polygon, 3);
+  for i := 0 to atokens.count - 1 do
+  begin
+    // now read and process the item name
+    curtoken := tdxftoken(atokens.items[i]);
+
+    // avoid an exception by previously checking if the conversion can be made
+    if curtoken.groupcode in [10, 20, 30, 11, 21, 31, 12, 22, 32, 13, 23, 33, 70] then
+    begin
+      curtoken.floatvalue :=  strtofloat(trim(curtoken.strvalue));
+    end;
+
+    case curtoken.groupcode of
+      10: polygon[0].x := curtoken.floatvalue;
+      20: polygon[0].y := curtoken.floatvalue;
+    //30: polygon[0].z := curtoken.floatvalue;
+      11: polygon[1].x := curtoken.floatvalue;
+      21: polygon[1].y := curtoken.floatvalue;
+    //31: polygon[1].z := curtoken.floatvalue;
+      12: polygon[2].x := curtoken.floatvalue;
+      22: polygon[2].y := curtoken.floatvalue;
+    //32: polygon[2].z := curtoken.floatvalue;
+      13:
+      begin
+        setlength(polygon, 4);
+        polygon[3].x := curtoken.floatvalue;
+      end;
+      23:
+      begin
+        setlength(polygon, 4);
+        polygon[3].y := curtoken.floatvalue;
+      end;
+      33:
+      begin
+        //setlength(polygon, 4);
+        //polygon[3].z := curtoken.floatvalue;
+      end;
+      {
+        Invisible edge flags (optional; default = 0):
+        1 = First edge is invisible
+        2 = Second edge is invisible
+        4 = Third edge is invisible
+        8 = Fourth edge is invisible
+      }
+      70:
+      begin
+        // ...
+      end;
+    end;
+  end;
+
+  for i := 0 to high(polygon) do
+  begin
+    polyline.add(polygon[i]);
+  end;
+  setlength(polygon, 0);
+
+  // write the polyline to the document
+  element := txypelementpolygonal.create(polyline);
+  element.color := polylinecolor;
+  element.layer := polylinelayer;
+  elements.add(element);
+  polyline := nil;
 end;
 
 procedure tvdxfreader.readentities_line(atokens: tdxftokens; elements: txypelementlist);
@@ -1110,6 +1189,7 @@ end;
 procedure tvdxfreader.internalreadentities(atokenstr: string; atokens: tdxftokens; elements: txypelementlist);
 begin
   case atokenstr of
+    '3DFACE':     readentities_3dface    (atokens, elements);
     'ARC':        readentities_circlearc (atokens, elements);
     'CIRCLE':     readentities_circle    (atokens, elements);
     'ELLIPSE':    readentities_ellipse   (atokens, elements);
