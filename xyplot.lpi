@@ -95,20 +95,20 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="64" Y="20"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="124"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpcoder.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6" Y="24"/>
-        <UsageCount Value="69"/>
+        <UsageCount Value="68"/>
       </Unit>
       <Unit>
         <Filename Value="../fpc/source/rtl/inc/mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="72"/>
         <CursorPos X="14" Y="98"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../lazarus/lcl/controls.pp"/>
@@ -116,7 +116,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2300"/>
         <CursorPos X="14" Y="2321"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../fpc/source/packages/fcl-image/src/fpcanvas.pp"/>
@@ -124,7 +124,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="327"/>
         <CursorPos X="15" Y="347"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../lazarus/lcl/extctrls.pp"/>
@@ -132,32 +132,32 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="429"/>
         <CursorPos X="14" Y="447"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="build/arm-linux/lib/main.lrs"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/gcodewriter.pas"/>
         <EditorIndex Value="-1"/>
         <FoldState Value=" T0jK624c"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypdriver.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="356"/>
-        <CursorPos X="53" Y="365"/>
+        <TopLine Value="532"/>
+        <CursorPos X="44" Y="553"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsetting.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="66"/>
         <CursorPos X="65" Y="72"/>
         <UsageCount Value="200"/>
@@ -168,7 +168,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1146"/>
         <CursorPos Y="1191"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/viewfrm.pas"/>
@@ -178,14 +178,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="17"/>
         <CursorPos X="37" Y="23"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="src/xyppaths.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="357"/>
-        <CursorPos X="47" Y="357"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="47"/>
+        <CursorPos X="47" Y="74"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -206,15 +206,14 @@
         <Filename Value="src/vpsketch.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="6"/>
-        <UsageCount Value="69"/>
+        <UsageCount Value="68"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypmath.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="10"/>
-        <TopLine Value="30"/>
-        <CursorPos X="3" Y="133"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="38"/>
+        <CursorPos X="51" Y="58"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -222,50 +221,50 @@
         <Filename Value="src/pltwave.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="28" Y="164"/>
-        <UsageCount Value="136"/>
+        <UsageCount Value="135"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/lcl/graphics.pp"/>
         <UnitName Value="Graphics"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="103"/>
-        <CursorPos X="5" Y="130"/>
-        <UsageCount Value="5"/>
+        <TopLine Value="227"/>
+        <CursorPos X="3" Y="246"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../fpc/source/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="90"/>
         <CursorPos X="10" Y="114"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/components/aggpas/src/agg_curves.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="31"/>
         <CursorPos X="23" Y="2"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpgcode.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="26" Y="4"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="src/pltdxfreader.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="617"/>
         <CursorPos X="14" Y="655"/>
-        <UsageCount Value="168"/>
+        <UsageCount Value="167"/>
       </Unit>
       <Unit>
         <Filename Value="src/sketchyimage.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="241"/>
         <CursorPos X="62" Y="258"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="src/calibrationfrm.pas"/>
@@ -275,7 +274,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos Y="67"/>
-        <UsageCount Value="32"/>
+        <UsageCount Value="31"/>
       </Unit>
       <Unit>
         <Filename Value="src/scalefrm.pas"/>
@@ -284,7 +283,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="26" Y="4"/>
-        <UsageCount Value="37"/>
+        <UsageCount Value="36"/>
       </Unit>
       <Unit>
         <Filename Value="src/offsetfrm.pas"/>
@@ -293,13 +292,13 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="37" Y="30"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="src/aboutfrm.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="10"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -315,14 +314,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos Y="35"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpsrvsetting.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/importfrm.pas"/>
@@ -332,12 +331,15 @@
         <EditorIndex Value="-1"/>
         <CursorPos X="18" Y="5"/>
         <ComponentState Value="1"/>
-        <UsageCount Value="162"/>
+        <UsageCount Value="161"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsketcher.pas"/>
-        <EditorIndex Value="-1"/>
-        <UsageCount Value="95"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="377"/>
+        <CursorPos X="45" Y="393"/>
+        <UsageCount Value="99"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src/mainfrm.pas"/>
@@ -360,40 +362,41 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="56" Y="16"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="FPC/3.0.4/source/rtl/inc/typshrdh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="129"/>
         <CursorPos X="19" Y="158"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpsetup.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="31"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypserial.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="68"/>
         <CursorPos X="53" Y="206"/>
-        <UsageCount Value="89"/>
+        <UsageCount Value="88"/>
       </Unit>
       <Unit>
         <Filename Value="usr/share/fpcsrc/3.0.4/packages/rtl-extra/src/unix/serial.pp"/>
         <UnitName Value="Serial"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="10"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/xyputils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <CursorPos X="15" Y="184"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="19"/>
+        <CursorPos X="87" Y="19"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -402,27 +405,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="948"/>
         <CursorPos X="14" Y="968"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.0.4/rtl/objpas/classes/classes.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="600"/>
         <CursorPos X="3" Y="602"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.0.4/rtl/objpas/sysutils/osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="16" Y="30"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.0.4/rtl/unix/sysutils.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1435"/>
         <CursorPos X="140" Y="1467"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="src/reportfrm.pas"/>
@@ -431,7 +434,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="35" Y="3"/>
-        <UsageCount Value="76"/>
+        <UsageCount Value="75"/>
       </Unit>
       <Unit>
         <Filename Value="src/checkfrm.pas"/>
@@ -441,7 +444,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="80"/>
         <CursorPos X="63" Y="99"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="src/settingfrm.pas"/>
@@ -451,7 +454,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="17" Y="14"/>
-        <UsageCount Value="153"/>
+        <UsageCount Value="152"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.0.4/source/packages/rtl-extra/src/win/serial.pp"/>
@@ -459,7 +462,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="44"/>
         <CursorPos X="10" Y="63"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="src/vpoptimizer.pas"/>
@@ -467,7 +470,7 @@
         <TopLine Value="303"/>
         <CursorPos X="56" Y="458"/>
         <FoldState Value=" T3k5073741221F"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgrapath.pas"/>
@@ -475,24 +478,24 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="213"/>
         <CursorPos X="15" Y="232"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/geometrytypes.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="17"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.0.4/source/rtl/objpas/fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="95"/>
         <CursorPos X="11" Y="114"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="src/xyppathoptimizer.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="22"/>
         <CursorPos X="13" Y="50"/>
         <UsageCount Value="100"/>
@@ -503,14 +506,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="151"/>
         <CursorPos X="10" Y="174"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypdebug.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="3" Y="37"/>
-        <UsageCount Value="156"/>
+        <UsageCount Value="155"/>
       </Unit>
       <Unit>
         <Filename Value="src/debugfrm.pas"/>
@@ -520,7 +523,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="15" Y="18"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="153"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Documenti/github/lazarus/lcl/dialogs.pp"/>
@@ -528,21 +531,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="680"/>
         <CursorPos X="20" Y="699"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypecpathoptimizer.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="483"/>
         <CursorPos X="25" Y="63"/>
-        <UsageCount Value="100"/>
+        <UsageCount Value="99"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.0.4/source/rtl/win32/system.pp"/>
         <UnitName Value="System"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="16"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.0.4/source/packages/fcl-image/src/fpimage.pp"/>
@@ -550,7 +553,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="94"/>
         <CursorPos X="54" Y="105"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgrasvg.pas"/>
@@ -558,7 +561,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="148"/>
         <CursorPos X="14" Y="170"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgrasvgtype.pas"/>
@@ -566,14 +569,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1918"/>
         <CursorPos X="3" Y="1921"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="156"/>
         <CursorPos X="11" Y="122"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgraclasses.pas"/>
@@ -581,7 +584,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="40"/>
         <CursorPos X="3" Y="53"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/types.pp"/>
@@ -589,14 +592,15 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="98"/>
         <CursorPos X="3" Y="107"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypdxfreader.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="514"/>
-        <CursorPos X="52" Y="294"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="1183"/>
+        <CursorPos X="41" Y="1192"/>
         <UsageCount Value="207"/>
         <Loaded Value="True"/>
       </Unit>
@@ -606,7 +610,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="81"/>
         <CursorPos X="9" Y="92"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgrawinbitmap.pas"/>
@@ -614,26 +618,28 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="38"/>
         <CursorPos X="3" Y="36"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/unibitmap.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="447"/>
         <CursorPos X="14" Y="468"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypfill.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="3"/>
-        <UsageCount Value="155"/>
+        <UsageCount Value="154"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypfiller.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="39" Y="30"/>
-        <UsageCount Value="6"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="126"/>
+        <CursorPos X="39" Y="153"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/packages/fcl-image/src/fpimage.pp"/>
@@ -641,21 +647,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="584"/>
         <CursorPos X="20" Y="34"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgracustombitmap.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="58"/>
         <CursorPos X="15" Y="78"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgraunits.pas"/>
         <UnitName Value="BGRAUnits"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="19"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/bgravectorize.pas"/>
@@ -663,27 +669,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="10" Y="30"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/bgrabitmap-master/bgrabitmap/csscolorconst.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="15"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/packages/fcl-base/examples/threads.pp"/>
         <UnitName Value="testthreads"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="31" Y="5"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/win/tthread.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="90"/>
         <CursorPos X="12" Y="96"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/lcl/xmlpropstorage.pas"/>
@@ -691,21 +697,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="123"/>
         <CursorPos X="25" Y="126"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypethernetstream.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="14" Y="34"/>
-        <UsageCount Value="168"/>
+        <UsageCount Value="167"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/sysutils/osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="10" Y="44"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/lcl/customtimer.pas"/>
@@ -713,7 +719,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="138"/>
         <CursorPos Y="153"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../AppData/Local/lazarus/onlinepackagemanager/packages/lnet/lib/lnet.pp"/>
@@ -721,14 +727,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="708"/>
         <CursorPos X="3" Y="746"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/packages/rtl-extra/src/inc/socketsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
         <CursorPos X="11" Y="159"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../AppData/Local/lazarus/onlinepackagemanager/packages/lnet/lazaruspackage/lnetcomponents.pas"/>
@@ -736,14 +742,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="78"/>
         <CursorPos X="3" Y="39"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="68"/>
         <CursorPos X="10" Y="82"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../../AppData/Local/lazarus/onlinepackagemanager/packages/lnet/lib/lnet.pp"/>
@@ -751,74 +757,74 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="364"/>
         <CursorPos Y="391"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.0/source/rtl/objpas/objpas.pp"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="8" Y="33"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1667"/>
         <CursorPos X="3" Y="1687"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/objpas/fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="983"/>
         <CursorPos X="36" Y="991"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/win/tthread.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="87"/>
         <CursorPos X="3" Y="97"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/objpas/classes/classes.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1020"/>
         <CursorPos X="10" Y="1039"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/inc/systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1612"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/packages/rtl-objpas/src/inc/dateutil.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1332"/>
         <CursorPos X="27" Y="1351"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/inc/mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="87"/>
         <CursorPos X="14" Y="106"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypgeneticalgorithm.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="2"/>
-        <UsageCount Value="100"/>
+        <UsageCount Value="99"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/inc/objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="187"/>
         <CursorPos X="23" Y="206"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="src/xypsimulatedannealing.pas"/>
@@ -831,7 +837,7 @@
       <Unit>
         <Filename Value="src/xypnodes.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="50"/>
         <CursorPos X="9" Y="68"/>
         <UsageCount Value="200"/>
@@ -842,7 +848,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="375"/>
         <CursorPos X="11" Y="394"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/win32/system.pp"/>
@@ -850,14 +856,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="34"/>
         <CursorPos Y="16"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../FPC/3.2.2/source/rtl/inc/dynarrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="8"/>
         <CursorPos X="31" Y="34"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../Documents/GitHub/lazarus/components/lazutils/avglvltree.pas"/>
@@ -865,7 +871,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="981"/>
         <CursorPos X="47" Y="1002"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../Documents/GitHub/lazarus/components/lazutils/laz_avl_tree.pp"/>
@@ -873,7 +879,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="125"/>
         <CursorPos X="3" Y="84"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="src/xyptrash.pas"/>
@@ -881,7 +887,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="283"/>
         <CursorPos X="21" Y="301"/>
-        <UsageCount Value="120"/>
+        <UsageCount Value="129"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/types.pp"/>
@@ -889,7 +895,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="597"/>
         <CursorPos X="15" Y="620"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/math.pp"/>
@@ -897,177 +903,185 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="262"/>
         <CursorPos X="19" Y="281"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../lazarus/lcl/dialogs.pp"/>
         <UnitName Value="Dialogs"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="57"/>
         <CursorPos X="14" Y="75"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="223"/>
         <CursorPos X="15" Y="243"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/inc/objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="196"/>
-        <CursorPos X="25" Y="215"/>
-        <UsageCount Value="10"/>
+        <CursorPos X="23" Y="206"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/inc/objpas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="322"/>
         <CursorPos X="12" Y="334"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="178"/>
         <CursorPos X="10" Y="197"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/sysutils/sysinth.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="3" Y="57"/>
+        <UsageCount Value="9"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../../../FPC/3.2.2/source/packages/fcl-image/src/fpimage.pp"/>
+        <UnitName Value="FPImage"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="14"/>
+        <CursorPos X="3" Y="33"/>
         <UsageCount Value="10"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="416" Column="63" TopLine="410"/>
+        <Caret Line="101" Column="36" TopLine="83"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="423" Column="68" TopLine="412"/>
+        <Caret Line="1121" Column="3" TopLine="1111"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="426" Column="68" TopLine="408"/>
+        <Caret Line="839" Column="15" TopLine="821"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="420" Column="31" TopLine="408"/>
+        <Caret Line="927" Column="11" TopLine="898"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="427" Column="67" TopLine="408"/>
+        <Caret Line="911" Column="27" TopLine="894"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="77" Column="14" TopLine="57"/>
+        <Caret Line="930" Column="11" TopLine="910"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="421" Column="31" TopLine="403"/>
+        <Caret Line="931" Column="30" TopLine="911"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="408" Column="30" TopLine="393"/>
+        <Caret Line="92" Column="32" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="410" Column="25" TopLine="391"/>
+        <Caret Line="90" Column="76" TopLine="71"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1124" Column="49" TopLine="1118"/>
+        <Caret Line="72" Column="39" TopLine="53"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="82" Column="25" TopLine="63"/>
+        <Caret Line="73" Column="82" TopLine="54"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1146" Column="64" TopLine="1123"/>
+        <Caret Line="32" Column="65" TopLine="13"/>
       </Position>
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="245" Column="11" TopLine="222"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="197" Column="29" TopLine="180"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1144" Column="7" TopLine="1118"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="97" Column="35" TopLine="71"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1100" Column="72" TopLine="1091"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="81" Column="25" TopLine="72"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1150" Column="66" TopLine="1123"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="81" Column="25" TopLine="66"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="1148" Column="5" TopLine="1126"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="81" Column="25" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="453" Column="11" TopLine="424"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="472" Column="9" TopLine="427"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="446" Column="14" TopLine="424"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="443" Column="32" TopLine="419"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="77" Column="5" TopLine="57"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="429" Column="74" TopLine="416"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="77" Column="47" TopLine="57"/>
+        <Caret Line="91" Column="15" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="src/xypmath.pas"/>
-        <Caret Line="63" Column="15" TopLine="49"/>
+        <Caret Line="60" Column="16" TopLine="38"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypmath.pas"/>
+        <Caret Line="58" Column="51" TopLine="38"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="590" Column="3" TopLine="571"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="592" Column="10" TopLine="580"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="595" Column="20" TopLine="576"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="616" Column="18" TopLine="590"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="627" Column="32" TopLine="600"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="628" Column="36" TopLine="608"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="641" Column="19" TopLine="574"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="595" Column="25" TopLine="580"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="657" Column="54" TopLine="632"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="593" Column="27" TopLine="574"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="657" Column="23" TopLine="631"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="653" Column="29" TopLine="634"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="655" Column="12" TopLine="636"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="595" TopLine="581"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="590" Column="31" TopLine="574"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
