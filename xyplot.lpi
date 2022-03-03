@@ -599,8 +599,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="1183"/>
-        <CursorPos X="41" Y="1192"/>
+        <TopLine Value="1190"/>
+        <CursorPos X="18" Y="1209"/>
         <UsageCount Value="207"/>
         <Loaded Value="True"/>
       </Unit>
@@ -965,10 +965,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
-        <Caret Line="101" Column="36" TopLine="83"/>
-      </Position>
-      <Position>
-        <Filename Value="src/xypdxfreader.pas"/>
         <Caret Line="1121" Column="3" TopLine="1111"/>
       </Position>
       <Position>
@@ -1082,6 +1078,10 @@
       <Position>
         <Filename Value="src/xypdxfreader.pas"/>
         <Caret Line="590" Column="31" TopLine="574"/>
+      </Position>
+      <Position>
+        <Filename Value="src/xypdxfreader.pas"/>
+        <Caret Line="1208" Column="27" TopLine="1189"/>
       </Position>
     </JumpHistory>
   </ProjectOptions>
