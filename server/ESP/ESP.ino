@@ -17,11 +17,13 @@
 #include <math.h>
 #if defined(ESP32) 
   #include "ESP32Module.h" 
+  #include "ESP32TimerInterrupt.h"
 #endif
 #if defined(ESP8266)
   #include "ESP8266Module.h"  
+  #include "ESP8266TimerInterrupt.h"
 #endif
-#include "TimerInterrupt_Generic.h"
+
 
 volatile uint8_t Bits = 0; 
 uint8_t Buffer[256];
