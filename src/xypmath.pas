@@ -115,6 +115,7 @@ procedure interpolate(const polygonal: txyppolygonal; var path: txyppolygonal; v
 // ---
 
 function distance(const p0, p1: txyppoint): double;
+function getangle(const p0, p1, p2: txyppoint): double;
 
 var
   origin: txyppoint;
@@ -123,7 +124,8 @@ implementation
 
 class operator txyppoint.= (a, b: txyppoint): boolean;
 begin
-  result := samevalue(a.x, b.x, 0.2) and samevalue(a.y, b.y, 0.2);
+  result := samevalue(a.x, b.x, 0.00001) and
+            samevalue(a.y, b.y, 0.00001);
 end;
 
 // MOVE
@@ -473,6 +475,40 @@ end;
 function distance(const p0, p1: txyppoint): double; inline;
 begin
   result := sqrt(sqr(p1.x - p0.x) + sqr(p1.y - p0.y));
+end;
+
+function getangle(const p0, p1, p2: txyppoint): double;
+var
+  v0_x, v1_x: double;
+  v0_y, v1_y: double;
+  v0_z, v1_z: double;
+  v0_mag, v1_mag: double;
+  v0_norm_x, v1_norm_x: double;
+  v0_norm_y, v1_norm_y: double;
+  v0_norm_z, v1_norm_z: double;
+begin
+  v0_x := p0.x - p1.x;
+  v0_y := p0.y - p1.y;
+  v0_z := 0;
+
+  v1_x := p2.x - p1.x;
+  v1_y := p2.y - p1.y;
+  v1_z := 0;
+
+  v0_mag    := sqrt(sqr(v0_x) + sqr(v0_y) + sqr(v0_z));
+  v0_norm_x := v0_x / v0_mag;
+  v0_norm_y := v0_y / v0_mag;
+  v0_norm_z := v0_z / v0_mag;
+
+  v1_mag    := sqrt(sqr(v1_x) + sqr(v1_y) + sqr(v1_z));
+  v1_norm_x := v1_x / v1_mag;
+  v1_norm_y := v1_y / v1_mag;
+  v1_norm_z := v1_z / v1_mag;
+
+  result := arccos(max(-1, min(1,
+    v0_norm_x * v1_norm_x +
+    v0_norm_y * v1_norm_y +
+    v0_norm_z * v1_norm_z)));
 end;
 
 initialization
