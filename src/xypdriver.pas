@@ -32,6 +32,7 @@ type
   txypdriver = class
   private
     fmicroseconds: int64;
+    fbrakepoints: tlistlongint;
     fstream: tmemorystream;
     fsetting: txypsetting;
     frcount1: longint; // current rcount value
@@ -42,8 +43,11 @@ type
     fxcount2: longint; // next    xcount value
     fycount2: longint; // next    ycount value
     fzcount2: longint; // next    zcount value
-    procedure compute(const p: txyppoint; var cx, cy: longint);
+    procedure addbrakepoint;
     procedure createramps;
+    function xcount(const p: txyppoint): longint;
+    function ycount(const p: txyppoint): longint;
+    procedure move(cx, cy, cz: longint);
   public
     constructor create(asetting: txypsetting; astream: tmemorystream);
     destructor destroy; override;
@@ -51,11 +55,11 @@ type
     {$ifopt D+}
     procedure debug(const filename: string);
     {$endif}
-    procedure movex(cx: longint);
-    procedure movey(cy: longint);
-    procedure movez(cz: longint);
-    procedure move(cx, cy, cz: longint);
-    procedure move(path: txypelementlist; pagewidth, pageheight: longint);
+    procedure movex(acount: longint);
+    procedure movey(acount: longint);
+    procedure movez(acount: longint);
+    procedure moveto(const apoint: txyppoint);
+    procedure plot(apath: txypelementlist; pagewidth, pageheight: longint);
     procedure setoriginx;
     procedure setoriginy;
     procedure setoriginz;
@@ -126,7 +130,7 @@ procedure driverdebug(adriver: txypdriver);
 var
   i, j: longint;
   page: array[0..2, 0..2] of txyppoint;
-  p: txyppoint;
+  p0, p1, p2: txyppoint;
 begin
   with adriver.fsetting do
   begin
@@ -155,10 +159,27 @@ begin
   for i := 0 to 2 do
     for j := 0 to 2 do
     begin
-      p := page[i, j];
-      printdbg('DRIVER', format('POINT.X          %12.5f mm', [p.x]));
-      printdbg('DRIVER', format('POINT.Y          %12.5f mm', [p.y]));
+      p0 := page[i, j];
+      printdbg('DRIVER', format('POINT.X          %12.5f mm', [p0.x]));
+      printdbg('DRIVER', format('POINT.Y          %12.5f mm', [p0.y]));
     end;
+
+  // getangle routine
+  p0.x := 0;  p1.x := 1;  p2.x := 2;
+  p0.y := 0;  p1.y := 0;  p2.y := 0;
+  printdbg('DRIVER', format('ANGLE-180        %12.0f °', [radtodeg(getangle(p0, p1, p2))]));
+
+  p0.x := 0;  p1.x := 1;  p2.x := 2;
+  p0.y := 0;  p1.y := 0;  p2.y := 1.7321;
+  printdbg('DRIVER', format('ANGLE-120        %12.0f °', [radtodeg(getangle(p0, p1, p2))]));
+
+  p0.x := 0;  p1.x := 1;  p2.x := 1;
+  p0.y := 0;  p1.y := 0;  p2.y := 1;
+  printdbg('DRIVER', format('ANGLE-90         %12.0f °', [radtodeg(getangle(p0, p1, p2))]));
+
+  p0.x := 0;  p1.x := 1;  p2.x := 0;
+  p0.y := 0;  p1.y := 0;  p2.y := -1;
+  printdbg('DRIVER', format('ANGLE-45         %12.0f °', [radtodeg(getangle(p0, p1, p2))]));
 end;
 
 // txypdriverengine
@@ -166,26 +187,34 @@ end;
 constructor txypdriver.create(asetting: txypsetting; astream: tmemorystream);
 begin
   inherited create;
-  fsetting  := asetting;
-  fstream   := astream;
-  frcount1  := 1;
-  fxcount1  := 0;
-  fycount1  := 0;
-  fzcount1  := 0;
-  frcount2  := 1;
-  fxcount2  := 0;
-  fycount2  := 0;
-  fzcount2  := 0;
+  fsetting     := asetting;
+  fbrakepoints := tlistlongint.create;
+  fstream      := astream;
+  frcount1     := 1;
+  fxcount1     := 0;
+  fycount1     := 0;
+  fzcount1     := 0;
+  frcount2     := 1;
+  fxcount2     := 0;
+  fycount2     := 0;
+  fzcount2     := 0;
 end;
 
 destructor txypdriver.destroy;
 begin
+  fbrakepoints.destroy;
   inherited destroy;
 end;
 
 procedure txypdriver.clearstream;
 begin
+  fbrakepoints.clear;
   fstream.clear;
+end;
+
+procedure txypdriver.addbrakepoint;
+begin
+  fbrakepoints.add(fstream.seek(0, socurrent));
 end;
 
 procedure txypdriver.setorigin;
@@ -269,10 +298,14 @@ begin
   fzcount2 := fzcount1;
 end;
 
-procedure txypdriver.compute(const p: txyppoint; var cx, cy: longint);
+function txypdriver.xcount(const p: txyppoint): longint;
 begin
-  cx := round(p.x/fsetting.pxratio);
-  cy := round(p.y/fsetting.pyratio);
+  result := round(p.x/fsetting.pxratio);
+end;
+
+function txypdriver.ycount(const p: txyppoint): longint;
+begin
+  result := round(p.y/fsetting.pyratio);
 end;
 
 procedure txypdriver.move(cx, cy, cz: longint);
@@ -336,158 +369,183 @@ begin
   fzcount2 := cz;
 end;
 
-procedure txypdriver.movex(cx: longint);
+procedure txypdriver.movex(acount: longint);
 begin
-  move(cx, fycount2 , fzcount2);
+  if acount <> fxcount2 then
+  begin
+    addbrakepoint;
+    move(acount, fycount2 , fzcount2);
+    addbrakepoint;
+  end;
 end;
 
-procedure txypdriver.movey(cy: longint);
+procedure txypdriver.movey(acount: longint);
 begin
-  move(fxcount2, cy, fzcount2);
+  if acount <> fycount2 then
+  begin
+    addbrakepoint;
+    move(fxcount2, acount, fzcount2);
+    addbrakepoint;
+  end;
 end;
 
-procedure txypdriver.movez(cz: longint);
+procedure txypdriver.movez(acount: longint);
 begin
-  move(fxcount2, fycount2, cz);
+  if acount <> fzcount2 then
+  begin
+    addbrakepoint;
+    move(fxcount2, fycount2, acount);
+    addbrakepoint;
+  end;
 end;
 
-procedure txypdriver.move(path: txypelementlist; pagewidth, pageheight: longint);
+procedure txypdriver.moveto(const apoint: txyppoint);
+var
+ i: longint;
+ item: txypelement;
+ poly: txyppolygonal;
+ startpoint: txyppoint;
+begin
+  startpoint.x := fxcount2 * fsetting.pxratio;
+  startpoint.y := fycount2 * fsetting.pyratio;
+
+  addbrakepoint;
+  poly := txyppolygonal.create;
+  item := txypelementline.create(startpoint, apoint);
+  item.interpolate(poly, min(fsetting.pxratio, fsetting.pyratio)/10);
+  for i := 0 to poly.count -1 do
+  begin
+    move(xcount(poly[i]), ycount(poly[i]), fzcount2);
+  end;
+  item.destroy;
+  poly.destroy;
+  addbrakepoint;
+end;
+
+procedure txypdriver.plot(apath: txypelementlist; pagewidth, pageheight: longint);
 var
   i, j: longint;
   item: txypelement;
-  p1, p2: txyppoint;
+  p0: txyppoint;
+  p1: txyppoint;
+  p2: txyppoint;
   poly: txyppolygonal;
-  xcount: longint;
-  ycount: longint;
 begin
-  p1.x := 0;
-  p1.y := 0;
+  p0.x := -1.0;
+  p0.y := -1.0;
+  p1   := origin;
   poly := txyppolygonal.create;
-
-  for i := 0 to path.count -1 do
+  for i := 0 to apath.count -1 do
   begin
-    item := path.items[i];
+    item := apath.items[i];
     item.interpolate(poly, min(fsetting.pxratio, fsetting.pyratio)/10);
+
     for j := 0 to poly.count -1 do
     begin
       p2 := poly[j];
-      if ((trunc(p2.x) >= 0) and (trunc(p2.x) <= pagewidth )) and
-         ((trunc(p2.y) >= 0) and (trunc(p2.y) <= pageheight)) then
+      if (p2.x >= 0) and (p2.x <= pagewidth ) and
+         (p2.y >= 0) and (p2.y <= pageheight) then
       begin
-        compute(p2, xcount, ycount);
-        if distance(p1, p2) > 0.2 then
-          move(fxcount2, fycount2, trunc(fsetting.pzup/fsetting.pzratio))
-        else
-          move(fxcount2, fycount2, trunc(fsetting.pzdown/fsetting.pzratio));
-        move(xcount, ycount, fzcount2);
-        p1 := p2;
+        if (p1 <> p2) then
+        begin
+
+          if distance(p1, p2) > 0.2 then
+          begin
+            movez(trunc(fsetting.pzup/fsetting.pzratio));
+            moveto(p2);
+          end else
+          begin
+            movez(trunc(fsetting.pzdown/fsetting.pzratio));
+            if radtodeg(getangle(p0, p1, p2)) < 165 then
+            begin
+              addbrakepoint;
+            end;
+            move(xcount(p2), ycount(p2), fzcount2);
+          end;
+          p0 := p1;
+          p1 := p2;
+        end;
       end;
     end;
     poly.clear;
   end;
   poly.destroy;
+  addbrakepoint;
 end;
 
 procedure txypdriver.createramps;
-const
-  dstp  = 2;
-  dmax  = 4;
 var
-  i, j, k: longint;
-  bfsize: longint;
-  bf: array of byte = nil;
-  dx: array of shortint = nil;
-  dy: array of shortint = nil;
-  dz: array of shortint = nil;
+  buffersize: longint;
+  buffer: array of byte = nil;
+  i, j: longint;
+  index1: longint;
+  index2: longint;
+  offset: longint;
 begin
-  {$ifopt D+} printdbg('DRIVER', 'CREATE RAMPS'); {$endif}
+  {$ifopt D+} printdbg('DRIVER', 'CREATE RAMPS V2'); {$endif}
 
-  bfsize := fstream.size;
+  buffersize := fstream.size;
   // store data into dx, dy and dz arrays
-  if bfsize > 0 then
+  if (buffersize > 0) then
   begin
-    setlength(bf, bfsize);
-    setlength(dx, bfsize);
-    setlength(dy, bfsize);
-    setlength(dz, bfsize);
+    setlength(buffer, buffersize);
     fstream.seek(0, sofrombeginning);
-    fstream.read(bf[0], bfsize);
-    for i := 0 to bfsize -1 do
+    fstream.read(buffer[0], buffersize);
+    // clean ramps
+    for i := 0 to buffersize -1 do
     begin
-      dx[i] := 0;
-      dy[i] := 0;
-      dz[i] := 0;
-      clearbit(bf[i], incrbit);
-      clearbit(bf[i], decrbit);
-
-      for j := max(i - dstp, 0) to min(i + dstp, bfsize -1) do
-      begin
-        //dx
-        if getbit(bf[j], xstpbit) = 1 then
+      clearbit(buffer[i], incrbit);
+      clearbit(buffer[i], decrbit);
+    end;
+    //
+    if fbrakepoints.count > 0 then
+    begin
+      offset := fbrakepoints[fbrakepoints.count -1] - buffersize;
+      if offset > 0 then
+        for i := fbrakepoints.count -1 downto 0 do
         begin
-          if getbit(bf[j], xdirbit) = fsetting.pxdir then
-            inc(dx[i])
-          else
-            dec(dx[i]);
+          fbrakepoints[i] := fbrakepoints[i] - offset;
+          if fbrakepoints[i] < 0 then
+          begin
+            fbrakepoints.delete(i);
+          end;
         end;
-        //dy
-        if getbit(bf[j], ystpbit) = 1 then
-        begin
-          if getbit(bf[j], ydirbit) = fsetting.pydir then
-            inc(dy[i])
-          else
-            dec(dy[i]);
-        end;
-        //dz
-        if getbit(bf[j], zstpbit) = 1 then
-        begin
-          if getbit(bf[j], zdirbit) = fsetting.pzdir then
-            inc(dz[i])
-          else
-            dec(dz[i]);
-        end;
-      end;
     end;
     // create ramps
-    i := dmax;
-    j := i + 1;
-    while (j < bfsize) do
+    index1 := 0;
+    for i := 0 to fbrakepoints.count -1 do
     begin
-
-      while (j < bfsize) and (abs(dx[j] - dx[i]) <= dmax) and
-                             (abs(dy[j] - dy[i]) <= dmax) and
-                             (abs(dz[j] - dz[i]) <= dmax) do inc(j);
-
-      for k := 0 to fsetting.rampkl -1 do
-        if (i + k) < (j - k) then
+      index2 := fbrakepoints[i] -1;
+      if index1 < index2 then
+      begin
+        for j := 0 to fsetting.rampkl -1 do
         begin
-          setbit(bf[i + k - dmax], incrbit);
-          setbit(bf[j - k - dmax], decrbit);
+          if (index1 + j) < (index2 - j) then
+          begin
+            setbit(buffer[index1 + j], incrbit);
+            setbit(buffer[index2 - j], decrbit);
+          end;
         end;
-
-      i := j + 1;
-      j := i + 1;
+        index1 := index2;
+      end;
     end;
     // estimate microseconds
     i := 0;
     j := 1;
     fmicroseconds := 0;
-    while i < bfsize do
+    while i < buffersize do
     begin
-      if getbit(bf[i], incrbit) = 1 then inc(j);
-      if getbit(bf[i], decrbit) = 1 then dec(j);
+      if getbit(buffer[i], incrbit) = 1 then inc(j);
+      if getbit(buffer[i], decrbit) = 1 then dec(j);
 
       inc(fmicroseconds, round(fsetting.rampkb*(sqrt(j + 1) - sqrt(j))));
       inc(i);
     end;
     // store data into the stream
     fstream.seek(0, sofrombeginning);
-    fstream.write(bf[0], bfsize);
+    fstream.write(buffer[0], buffersize);
     fstream.seek(0, sofrombeginning);
-    setlength(bf, 0);
-    setlength(dx, 0);
-    setlength(dy, 0);
-    setlength(dz, 0);
+    setlength(buffer, 0);
   end;
 end;
 
@@ -589,7 +647,6 @@ procedure txypdriverstreamer.startstreaming(count: longint);
 var
   buffer: array[0..$FFFF] of byte;
 begin
-
   fserialspeed := 0;
   fremainingmillis := driver.fmicroseconds div 1000;
   if serialstream.connected then
@@ -683,8 +740,9 @@ begin
       fremainingmillis := max(0, fremainingmillis - time4);
       fserialspeed     := fposition - lastposition;
       if assigned(fontick) then
+      begin
         queue(fontick);
-
+      end;
       lastposition := fposition;
       time1 := time2;
     end;

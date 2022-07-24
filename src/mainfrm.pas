@@ -170,7 +170,7 @@ implementation
 {$R *.lfm}
 
 uses
-  aboutfrm, importfrm, math, sysutils, xypdxfreader, xypsvgreader, xyputils;
+  aboutfrm, importfrm, math, sysutils, xypdxfreader, xypmath, xypsvgreader, xyputils;
 
 // SCREEN THREAD
 
@@ -778,9 +778,9 @@ begin
       scheduling := true;
       driver.clearstream;
       driver.sync;
-      driver.move(page, pagewidth, pageheight);
+      driver.plot(page, pagewidth, pageheight);
       driver.movez(trunc(setting.pzup/setting.pzratio));
-      driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
+      driver.moveto(origin);
       driver.movez(0);
       driverstreamer := txypdriverstreamer.create(stream);
       driverstreamer.onstart := @streamingonstart;
@@ -810,7 +810,7 @@ begin
       driver.clearstream;
       driver.sync;
       driver.movez(trunc(setting.pzup/setting.pzratio));
-      driver.move(0, 0, trunc(setting.pzup/setting.pzratio));
+      driver.moveto(origin);
       driver.movez(0);
       driverstreamer := txypdriverstreamer.create(stream);
       driverstreamer.onstart := @streamingonstart;
