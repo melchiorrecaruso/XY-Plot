@@ -23,8 +23,6 @@ unit mainfrm;
 
 {$mode objfpc}
 
-{*$DEFINE ETHERNET}
-
 interface
 
 uses
@@ -32,7 +30,7 @@ uses
   bgrapath, buttons, classes, comctrls, controls, dateutils, dialogs, extctrls,
   forms, graphics, menus, spin, stdctrls, shellctrls, xmlpropstorage, extdlgs,
   dividerbevel, spinex, xypdriver, xypfiller, xyppaths, xyppathoptimizer,
-  xypserial, xypsetting, xypsketcher;
+  xypserial, xypsetting, xypsketcher, lNet, lNetComponents;
 
 type
 
@@ -131,7 +129,6 @@ type
     {$ifdef ETHERNET}
     procedure streamingonconnect(asocket: tlsocket);
     procedure streamingondisconnect(asocket: tlsocket);
-    procedure streamingonreceive(asocket: tlsocket);
     {$else}
     procedure streamingonconnect;
     procedure streamingondisconnect;

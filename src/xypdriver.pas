@@ -651,7 +651,10 @@ begin
   fremainingmillis := driver.fmicroseconds div 1000;
   if serialstream.connected then
   begin
+    {$ifdef ETHERNET}
+    {$else}
     serialstream.clear;
+    {$endif}
     count := fstream.read(buffer, count);
     if count > 0 then
     begin
@@ -696,6 +699,8 @@ var
 begin
   // create ramps
   driver.createramps;
+
+
   // start data streaming
   time1 := now;
   if assigned(fonstart) then

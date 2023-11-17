@@ -34,8 +34,8 @@ begin
   printdbg('XY-PLOT', 'DEBUG');
   {$endif}
   requirederivedformresource := true;
-  application.scaled := true;
-  application.title := 'XY-Plot';
+  Application.Scaled := True;
+  Application.Title := 'XY-Plot';
   application.initialize;
   application.createform(tmainform, mainform);
   application.createform(taboutform, aboutform);
