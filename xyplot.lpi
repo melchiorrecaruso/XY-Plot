@@ -13,7 +13,7 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <BuildModes Active="Release">
+    <BuildModes Active="Debug">
       <Item Name="Release" Default="True"/>
       <Item Name="Debug">
         <CompilerOptions>
@@ -31,8 +31,8 @@
               <CStyleOperator Value="False"/>
               <IncludeAssertionCode Value="True"/>
               <AllowLabel Value="False"/>
-              <CPPInline Value="False"/>
               <UseAnsiStrings Value="False"/>
+              <CPPInline Value="False"/>
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
@@ -54,7 +54,6 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dETHERNET"/>
             <OtherDefines Count="1">
               <Define0 Value="ETHERNET"/>
             </OtherDefines>
@@ -96,7 +95,7 @@
       <Unit>
         <Filename Value="xyplot.pas"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="35" Y="32"/>
+        <CursorPos X="6" Y="32"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -208,7 +207,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="3"/>
         <TopLine Value="34"/>
-        <CursorPos X="69" Y="45"/>
+        <CursorPos X="54" Y="45"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -224,7 +223,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
         <TopLine Value="106"/>
-        <CursorPos X="30" Y="109"/>
+        <CursorPos X="15" Y="109"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -534,7 +533,7 @@
         <UsageCount Value="149"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../Documenti/github/lazarus/lcl/dialogs.pp"/>
+        <Filename Value="../../github/lazarus/lcl/dialogs.pp"/>
         <UnitName Value="Dialogs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="680"/>
@@ -894,7 +893,7 @@
         <UsageCount Value="199"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/types.pp"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/types.pp"/>
         <UnitName Value="Types"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="597"/>
@@ -902,7 +901,7 @@
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/math.pp"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/math.pp"/>
         <UnitName Value="Math"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="267"/>
@@ -916,49 +915,49 @@
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/fgl.pp"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="128"/>
         <CursorPos X="14" Y="147"/>
         <UsageCount Value="7"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/classes/classesh.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="921"/>
         <CursorPos X="26" Y="940"/>
         <UsageCount Value="10"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/inc/objpash.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/inc/objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="196"/>
         <CursorPos X="23" Y="206"/>
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/inc/objpas.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/inc/objpas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="322"/>
         <CursorPos X="12" Y="334"/>
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/sysutils/sysstrh.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="178"/>
         <CursorPos X="10" Y="197"/>
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/sysutils/sysinth.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/sysutils/sysinth.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="3" Y="57"/>
         <UsageCount Value="5"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/packages/fcl-image/src/fpimage.pp"/>
+        <Filename Value="/FPC/3.2.2/source/packages/fcl-image/src/fpimage.pp"/>
         <UnitName Value="FPImage"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
@@ -966,14 +965,14 @@
         <UsageCount Value="6"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/inc/systemh.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/inc/systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="115"/>
         <CursorPos X="5" Y="134"/>
         <UsageCount Value="6"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../FPC/3.2.2/source/rtl/objpas/classes/streams.inc"/>
+        <Filename Value="/FPC/3.2.2/source/rtl/objpas/classes/streams.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos X="35" Y="43"/>
@@ -1123,8 +1122,8 @@
       <SyntaxOptions>
         <CStyleOperator Value="False"/>
         <AllowLabel Value="False"/>
-        <CPPInline Value="False"/>
         <UseAnsiStrings Value="False"/>
+        <CPPInline Value="False"/>
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
@@ -1147,7 +1146,6 @@
       </Options>
     </Linking>
     <Other>
-      <CustomOptions Value="-dETHERNET"/>
       <OtherDefines Count="1">
         <Define0 Value="ETHERNET"/>
       </OtherDefines>
@@ -1157,7 +1155,7 @@
     <Watches>
       <Item>
         <Expression Value="adjindex"/>
-        <DisplayStyle Value="wdfDecimal"/>
+        <DisplayFormat Sign="vdfSignSigned"/>
       </Item>
       <Item>
         <Expression Value="curr_v"/>

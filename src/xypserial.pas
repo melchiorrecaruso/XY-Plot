@@ -106,7 +106,11 @@ end;
 function txypserialstream.connect(const port: string): boolean;
 begin
   disconnect;
+  {$IFDEF MSWINDOWS}
   fhandle := seropen('\\.\\' + port);
+  {$ELSE}
+  fhandle := seropen(port);
+  {$ENDIF}
   result  := connected;
   if result then
   begin
